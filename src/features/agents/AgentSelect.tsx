@@ -36,7 +36,7 @@ export function AgentSelect() {
         <p className="text-sm text-rose-400">{error}</p>
       ) : (
         <div className="grid gap-2">
-          {agents.slice(0, 6).map((agent) => (
+          {agents.map((agent) => (
             <button
               key={agent.uuid}
               type="button"

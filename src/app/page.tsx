@@ -9,13 +9,13 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-slate-950 text-slate-100">
       <section className="mx-auto flex max-w-7xl flex-col gap-10 px-6 py-10 lg:px-8">
-        <div className="space-y-4">
+        <div className="space-y-4" id="inicio">
           <SectionHeader
             title="Lineups interativas de Valorant"
-            description="Selecione agente, mapa e habilidades para explorar jogadas anotadas diretamente sobre o mapa."
+            description="Selecione agente, mapa e habilidade para explorar jogadas anotadas diretamente no mapa."
           />
           <p className="max-w-3xl text-slate-300 sm:text-lg">
-            Crie uma experiência rápida e visual para consultar o posicionamento de utilitários e entender o contexto da jogada em segundos.
+            Crie um fluxo tático claro e imediato para visualizar posicionamentos, utilitários e o contexto das jogadas em segundos.
           </p>
         </div>
 

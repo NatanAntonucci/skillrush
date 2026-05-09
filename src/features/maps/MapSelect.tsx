@@ -17,7 +17,24 @@ export function MapSelect() {
       setError(null);
       try {
         const response = await fetchMaps();
-        setMaps(response.data.filter((item) => item.displayName !== 'Menu')); 
+        const competitiveMaps = new Set([
+          'Ascent',
+          'Bind',
+          'Breeze',
+          'Fracture',
+          'Haven',
+          'Icebox',
+          'Lotus',
+          'Pearl',
+          'Split',
+          'Sunset',
+        ]);
+
+        setMaps(
+          response.data
+            .filter((item) => competitiveMaps.has(item.displayName))
+            .sort((a, b) => a.displayName.localeCompare(b.displayName)),
+        );
       } catch (err) {
         setError('Não foi possível carregar mapas.');
       } finally {

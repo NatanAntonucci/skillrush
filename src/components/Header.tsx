@@ -1,3 +1,5 @@
+'use client';
+
 import { MouseEvent, useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 
@@ -35,16 +37,16 @@ export default function Header() {
   };
 
   return (
-    <header className={`bg-white sticky top-0 z-50 transition-shadow duration-200 ${isScrolled ? 'shadow-lg' : 'shadow-md'}`}>
+    <header className={`sticky top-0 z-50 border-b border-slate-800 bg-slate-950/95 backdrop-blur transition-shadow duration-200 ${isScrolled ? 'shadow-xl' : ''}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           <a
             href="#inicio"
-            className="flex flex-col gap-1 hover:opacity-85 transition-opacity focus:outline-2 focus:outline-offset-2 focus:outline-primary"
+            className="flex items-center gap-4 text-white transition-opacity hover:opacity-90 focus:outline-2 focus:outline-offset-2 focus:outline-cyan-400"
             onClick={(event) => handleNavClick(event, '#inicio')}
           >
-            <span className="text-lg font-semibold text-neutral-900">React Template Base</span>
-            <span className="text-xs text-neutral-500">Template React + Vite + Tailwind</span>
+            <img src="/logo.svg" alt="Skillrush" className="h-16 w-auto max-w-[160px]" />
+            <span className="text-base font-medium tracking-[0.02em] text-slate-100">Lineups Valorant</span>
           </a>
 
           <div className="hidden lg:flex items-center gap-8">
@@ -53,7 +55,7 @@ export default function Header() {
                 key={item.href}
                 href={item.href}
                 onClick={(event) => handleNavClick(event, item.href)}
-                className="text-neutral-700 hover:text-primary transition-colors font-medium"
+                className="text-slate-200 hover:text-white transition-colors font-medium"
               >
                 {item.label}
               </a>
@@ -61,7 +63,7 @@ export default function Header() {
             <a
               href="#contato"
               onClick={(event) => handleNavClick(event, '#contato')}
-              className="bg-primary text-white px-5 py-2.5 rounded-lg font-semibold hover:bg-primary-dark transition-colors"
+              className="rounded-2xl bg-cyan-500 px-5 py-2.5 text-sm font-semibold text-slate-950 transition-colors hover:bg-cyan-400"
             >
               Vamos começar
             </a>
@@ -69,7 +71,7 @@ export default function Header() {
 
           <button
             type="button"
-            className="lg:hidden p-2 rounded-md text-neutral-700 hover:text-primary focus:outline-2 focus:outline-offset-2 focus:outline-primary"
+            className="lg:hidden p-2 rounded-md text-slate-200 hover:text-white focus:outline-2 focus:outline-offset-2 focus:outline-cyan-400"
             onClick={() => setIsMenuOpen((current) => !current)}
             aria-label={isMenuOpen ? 'Fechar menu' : 'Abrir menu'}
             aria-expanded={isMenuOpen}
@@ -80,14 +82,14 @@ export default function Header() {
       </div>
 
       {isMenuOpen && (
-        <div className="lg:hidden bg-white border-t border-neutral-200">
-          <div className="px-4 py-4 space-y-2">
+        <div className="lg:hidden border-t border-slate-800 bg-slate-950/95 px-4 py-4">
+          <div className="space-y-2">
             {navItems.map((item) => (
               <a
                 key={item.href}
                 href={item.href}
                 onClick={(event) => handleNavClick(event, item.href)}
-                className="block text-neutral-700 hover:text-primary font-medium py-2"
+                className="block rounded-2xl px-4 py-3 text-slate-200 hover:bg-slate-900 hover:text-white"
               >
                 {item.label}
               </a>
