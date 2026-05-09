@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <!-- Character encoding and viewport -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    
+    <!-- DNS Prefetch & Preconnect para otimização -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="dns-prefetch" href="https://fundacao193.org.br" />
+    <link rel="preconnect" href="https://fundacao193.org.br" crossorigin />
+    
+    <!-- Primary meta tags -->
+    <title>Fundação 193 - Instituição de Apoio ao CBMDF</title>
+    <meta name="description" content="Fundação de apoio ao Corpo de Bombeiros Militar do Distrito Federal. Promovemos capacitação profissional, inovação e suporte às operações de salvamento e prevenção de incêndios." />
+    <meta name="keywords" content="Fundação 193, CBMDF, bombeiros, Distrito Federal, capacitação, apoio institucional" />
+    <meta name="author" content="Fundação 193" />
+    <meta name="language" content="pt-BR" />
+    
+    <!-- Canonical URL (update to your production domain) -->
+    <link rel="canonical" href="https://fundacao193.org.br" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://fundacao193.org.br" />
+    <meta property="og:title" content="Fundação 193 - Apoiando quem salva vidas" />
+    <meta property="og:description" content="Fundação de apoio ao Corpo de Bombeiros Militar do Distrito Federal" />
+    <meta property="og:image" content="https://fundacao193.org.br/og-image.png" />
+    <meta property="og:image:alt" content="Fundação 193 - Logo" />
+    <meta property="og:locale" content="pt_BR" />
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://fundacao193.org.br" />
+    <meta name="twitter:title" content="Fundação 193 - Apoiando quem salva vidas" />
+    <meta name="twitter:description" content="Instituição de apoio ao Corpo de Bombeiros do Distrito Federal" />
+    <meta name="twitter:image" content="https://fundacao193.org.br/og-image.png" />
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/logo-reduzida.png" />
+    <link rel="apple-touch-icon" href="/logo-reduzida.png" />
+    
+    <!-- Theme color for browser UI (white for status bar) -->
+    <meta name="theme-color" content="#ffffff" />
+    <!-- iOS status bar style (white background with dark icons) -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    
+    <!-- Additional SEO -->
+    <meta name="robots" content="index, follow" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+  </head>
+  <body>
+    <!-- ====== GOOGLE TAG MANAGER (noscript) ====== -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5Z9SQKGV"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    
+    <!-- Defer GTM loading until after page interactive (Web Vitals optimization) -->
+    <script>
+      // GTM IDs
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-MMM20FTFR3', { 'send_page_view': false });
+      
+      // Load GTM after page interactive
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+          setTimeout(() => {
+            var gtmScript = document.createElement('script');
+            gtmScript.async = true;
+            gtmScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-MMM20FTFR3&cx=c&gtm=4e6321';
+            document.head.appendChild(gtmScript);
+          }, 3000); // Load GTM after 3 seconds to avoid blocking LCP
+        });
+      } else {
+        setTimeout(() => {
+          var gtmScript = document.createElement('script');
+          gtmScript.async = true;
+          gtmScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-MMM20FTFR3&cx=c&gtm=4e6321';
+          document.head.appendChild(gtmScript);
+        }, 3000);
+      }
+    </script>
+    
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
