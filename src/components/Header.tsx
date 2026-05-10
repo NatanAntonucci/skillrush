@@ -4,11 +4,10 @@ import { MouseEvent, useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 
 const navItems = [
-  { label: 'Início', href: '#inicio' },
-  { label: 'Sobre', href: '#sobre' },
-  { label: 'Serviços', href: '#servicos' },
-  { label: 'Impacto', href: '#impacto' },
-  { label: 'Contato', href: '#contato' },
+  { label: 'Lineups', href: '/' },
+  { label: 'Agentes', href: '/agents' },
+  { label: 'Mapas', href: '/maps' },
+  { label: 'Upload', href: '/upload' },
 ];
 
 export default function Header() {
@@ -39,14 +38,12 @@ export default function Header() {
   return (
     <header className={`sticky top-0 z-50 border-b border-slate-800 bg-slate-950/95 backdrop-blur transition-shadow duration-200 ${isScrolled ? 'shadow-xl' : ''}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-16">
           <a
-            href="#inicio"
-            className="flex items-center gap-4 text-white transition-opacity hover:opacity-90 focus:outline-2 focus:outline-offset-2 focus:outline-cyan-400"
-            onClick={(event) => handleNavClick(event, '#inicio')}
+            href="/"
+            className="flex items-center text-white transition-opacity hover:opacity-90 focus:outline-2 focus:outline-offset-2 focus:outline-cyan-400"
           >
-            <img src="/logo.svg" alt="Skillrush" className="h-16 w-auto max-w-[160px]" />
-            <span className="text-base font-medium tracking-[0.02em] text-slate-100">Lineups Valorant</span>
+            <img src="/logo.svg" alt="Skillrush" className="h-16 w-auto max-w-[220px]" />
           </a>
 
           <div className="hidden lg:flex items-center gap-8">
@@ -61,11 +58,10 @@ export default function Header() {
               </a>
             ))}
             <a
-              href="#contato"
-              onClick={(event) => handleNavClick(event, '#contato')}
+              href="/upload"
               className="rounded-2xl bg-cyan-500 px-5 py-2.5 text-sm font-semibold text-slate-950 transition-colors hover:bg-cyan-400"
             >
-              Vamos começar
+              Upload
             </a>
           </div>
 

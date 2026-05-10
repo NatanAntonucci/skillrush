@@ -6,6 +6,8 @@ export interface Lineup {
   ability: string;
   description: string;
   videoUrl: string;
+  difficulty?: string;
+  side?: string;
   hotspot: {
     x: number;
     y: number;

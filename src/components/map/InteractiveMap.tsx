@@ -7,7 +7,7 @@ import { useLineups } from '@/hooks/useLineups';
 import { LineupDetailsModal } from '@/components/lineup/LineupDetailsModal';
 import type { Lineup } from '@/types';
 
-export function InteractiveMap() {
+export default function InteractiveMap() {
   const { selectedMap, selectedAgent } = useLineupStore();
   const { lineups, loading, error } = useLineups({
     agentId: selectedAgent?.uuid,

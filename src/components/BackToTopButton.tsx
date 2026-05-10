@@ -1,5 +1,7 @@
+'use client';
+
 import { ChevronUp } from 'lucide-react';
-import { useBackToTop } from '../hooks/useBackToTop';
+import { useState, useEffect } from 'react';
 
 interface BackToTopButtonProps {
   threshold?: number;
@@ -14,7 +16,24 @@ interface BackToTopButtonProps {
  * @param className - Classes Tailwind customizadas (opcional)
  */
 export default function BackToTopButton({ threshold = 300, className = '' }: BackToTopButtonProps) {
-  const { isVisible, scrollToTop } = useBackToTop(threshold);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > threshold) {
+        setIsVisible(true);
+      } else {
+        setIsVisible(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [threshold]);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
     <button

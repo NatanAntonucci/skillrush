@@ -2,17 +2,31 @@
 
 import { useLineupStore } from '@/stores/lineupStore';
 
-const filters = ['Smoke', 'Flash', 'Molotov', 'Recon', 'Crowd Control'];
+const utilityFilters = ['Smoke', 'Flash', 'Molotov', 'Recon', 'Crowd Control'];
+const difficultyOptions = ['Fácil', 'Médio', 'Difícil'];
+const sideOptions = ['Ataque', 'Defesa'] as const;
 
 export function LineupFilterPanel() {
-  const { filters: activeFilters, toggleFilter, resetFilters } = useLineupStore();
+  const {
+    filters: activeFilters,
+    toggleFilter,
+    resetFilters,
+    selectedDifficulty,
+    selectedSide,
+    setSelectedDifficulty,
+    setSelectedSide,
+    selectedAgent,
+  } = useLineupStore();
+
+  const agentAbilities = selectedAgent?.abilities?.map(a => a.displayName) || [];
+  const availableFilters = selectedAgent ? agentAbilities : utilityFilters;
 
   return (
-    <div className="space-y-4 rounded-3xl border border-slate-800 bg-slate-950/90 p-4">
+    <div className="space-y-6 rounded-3xl border border-slate-800 bg-slate-950/90 p-4">
       <div className="flex items-center justify-between gap-4">
         <div>
           <p className="text-sm uppercase tracking-[0.28em] text-slate-400">Filtros</p>
-          <p className="text-sm text-slate-400">Refine lineups por utilitário e execução.</p>
+          <p className="text-sm text-slate-400">Refine lineups por utilitário, dificuldade e lado.</p>
         </div>
         <button
           type="button"
@@ -22,24 +36,70 @@ export function LineupFilterPanel() {
           Limpar
         </button>
       </div>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-        {filters.map((filter) => {
-          const isActive = activeFilters.includes(filter);
-          return (
-            <button
-              key={filter}
-              type="button"
-              onClick={() => toggleFilter(filter)}
-              className={`rounded-2xl border px-3 py-2 text-sm transition ${
-                isActive
-                  ? 'border-cyan-400 bg-cyan-500/15 text-cyan-100'
-                  : 'border-slate-800 bg-slate-900 text-slate-300 hover:border-slate-600 hover:bg-slate-900/90'
-              }`}
-            >
-              {filter}
-            </button>
-          );
-        })}
+
+      <div className="grid gap-4 md:grid-cols-2">
+        <div>
+          <p className="text-xs uppercase tracking-[0.28em] text-slate-400">Dificuldade</p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {difficultyOptions.map((difficulty) => (
+              <button
+                key={difficulty}
+                type="button"
+                onClick={() => setSelectedDifficulty(selectedDifficulty === difficulty ? null : difficulty)}
+                className={`rounded-2xl border px-4 py-2 text-sm transition ${
+                  selectedDifficulty === difficulty
+                    ? 'border-cyan-400 bg-cyan-500/15 text-cyan-100'
+                    : 'border-slate-800 bg-slate-900 text-slate-300 hover:border-slate-600 hover:bg-slate-900/90'
+                }`}
+              >
+                {difficulty}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <p className="text-xs uppercase tracking-[0.28em] text-slate-400">Lado</p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {sideOptions.map((side) => (
+              <button
+                key={side}
+                type="button"
+                onClick={() => setSelectedSide(selectedSide === side ? null : side)}
+                className={`rounded-2xl border px-4 py-2 text-sm transition ${
+                  selectedSide === side
+                    ? 'border-violet-400 bg-violet-500/15 text-violet-100'
+                    : 'border-slate-800 bg-slate-900 text-slate-300 hover:border-slate-600 hover:bg-slate-900/90'
+                }`}
+              >
+                {side}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <p className="text-xs uppercase tracking-[0.28em] text-slate-400">Habilidade</p>
+        <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
+          {availableFilters.map((filter) => {
+            const isActive = activeFilters.includes(filter);
+            return (
+              <button
+                key={filter}
+                type="button"
+                onClick={() => toggleFilter(filter)}
+                className={`rounded-2xl border px-3 py-2 text-sm transition ${
+                  isActive
+                    ? 'border-cyan-400 bg-cyan-500/15 text-cyan-100'
+                    : 'border-slate-800 bg-slate-900 text-slate-300 hover:border-slate-600 hover:bg-slate-900/90'
+                }`}
+              >
+                {filter}
+              </button>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

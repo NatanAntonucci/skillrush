@@ -1,7 +1,10 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
+import dynamic from 'next/dynamic';
 import './globals.css';
 import Header from '@/components/Header';
+
+const BackToTopButton = dynamic(() => import('@/components/BackToTopButton'), { ssr: false });
 
 export const metadata: Metadata = {
   title: 'Skillrush',
@@ -14,6 +17,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body className="bg-slate-950 text-slate-100">
         <Header />
         {children}
+        <BackToTopButton />
       </body>
     </html>
   );

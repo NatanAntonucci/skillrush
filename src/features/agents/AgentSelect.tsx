@@ -49,7 +49,7 @@ export function AgentSelect() {
             >
               <div className="flex items-center gap-3">
                 {agent.displayIcon ? (
-                  <img src={agent.displayIcon} alt={agent.displayName} className="h-8 w-8 rounded-full object-cover" />
+                  <img src={agent.displayIcon} alt={agent.displayName} className="h-8 w-8 rounded-full object-cover" loading="lazy" />
                 ) : (
                   <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-slate-800 text-xs text-slate-300">{agent.displayName.slice(0, 2)}</span>
                 )}

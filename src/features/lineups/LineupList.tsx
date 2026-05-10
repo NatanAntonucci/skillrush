@@ -4,11 +4,14 @@ import { useMemo } from 'react';
 import { useLineupStore } from '@/stores/lineupStore';
 import { useLineups } from '@/hooks/useLineups';
 
-export function LineupList() {
-  const { selectedAgent, selectedMap } = useLineupStore();
+export default function LineupList() {
+  const { selectedAgent, selectedMap, filters, selectedDifficulty, selectedSide } = useLineupStore();
   const { lineups, loading, error } = useLineups({
     agentId: selectedAgent?.uuid,
     mapId: selectedMap?.uuid,
+    difficulty: selectedDifficulty,
+    side: selectedSide,
+    abilities: filters,
   });
 
   if (loading) {
@@ -57,6 +60,12 @@ export function LineupList() {
           </div>
           <div className="mt-4 flex flex-wrap gap-2 text-xs text-slate-400">
             <span className="rounded-full bg-slate-800 px-2 py-1">#{lineup.hotspot.label}</span>
+            {lineup.difficulty && (
+              <span className="rounded-full bg-slate-800 px-2 py-1">{lineup.difficulty}</span>
+            )}
+            {lineup.side && (
+              <span className="rounded-full bg-slate-800 px-2 py-1">{lineup.side}</span>
+            )}
           </div>
         </article>
       ))}

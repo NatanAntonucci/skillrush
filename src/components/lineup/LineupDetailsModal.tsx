@@ -1,8 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useLineups } from '@/hooks/useLineups';
-import { useLineupStore } from '@/stores/lineupStore';
 import type { Lineup } from '@/types';
 import { X, Play } from 'lucide-react';
 
@@ -54,6 +52,16 @@ export function LineupDetailsModal({ lineup, onClose }: LineupDetailsModalProps)
               <div className="flex flex-col gap-2 rounded-2xl border border-slate-800 bg-slate-950/80 p-4">
                 <span className="text-xs uppercase text-slate-400">Hotspot</span>
                 <strong className="text-lg text-violet-100">{lineup.hotspot.label}</strong>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="flex flex-col gap-2 rounded-2xl border border-slate-800 bg-slate-950/80 p-4">
+                <span className="text-xs uppercase text-slate-400">Dificuldade</span>
+                <strong className="text-lg text-slate-100">{lineup.difficulty ?? 'Não definida'}</strong>
+              </div>
+              <div className="flex flex-col gap-2 rounded-2xl border border-slate-800 bg-slate-950/80 p-4">
+                <span className="text-xs uppercase text-slate-400">Lado</span>
+                <strong className="text-lg text-slate-100">{lineup.side ?? 'Não definido'}</strong>
               </div>
             </div>
 
