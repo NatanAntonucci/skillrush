@@ -14,15 +14,17 @@ export function LineupDetailsModal({ lineup, onClose }: LineupDetailsModalProps)
 
   const getYoutubeEmbedUrl = (url: string) => {
     const videoId = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/)?.[1];
-    return videoId ? `https://www.youtube.com/embed/${videoId}` : url;
+    return videoId
+  ? `https://www.youtube.com/embed/${videoId}?autoplay=0&rel=0`
+  : url;
   };
 
   const embedUrl = getYoutubeEmbedUrl(lineup.videoUrl);
   const isYoutubeUrl = embedUrl.includes('youtube.com');
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-4 backdrop-blur-sm">
-      <div className="max-w-4xl w-full rounded-3xl border border-slate-800 bg-slate-900 overflow-hidden shadow-2xl shadow-slate-950/60">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/80 p-4 backdrop-blur-sm">
+      <div className="mx-auto my-10 w-full max-w-5xl rounded-3xl border border-slate-800 bg-slate-900 overflow-hidden shadow-2xl shadow-slate-950/60">
         {/* Header */}
         <div className="flex items-start justify-between gap-4 border-b border-slate-800 p-6">
           <div className="flex-1">

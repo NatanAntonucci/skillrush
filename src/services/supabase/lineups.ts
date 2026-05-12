@@ -56,7 +56,7 @@ export async function fetchLineups(filters?: LineupFilters) {
   }
 
   if (filters?.abilities?.length) {
-    query = query.in('ability_id', filters.abilities);
+    query = query.in('ability_name', filters.abilities);
   }
 
   query = query
@@ -111,6 +111,7 @@ export async function fetchLineups(filters?: LineupFilters) {
           displayName: lineup.map.display_name,
           listViewIcon: lineup.map.list_view_icon,
           splash: lineup.map.splash,
+          displayIcon: lineup.map.display_icon,
         }
       : undefined,
 

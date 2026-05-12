@@ -70,7 +70,7 @@ export default function InteractiveMap() {
           <img
             src={mapImage}
             alt={selectedMap?.displayName ?? 'Mapa Valorant'}
-            className="h-full w-full object-contain opacity-95"
+            className="h-[650px] w-full object-contain opacity-95"
           />
 
           {/* HOTSPOTS */}
