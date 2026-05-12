@@ -1,8 +1,8 @@
-// File: D:\DEV-Projetos\SkillRush\desenv\skillrushFront\src\app\admin\setup\page.tsx
-import * as entry from '../../../../../src/app/admin/setup/page.js'
+// File: D:\DEV-Projetos\SkillRush\desenv\skillrushFront\src\app\page.tsx
+import * as entry from '../../../src/app/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
-type TEntry = typeof import('../../../../../src/app/admin/setup/page.js')
+type TEntry = typeof import('../../../src/app/page.js')
 
 // Check that the entry is a valid entry
 checkFields<Diff<{

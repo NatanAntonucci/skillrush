@@ -1,7 +1,6 @@
 import { supabase } from './client';
 
 import type { Lineup } from '@/types';
-import { supabaseAdmin } from './admin';
 
 interface LineupFilters {
   agentId?: string;
@@ -128,7 +127,7 @@ export async function fetchLineups(filters?: LineupFilters) {
 }
 
 export async function createLineup(payload: CreateLineupPayload) {
-  const { data, error } = await supabaseAdmin
+  const { data, error } = await supabase
     .from('lineups')
     .insert([
       {

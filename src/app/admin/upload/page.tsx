@@ -10,8 +10,8 @@ import { fetchAbilitiesByAgent } from '@/services/supabase/abilities';
 
 import type { Agent, Ability, MapData } from '@/types';
 
-const difficultyOptions = ['Fácil', 'Médio', 'Difícil'];
-const sideOptions = ['Ataque', 'Defesa'];
+const difficultyOptions = ['easy', 'medium', 'hard'];
+const sideOptions = ['attack', 'defense'];
 const uploadEnabled = process.env.NEXT_PUBLIC_UPLOAD_ENABLED !== 'false';
 
 export default function UploadPage() {

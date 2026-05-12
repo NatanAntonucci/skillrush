@@ -93,11 +93,9 @@ export async function POST(request: NextRequest) {
           description: payload.description,
           video_url: payload.videoUrl,
           difficulty: payload.difficulty,
-          side: payload.side,
           hotspot_x: payload.hotspot.x,
           hotspot_y: payload.hotspot.y,
           hotspot_label: payload.hotspot.label,
-          created_by: user.id,
         },
       ])
       .select()
