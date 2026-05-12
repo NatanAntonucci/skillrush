@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { fetchAgents } from '@/services/valorant-api/client';
+import { fetchAgents } from '@/services/supabase/agents';
 import { useLineupStore } from '@/stores/lineupStore';
 import type { Agent } from '@/types';
 
@@ -16,8 +16,8 @@ export function AgentSelect() {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetchAgents();
-        setAgents(response.data);
+        const data = await fetchAgents();
+        setAgents(data);
       } catch (err) {
         setError('Não foi possível carregar agentes.');
       } finally {
@@ -38,11 +38,11 @@ export function AgentSelect() {
         <div className="grid gap-2">
           {agents.map((agent) => (
             <button
-              key={agent.uuid}
+              key={agent.id}
               type="button"
               onClick={() => setSelectedAgent(agent)}
               className={`rounded-2xl border px-4 py-3 text-left transition ${
-                selectedAgent?.uuid === agent.uuid
+                selectedAgent?.id === agent.id
                   ? 'border-cyan-400 bg-cyan-500/10 text-cyan-100'
                   : 'border-slate-800 bg-slate-900 text-slate-200 hover:border-slate-600 hover:bg-slate-900/90'
               }`}

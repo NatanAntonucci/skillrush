@@ -1,4 +1,4 @@
-import { Facebook, Instagram, Linkedin, Youtube } from 'lucide-react';
+
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -61,18 +61,7 @@ export default function Footer() {
             © {currentYear} React Template Base. Todos os direitos reservados.
           </p>
           <div className="flex items-center gap-3">
-            <a href="#" className="text-neutral-400 hover:text-white transition-colors" aria-label="Facebook">
-              <Facebook size={20} />
-            </a>
-            <a href="#" className="text-neutral-400 hover:text-white transition-colors" aria-label="Instagram">
-              <Instagram size={20} />
-            </a>
-            <a href="#" className="text-neutral-400 hover:text-white transition-colors" aria-label="LinkedIn">
-              <Linkedin size={20} />
-            </a>
-            <a href="#" className="text-neutral-400 hover:text-white transition-colors" aria-label="YouTube">
-              <Youtube size={20} />
-            </a>
+            
           </div>
         </div>
       </div>

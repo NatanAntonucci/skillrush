@@ -9,19 +9,24 @@ import type { Lineup } from '@/types';
 
 export default function InteractiveMap() {
   const { selectedMap, selectedAgent } = useLineupStore();
+
   const { lineups, loading, error } = useLineups({
-    agentId: selectedAgent?.uuid,
-    mapId: selectedMap?.uuid,
+    agentId: selectedAgent?.id,
+    mapId: selectedMap?.id,
   });
-  
+
   const [activeLineup, setActiveLineup] = useState<Lineup | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const mapImage = selectedMap?.splash ?? 'https://images.unsplash.com/photo-1593642532973-d31b6557fa68?auto=format&fit=crop&w=1400&q=80';
+  // ✅ MINIMAP REAL com fallback completo
+  const mapImage =
+    selectedMap?.displayIcon ||
+    selectedMap?.splash ||
+    'https://images.unsplash.com/photo-1593642532973-d31b6557fa68?auto=format&fit=crop&w=1400&q=80';
 
   const hotspots = useMemo(() => {
     if (!selectedMap) return [];
-    return lineups.filter((item) => item.mapId === selectedMap.uuid);
+    return lineups.filter((item) => item.mapId === selectedMap.id);
   }, [lineups, selectedMap]);
 
   const handleHotspotClick = (lineup: Lineup) => {
@@ -31,16 +36,24 @@ export default function InteractiveMap() {
 
   return (
     <div className="space-y-4 rounded-3xl border border-slate-800 bg-slate-950/90 p-4 shadow-inner shadow-slate-950/20">
+
+      {/* HEADER */}
       <div className="flex items-center justify-between gap-4">
         <div>
-          <p className="text-sm uppercase tracking-[0.28em] text-slate-400">Mapa interativo</p>
-          <h2 className="text-xl font-semibold text-white">Posicione sua jogada</h2>
+          <p className="text-sm uppercase tracking-[0.28em] text-slate-400">
+            Mapa interativo
+          </p>
+          <h2 className="text-xl font-semibold text-white">
+            Posicione sua jogada
+          </h2>
         </div>
+
         <span className="rounded-full bg-slate-800 px-3 py-1 text-xs uppercase text-slate-300">
           {selectedMap?.displayName ?? 'Selecione um mapa'}
         </span>
       </div>
 
+      {/* LOADING / ERROR */}
       {loading ? (
         <div className="aspect-video rounded-3xl border border-slate-800 bg-slate-900/50 flex items-center justify-center">
           <p className="text-slate-400">Carregando hotspots...</p>
@@ -50,13 +63,17 @@ export default function InteractiveMap() {
           <p className="text-rose-400">{error}</p>
         </div>
       ) : (
-        <div className="relative overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/90 shadow-lg shadow-slate-950/30">
+        // MAPA
+        <div className="relative h-[420px] w-full overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/90 shadow-lg shadow-slate-950/30">
+
+          {/* MINIMAP */}
           <img
             src={mapImage}
             alt={selectedMap?.displayName ?? 'Mapa Valorant'}
-            className="h-[420px] w-full object-cover opacity-95"
+            className="h-full w-full object-contain opacity-95"
           />
 
+          {/* HOTSPOTS */}
           {hotspots.length > 0 ? (
             hotspots.map((hotspot) => (
               <MapHotspot
@@ -70,18 +87,29 @@ export default function InteractiveMap() {
           ) : (
             <div className="absolute inset-0 flex items-center justify-center bg-black/20">
               <p className="text-slate-300 text-center">
-                {selectedMap ? 'Nenhuma lineup disponível para este mapa' : 'Selecione um mapa para ver hotspots'}
+                {selectedMap
+                  ? 'Nenhuma lineup disponível para este mapa'
+                  : 'Selecione um mapa para ver hotspots'}
               </p>
             </div>
           )}
         </div>
       )}
 
+      {/* FOOTER */}
       <p className="text-sm text-slate-400">
-        {hotspots.length > 0 ? `${hotspots.length} hotspot(s) disponível(is) · Clique para ver detalhes` : 'Clique em um hotspot para ver o vídeo da jogada e o contexto.'}
+        {hotspots.length > 0
+          ? `${hotspots.length} hotspot(s) disponível(is) · Clique para ver detalhes`
+          : 'Clique em um hotspot para ver o vídeo da jogada e o contexto.'}
       </p>
 
-      {isModalOpen && activeLineup && <LineupDetailsModal lineup={activeLineup} onClose={() => setIsModalOpen(false)} />}
+      {/* MODAL */}
+      {isModalOpen && activeLineup && (
+        <LineupDetailsModal
+          lineup={activeLineup}
+          onClose={() => setIsModalOpen(false)}
+        />
+      )}
     </div>
   );
 }

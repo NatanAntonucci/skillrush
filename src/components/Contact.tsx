@@ -61,7 +61,7 @@ export default function Contact() {
     setStatus({ type: 'loading', message: '' });
 
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'https://example.com/api';
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://example.com/api';
       const response = await fetch(`${apiUrl}/contact`, {
         method: 'POST',
         headers: {

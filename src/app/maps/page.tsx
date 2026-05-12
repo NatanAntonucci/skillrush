@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { fetchMaps } from '@/services/valorant-api/client';
+import { fetchMaps } from '@/services/supabase/maps';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import type { MapData } from '@/types';
 
@@ -15,8 +15,8 @@ export default function MapsPage() {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetchMaps();
-        setMaps(response.data.filter((item) => item.displayName !== 'Menu'));
+        const data = await fetchMaps();
+        setMaps(data.filter((item) => item.displayName !== 'Menu'));
       } catch (err) {
         setError('Não foi possível carregar mapas.');
       } finally {
@@ -45,7 +45,7 @@ export default function MapsPage() {
         ) : (
           <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {maps.map((map) => (
-              <div key={map.uuid} className="rounded-3xl border border-slate-800 bg-slate-900/80 p-6 shadow-xl shadow-slate-950/40">
+              <div key={map.id} className="rounded-3xl border border-slate-800 bg-slate-900/80 p-6 shadow-xl shadow-slate-950/40">
                 {map.splash && (
                   <img src={map.splash} alt={map.displayName} className="w-full h-32 object-cover rounded-2xl mb-4" loading="lazy" />
                 )}

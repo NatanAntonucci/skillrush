@@ -27,6 +27,7 @@ export async function fetchMaps() {
   return valorantFetch<{ data: Array<{
     uuid: string;
     displayName: string;
+    displayIcon: string | null;
     listViewIcon: string | null;
     splash: string | null;
   }> }>('/maps');

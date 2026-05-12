@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import type { Lineup } from '@/types';
+import type { Lineup } from '@/types/lineup';
 import { X, Play } from 'lucide-react';
 
 interface LineupDetailsModalProps {
@@ -47,7 +47,7 @@ export function LineupDetailsModal({ lineup, onClose }: LineupDetailsModalProps)
             <div className="grid grid-cols-2 gap-3">
               <div className="flex flex-col gap-2 rounded-2xl border border-slate-800 bg-slate-950/80 p-4">
                 <span className="text-xs uppercase text-slate-400">Habilidade</span>
-                <strong className="text-lg text-cyan-100">{lineup.ability}</strong>
+                <strong className="text-lg text-cyan-100">{lineup.abilityName}</strong>
               </div>
               <div className="flex flex-col gap-2 rounded-2xl border border-slate-800 bg-slate-950/80 p-4">
                 <span className="text-xs uppercase text-slate-400">Hotspot</span>

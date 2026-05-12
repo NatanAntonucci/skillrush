@@ -3,7 +3,7 @@
  * Supports searching: News, Projects, Events, Training, Partners
  */
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://api.example.com/v1';
+const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://example.com/api';
 
 // Cache to avoid multiple requests
 const searchCache = new Map<string, { timestamp: number; results: SearchResults }>();

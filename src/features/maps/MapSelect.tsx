@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { fetchMaps } from '@/services/valorant-api/client';
+import { fetchMaps } from '@/services/supabase/maps';
 import { useLineupStore } from '@/stores/lineupStore';
 import type { MapData } from '@/types';
 
@@ -16,25 +16,8 @@ export function MapSelect() {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetchMaps();
-        const competitiveMaps = new Set([
-          'Ascent',
-          'Bind',
-          'Breeze',
-          'Fracture',
-          'Haven',
-          'Icebox',
-          'Lotus',
-          'Pearl',
-          'Split',
-          'Sunset',
-        ]);
-
-        setMaps(
-          response.data
-            .filter((item) => competitiveMaps.has(item.displayName))
-            .sort((a, b) => a.displayName.localeCompare(b.displayName)),
-        );
+        const data = await fetchMaps();
+        setMaps(data.filter((map) => map.isCompetitive !== false).sort((a, b) => a.displayName.localeCompare(b.displayName)));
       } catch (err) {
         setError('Não foi possível carregar mapas.');
       } finally {
@@ -56,11 +39,11 @@ export function MapSelect() {
         <div className="grid gap-2">
           {maps.slice(0, 6).map((map) => (
             <button
-              key={map.uuid}
+              key={map.id}
               type="button"
               onClick={() => setSelectedMap(map)}
               className={`rounded-2xl border px-4 py-3 text-left transition ${
-                selectedMap?.uuid === map.uuid
+                selectedMap?.id === map.id
                   ? 'border-violet-400 bg-violet-500/10 text-violet-100'
                   : 'border-slate-800 bg-slate-900 text-slate-200 hover:border-slate-600 hover:bg-slate-900/90'
               }`}

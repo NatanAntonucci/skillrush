@@ -1,4 +1,7 @@
 {
-  "/page": "app/page.js",
-  "/upload/page": "app/upload/page.js"
+  "/admin/page": "app/admin/page.js",
+  "/admin/debug/page": "app/admin/debug/page.js",
+  "/admin/setup/page": "app/admin/setup/page.js",
+  "/api/lineups/route": "app/api/lineups/route.js",
+  "/admin/upload/page": "app/admin/upload/page.js"
 }

@@ -7,8 +7,8 @@ import { useLineups } from '@/hooks/useLineups';
 export default function LineupList() {
   const { selectedAgent, selectedMap, filters, selectedDifficulty, selectedSide } = useLineupStore();
   const { lineups, loading, error } = useLineups({
-    agentId: selectedAgent?.uuid,
-    mapId: selectedMap?.uuid,
+    agentId: selectedAgent?.id,
+    mapId: selectedMap?.id,
     difficulty: selectedDifficulty,
     side: selectedSide,
     abilities: filters,
@@ -56,7 +56,7 @@ export default function LineupList() {
               <h3 className="text-lg font-semibold text-white group-hover:text-cyan-100 transition">{lineup.title}</h3>
               <p className="mt-2 text-sm text-slate-400">{lineup.description}</p>
             </div>
-            <span className="rounded-full bg-cyan-500/20 px-3 py-1 text-xs uppercase text-cyan-300">{lineup.ability}</span>
+            <span className="rounded-full bg-cyan-500/20 px-3 py-1 text-xs uppercase text-cyan-300">{lineup.abilityName}</span>
           </div>
           <div className="mt-4 flex flex-wrap gap-2 text-xs text-slate-400">
             <span className="rounded-full bg-slate-800 px-2 py-1">#{lineup.hotspot.label}</span>

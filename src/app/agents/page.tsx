@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { fetchAgents } from '@/services/valorant-api/client';
+import { fetchAgents } from '@/services/supabase/agents';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import type { Agent } from '@/types';
 
@@ -15,8 +15,8 @@ export default function AgentsPage() {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetchAgents();
-        setAgents(response.data);
+        const data = await fetchAgents();
+        setAgents(data);
       } catch (err) {
         setError('Não foi possível carregar agentes.');
       } finally {
@@ -45,7 +45,7 @@ export default function AgentsPage() {
         ) : (
           <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {agents.map((agent) => (
-              <div key={agent.uuid} className="rounded-3xl border border-slate-800 bg-slate-900/80 p-6 shadow-xl shadow-slate-950/40">
+              <div key={agent.id} className="rounded-3xl border border-slate-800 bg-slate-900/80 p-6 shadow-xl shadow-slate-950/40">
                 <div className="flex items-center gap-4 mb-4">
                   {agent.displayIcon && (
                     <img src={agent.displayIcon} alt={agent.displayName} className="h-12 w-12 rounded-full object-cover" loading="lazy" />
@@ -63,7 +63,7 @@ export default function AgentsPage() {
                     <p className="text-sm font-medium text-slate-200 mb-2">Utilitários:</p>
                     <div className="space-y-2">
                       {agent.abilities.map((ability) => (
-                        <div key={ability.slot} className="flex items-center gap-2">
+                        <div key={ability.id} className="flex items-center gap-2">
                           {ability.displayIcon && (
                             <img src={ability.displayIcon} alt={ability.displayName} className="h-6 w-6 rounded" loading="lazy" />
                           )}

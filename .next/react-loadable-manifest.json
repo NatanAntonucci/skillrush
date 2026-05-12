@@ -14,17 +14,5 @@
   "..\\node_modules\\@supabase\\storage-js\\dist\\module\\lib\\helpers.js -> @supabase/node-fetch": {
     "id": "..\\node_modules\\@supabase\\storage-js\\dist\\module\\lib\\helpers.js -> @supabase/node-fetch",
     "files": []
-  },
-  "app\\upload\\page.tsx -> @/services/supabase/lineups": {
-    "id": "app\\upload\\page.tsx -> @/services/supabase/lineups",
-    "files": [
-      "static/chunks/_app-pages-browser_src_services_supabase_lineups_ts-_0f0d1.js"
-    ]
-  },
-  "hooks\\useLineups.ts -> @/services/supabase/lineups": {
-    "id": "hooks\\useLineups.ts -> @/services/supabase/lineups",
-    "files": [
-      "static/chunks/_app-pages-browser_src_services_supabase_lineups_ts-_0f0d0.js"
-    ]
   }
 }
