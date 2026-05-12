@@ -1,95 +1,125 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import { MapHotspot } from './MapHotspot';
+import { useMemo } from 'react';
+
 import { useLineupStore } from '@/stores/lineupStore';
+
 import { useLineups } from '@/hooks/useLineups';
-import { LineupDetailsModal } from '@/components/lineup/LineupDetailsModal';
-import type { Lineup } from '@/types';
+
+import { MapHotspot } from './MapHotspot';
 
 export default function InteractiveMap() {
-  const { selectedMap, selectedAgent } = useLineupStore();
+  const {
+    selectedMap,
+    selectedAgent,
+
+    selectedLineup,
+
+    setSelectedLineup,
+
+    syncFromLineup,
+  } = useLineupStore();
 
   const { lineups, loading, error } = useLineups({
     agentId: selectedAgent?.id,
     mapId: selectedMap?.id,
   });
 
-  const [activeLineup, setActiveLineup] = useState<Lineup | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  // ✅ MINIMAP REAL com fallback completo
-  const mapImage =
-    selectedMap?.displayIcon ||
-    selectedMap?.splash ||
-    'https://images.unsplash.com/photo-1593642532973-d31b6557fa68?auto=format&fit=crop&w=1400&q=80';
+  const activeMap =
+    selectedMap ??
+    selectedLineup?.map ??
+    null;
 
   const hotspots = useMemo(() => {
-    if (!selectedMap) return [];
-    return lineups.filter((item) => item.mapId === selectedMap.id);
-  }, [lineups, selectedMap]);
+    if (!activeMap) return [];
 
-  const handleHotspotClick = (lineup: Lineup) => {
-    setActiveLineup(lineup);
-    setIsModalOpen(true);
-  };
+    return lineups.filter(
+      (lineup) =>
+        lineup.mapId === activeMap.id,
+    );
+  }, [lineups, activeMap]);
+
+  const mapImage =
+    activeMap?.displayIcon ||
+    activeMap?.splash ||
+    '';
 
   return (
-    <div className="space-y-4 rounded-3xl border border-slate-800 bg-slate-950/90 p-4 shadow-inner shadow-slate-950/20">
+    <div className="space-y-4 rounded-3xl border border-slate-800 bg-slate-950/90 p-4">
 
       {/* HEADER */}
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex items-center justify-between">
         <div>
           <p className="text-sm uppercase tracking-[0.28em] text-slate-400">
-            Mapa interativo
+            Mapa Interativo
           </p>
+
           <h2 className="text-xl font-semibold text-white">
-            Posicione sua jogada
+            {activeMap?.displayName ??
+              'Selecione uma lineup'}
           </h2>
         </div>
 
-        <span className="rounded-full bg-slate-800 px-3 py-1 text-xs uppercase text-slate-300">
-          {selectedMap?.displayName ?? 'Selecione um mapa'}
-        </span>
+        {selectedLineup && (
+          <span className="rounded-full bg-cyan-500/10 px-3 py-1 text-xs text-cyan-300">
+            {selectedLineup.title}
+          </span>
+        )}
       </div>
 
-      {/* LOADING / ERROR */}
-      {loading ? (
-        <div className="aspect-video rounded-3xl border border-slate-800 bg-slate-900/50 flex items-center justify-center">
-          <p className="text-slate-400">Carregando hotspots...</p>
+      {/* EMPTY */}
+      {!activeMap && (
+        <div className="flex h-[420px] items-center justify-center rounded-3xl border border-dashed border-slate-700">
+          <p className="text-slate-400">
+            Selecione um mapa ou lineup.
+          </p>
         </div>
-      ) : error ? (
-        <div className="aspect-video rounded-3xl border border-slate-800 bg-slate-900/50 flex items-center justify-center">
-          <p className="text-rose-400">{error}</p>
-        </div>
-      ) : (
-        // MAPA
-        <div className="relative h-[420px] w-full overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/90 shadow-lg shadow-slate-950/30">
+      )}
 
-          {/* MINIMAP */}
+      {/* MAP */}
+      {activeMap && (
+        <div className="relative overflow-hidden rounded-3xl border border-slate-800 bg-slate-900 aspect-video">
+
+          {/* IMAGE */}
           <img
             src={mapImage}
-            alt={selectedMap?.displayName ?? 'Mapa Valorant'}
-            className="h-[650px] w-full object-contain opacity-95"
+            alt={activeMap.displayName}
+            className="w-full h-full object-contain"
           />
 
           {/* HOTSPOTS */}
-          {hotspots.length > 0 ? (
-            hotspots.map((hotspot) => (
-              <MapHotspot
-                key={hotspot.id}
-                label={hotspot.hotspot.label}
-                x={hotspot.hotspot.x}
-                y={hotspot.hotspot.y}
-                onClick={() => handleHotspotClick(hotspot)}
-              />
-            ))
-          ) : (
-            <div className="absolute inset-0 flex items-center justify-center bg-black/20">
-              <p className="text-slate-300 text-center">
-                {selectedMap
-                  ? 'Nenhuma lineup disponível para este mapa'
-                  : 'Selecione um mapa para ver hotspots'}
+          {!loading &&
+            !error &&
+            hotspots.map((lineup) => {
+              const active =
+                selectedLineup?.id === lineup.id;
+
+              return (
+                <MapHotspot
+                key={lineup.id}
+                x={lineup.hotspot.x}
+                y={lineup.hotspot.y}
+                abilityIcon={lineup.ability?.displayIcon}
+                isSelected={selectedLineup?.id === lineup.id}
+                onClick={() => setSelectedLineup(lineup)}
+                />
+              );
+            })}
+
+          {/* LOADING */}
+          {loading && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+              <p className="text-slate-300">
+                Carregando hotspots...
+              </p>
+            </div>
+          )}
+
+          {/* ERROR */}
+          {error && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+              <p className="text-rose-400">
+                {error}
               </p>
             </div>
           )}
@@ -97,19 +127,11 @@ export default function InteractiveMap() {
       )}
 
       {/* FOOTER */}
-      <p className="text-sm text-slate-400">
+      <div className="text-sm text-slate-400">
         {hotspots.length > 0
-          ? `${hotspots.length} hotspot(s) disponível(is) · Clique para ver detalhes`
-          : 'Clique em um hotspot para ver o vídeo da jogada e o contexto.'}
-      </p>
-
-      {/* MODAL */}
-      {isModalOpen && activeLineup && (
-        <LineupDetailsModal
-          lineup={activeLineup}
-          onClose={() => setIsModalOpen(false)}
-        />
-      )}
+          ? `${hotspots.length} lineup(s) encontrada(s)`
+          : 'Nenhuma lineup encontrada'}
+      </div>
     </div>
   );
 }

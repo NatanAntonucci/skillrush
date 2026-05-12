@@ -11,6 +11,8 @@ export interface Lineup {
 
   videoUrl: string;
 
+  imageUrl?: string;
+
   difficulty?: string;
 
   side?: string;

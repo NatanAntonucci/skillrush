@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState, type FormEvent, type MouseEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, type FormEvent, type MouseEvent } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { supabase } from '@/services/supabase/client';
@@ -122,9 +122,24 @@ export default function UploadPage() {
     setAbilityName(selectedAbility?.displayName ?? '');
   }, [selectedAbility]);
 
-  const handleMapClick = (event: MouseEvent<HTMLButtonElement>) => {
-    const rect = event.currentTarget.getBoundingClientRect();
+  const imgRef = useRef<HTMLImageElement | null>(null);
 
+  const handleMapClick = (event: MouseEvent<HTMLButtonElement>) => {
+    // Prefer to compute relative to the displayed image box (handles letterboxing from object-contain)
+    const imgEl = imgRef.current;
+    if (imgEl) {
+      const imgRect = imgEl.getBoundingClientRect();
+
+      const x = Math.round(((event.clientX - imgRect.left) / imgRect.width) * 100);
+      const y = Math.round(((event.clientY - imgRect.top) / imgRect.height) * 100);
+
+      setHotspotX(Math.min(100, Math.max(0, x)));
+      setHotspotY(Math.min(100, Math.max(0, y)));
+      return;
+    }
+
+    // Fallback to container if image not available
+    const rect = event.currentTarget.getBoundingClientRect();
     const x = Math.round(((event.clientX - rect.left) / rect.width) * 100);
     const y = Math.round(((event.clientY - rect.top) / rect.height) * 100);
 
@@ -277,11 +292,11 @@ export default function UploadPage() {
             placeholder="YouTube URL"
           />
 
-          <div className="relative rounded-xl overflow-hidden border border-slate-800">
+          <div className="relative rounded-xl overflow-hidden border border-slate-800" style={{ aspectRatio: '16 / 9' }}>
             {mapImage ? (
-              <img src={mapImage} className="h-[320px] w-full object-contain" />
+              <img ref={imgRef} src={mapImage} className="h-full w-full object-contain" />
             ) : (
-              <div className="h-[320px] flex items-center justify-center">
+              <div className="flex items-center justify-center h-full">
                 Selecione um mapa
               </div>
             )}

@@ -1,22 +1,18 @@
 'use client';
 
-import { useState } from 'react';
-
 import { useLineupStore } from '@/stores/lineupStore';
 import { useLineups } from '@/hooks/useLineups';
 
-import { LineupDetailsModal } from '@/components/lineup/LineupDetailsModal';
-
-import type { Lineup } from '@/types';
 
 export default function LineupList() {
   const {
-    selectedAgent,
-    selectedMap,
-    filters,
-    selectedDifficulty,
-    selectedSide,
-  } = useLineupStore();
+  selectedAgent,
+  selectedMap,
+  filters,
+  selectedDifficulty,
+  selectedSide,
+  syncFromLineup,
+} = useLineupStore();
 
   const { lineups, loading, error } = useLineups({
     agentId: selectedAgent?.id,
@@ -26,7 +22,6 @@ export default function LineupList() {
     abilities: filters,
   });
 
-  const [activeLineup, setActiveLineup] = useState<Lineup | null>(null);
 
   if (loading) {
     return (
@@ -67,7 +62,7 @@ export default function LineupList() {
         {lineups.map((lineup) => (
           <article
             key={lineup.id}
-            onClick={() => setActiveLineup(lineup)}
+            onClick={() => syncFromLineup(lineup)}
             className="group cursor-pointer rounded-3xl border border-slate-800 bg-slate-900/90 p-4 shadow-sm shadow-slate-950/20 transition hover:border-cyan-500/40 hover:bg-slate-900"
           >
             <div className="flex items-start justify-between gap-4">
@@ -87,10 +82,6 @@ export default function LineupList() {
             </div>
 
             <div className="mt-4 flex flex-wrap gap-2 text-xs text-slate-400">
-              <span className="rounded-full bg-slate-800 px-2 py-1">
-                #{lineup.hotspot.label}
-              </span>
-
               {lineup.difficulty && (
                 <span className="rounded-full bg-slate-800 px-2 py-1">
                   {lineup.difficulty}
@@ -107,12 +98,6 @@ export default function LineupList() {
         ))}
       </div>
 
-      {activeLineup && (
-        <LineupDetailsModal
-          lineup={activeLineup}
-          onClose={() => setActiveLineup(null)}
-        />
-      )}
     </>
   );
 }
