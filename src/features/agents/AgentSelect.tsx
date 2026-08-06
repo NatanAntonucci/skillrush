@@ -80,17 +80,16 @@ export function AgentSelect() {
       ) : error ? (
         <p className="text-sm text-rose-400">{error}</p>
       ) : (
-        <div className="overflow-x-auto">
-          <div className="flex gap-3 pb-2">
-            {filteredAgents.map((agent) => (
+        <div className="grid grid-cols-6 gap-2 sm:grid-cols-7 md:grid-cols-8 lg:grid-cols-9">
+          {filteredAgents.map((agent) => (
               <button
                 key={agent.id}
                 type="button"
                 onClick={() => setSelectedAgent(agent)}
-                className={`flex flex-col items-center gap-2 rounded-2xl border p-3 transition flex-shrink-0 ${
+                className={`flex flex-col items-center gap-1 rounded-xl transition ${
                   selectedAgent?.id === agent.id
-                    ? 'border-cyan-400 bg-cyan-500/10'
-                    : 'border-slate-800 bg-slate-900 hover:border-slate-600 hover:bg-slate-900/90'
+                    ? 'ring-2 ring-cyan-400 ring-offset-2 ring-offset-slate-950'
+                    : 'hover:opacity-80'
                 }`}
                 title={agent.displayName}
               >
@@ -98,22 +97,21 @@ export function AgentSelect() {
                   <img 
                     src={agent.displayIcon} 
                     alt={agent.displayName} 
-                    className="h-12 w-12 rounded-full object-cover border border-slate-700"
+                    className="h-10 w-10 rounded-lg object-cover"
                     loading="lazy" 
                   />
                 ) : (
-                  <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-slate-800 text-xs font-semibold text-slate-300">
+                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-slate-700 text-xs font-semibold text-slate-200">
                     {agent.displayName.slice(0, 2).toUpperCase()}
                   </span>
                 )}
-                <span className={`text-xs font-medium text-center max-w-[60px] leading-tight ${
-                  selectedAgent?.id === agent.id ? 'text-cyan-100' : 'text-slate-200'
+                <span className={`text-xs font-medium text-center leading-tight w-full px-1 truncate ${
+                  selectedAgent?.id === agent.id ? 'text-cyan-300' : 'text-slate-400'
                 }`}>
                   {agent.displayName}
                 </span>
               </button>
             ))}
-          </div>
         </div>
       )}
     </div>

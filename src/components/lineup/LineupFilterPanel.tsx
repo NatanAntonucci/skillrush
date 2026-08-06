@@ -3,8 +3,15 @@
 import { useLineupStore } from '@/stores/lineupStore';
 
 const utilityFilters = ['Smoke', 'Flash', 'Molotov', 'Recon', 'Crowd Control'];
-const difficultyOptions = ['Fácil', 'Médio', 'Difícil'];
-const sideOptions = ['Ataque', 'Defesa'] as const;
+const difficultyOptions = [
+  { label: 'Fácil', value: 'easy' },
+  { label: 'Médio', value: 'medium' },
+  { label: 'Difícil', value: 'hard' },
+] as const;
+const sideOptions = [
+  { label: 'Ataque', value: 'attack' },
+  { label: 'Defesa', value: 'defense' },
+] as const;
 
 export function LineupFilterPanel() {
   const {
@@ -43,16 +50,16 @@ export function LineupFilterPanel() {
           <div className="mt-3 flex flex-wrap gap-2">
             {difficultyOptions.map((difficulty) => (
               <button
-                key={difficulty}
+                key={difficulty.value}
                 type="button"
-                onClick={() => setSelectedDifficulty(selectedDifficulty === difficulty ? null : difficulty)}
+                onClick={() => setSelectedDifficulty(selectedDifficulty === difficulty.value ? null : difficulty.value)}
                 className={`rounded-2xl border px-4 py-2 text-sm transition ${
-                  selectedDifficulty === difficulty
+                  selectedDifficulty === difficulty.value
                     ? 'border-cyan-400 bg-cyan-500/15 text-cyan-100'
                     : 'border-slate-800 bg-slate-900 text-slate-300 hover:border-slate-600 hover:bg-slate-900/90'
                 }`}
               >
-                {difficulty}
+                {difficulty.label}
               </button>
             ))}
           </div>
@@ -63,16 +70,16 @@ export function LineupFilterPanel() {
           <div className="mt-3 flex flex-wrap gap-2">
             {sideOptions.map((side) => (
               <button
-                key={side}
+                key={side.value}
                 type="button"
-                onClick={() => setSelectedSide(selectedSide === side ? null : side)}
+                onClick={() => setSelectedSide(selectedSide === side.value ? null : side.value)}
                 className={`rounded-2xl border px-4 py-2 text-sm transition ${
-                  selectedSide === side
+                  selectedSide === side.value
                     ? 'border-violet-400 bg-violet-500/15 text-violet-100'
                     : 'border-slate-800 bg-slate-900 text-slate-300 hover:border-slate-600 hover:bg-slate-900/90'
                 }`}
               >
-                {side}
+                {side.label}
               </button>
             ))}
           </div>

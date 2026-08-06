@@ -6,9 +6,6 @@ import type { Lineup } from '@/types';
 interface UseLineupsOptions {
   agentId?: string;
   mapId?: string;
-  difficulty?: string | null;
-  side?: string | null;
-  abilities?: string[];
 }
 
 export function useLineups(options?: UseLineupsOptions) {
@@ -25,9 +22,6 @@ export function useLineups(options?: UseLineupsOptions) {
         const data = await fetchLineups({
           agentId: options?.agentId,
           mapId: options?.mapId,
-          difficulty: options?.difficulty,
-          side: options?.side,
-          abilities: options?.abilities,
         });
         setLineups(data);
       } catch (err) {
@@ -38,13 +32,7 @@ export function useLineups(options?: UseLineupsOptions) {
     }
 
     loadLineups();
-  }, [
-    options?.agentId,
-    options?.mapId,
-    options?.difficulty,
-    options?.side,
-    options?.abilities?.join(','),
-  ]);
+  }, [options?.agentId, options?.mapId]);
 
   return { lineups, loading, error };
 }

@@ -21,8 +21,8 @@ export default function InteractiveMap() {
   } = useLineupStore();
 
   const { lineups, loading, error } = useLineups({
-    agentId: selectedAgent?.id,
-    mapId: selectedMap?.id,
+    agentId: selectedAgent?.id ?? selectedLineup?.agentId,
+    mapId: selectedMap?.id ?? selectedLineup?.mapId,
   });
 
   const activeMap =
@@ -66,7 +66,6 @@ export default function InteractiveMap() {
           </span>
         )}
       </div>
-
       {/* EMPTY */}
       {!activeMap && (
         <div className="flex h-[420px] items-center justify-center rounded-3xl border border-dashed border-slate-700">
@@ -96,12 +95,12 @@ export default function InteractiveMap() {
 
               return (
                 <MapHotspot
-                key={lineup.id}
-                x={lineup.hotspot.x}
-                y={lineup.hotspot.y}
-                abilityIcon={lineup.ability?.displayIcon}
-                isSelected={selectedLineup?.id === lineup.id}
-                onClick={() => setSelectedLineup(lineup)}
+                  key={lineup.id}
+                  x={lineup.hotspot.x}
+                  y={lineup.hotspot.y}
+                  abilityIcon={lineup.ability?.displayIcon}
+                  isSelected={selectedLineup?.id === lineup.id}
+                  onClick={() => syncFromLineup(lineup)}
                 />
               );
             })}

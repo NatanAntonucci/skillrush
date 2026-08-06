@@ -1,103 +1,104 @@
 'use client';
 
-import { useLineupStore } from '@/stores/lineupStore';
+import { useMemo } from 'react';
 import { useLineups } from '@/hooks/useLineups';
+import { useLineupStore } from '@/stores/lineupStore';
+import { classNames } from '@/utils/classNames';
 
-
-export default function LineupList() {
+export function LineupList() {
   const {
-  selectedAgent,
-  selectedMap,
-  filters,
-  selectedDifficulty,
-  selectedSide,
-  syncFromLineup,
-} = useLineupStore();
+    selectedLineup,
+    filters,
+    selectedDifficulty,
+    selectedSide,
+    selectedAgent,
+    selectedMap,
+    syncFromLineup,
+  } = useLineupStore();
 
   const { lineups, loading, error } = useLineups({
-    agentId: selectedAgent?.id,
-    mapId: selectedMap?.id,
-    difficulty: selectedDifficulty,
-    side: selectedSide,
-    abilities: filters,
+    agentId: selectedAgent?.id ?? selectedLineup?.agentId,
+    mapId: selectedMap?.id ?? selectedLineup?.mapId,
   });
 
+  const visibleLineups = useMemo(() => {
+    const filtered = lineups.filter((lineup) => {
+      if (selectedDifficulty && lineup.difficulty !== selectedDifficulty) {
+        return false;
+      }
+      if (selectedSide && lineup.side !== selectedSide) {
+        return false;
+      }
+      if (filters.length > 0) {
+        return filters.every((filter) => lineup.abilityName?.toLowerCase().includes(filter.toLowerCase()));
+      }
+      return true;
+    });
+
+    if (!selectedLineup) {
+      return filtered;
+    }
+
+    const selectedVisible = filtered.some((lineup) => lineup.id === selectedLineup.id);
+    return selectedVisible ? filtered : [selectedLineup, ...filtered];
+  }, [lineups, selectedDifficulty, selectedSide, filters, selectedLineup]);
 
   if (loading) {
-    return (
-      <div className="space-y-4">
-        {[...Array(3)].map((_, i) => (
-          <div
-            key={i}
-            className="animate-pulse rounded-3xl border border-slate-800 bg-slate-900/90 p-4 h-24"
-          />
-        ))}
-      </div>
-    );
+    return <div className="p-4 text-center opacity-50 text-sm">Carregando táticas...</div>;
   }
 
   if (error) {
     return (
-      <div className="rounded-3xl border border-rose-800/30 bg-rose-950/20 p-6 text-rose-400">
-        <p className="text-sm">{error}</p>
+      <div className="rounded-2xl border border-rose-800/30 bg-rose-950/20 p-4 text-sm text-rose-300">
+        {error}
       </div>
     );
   }
 
-  if (lineups.length === 0) {
+  if (visibleLineups.length === 0) {
     return (
       <div className="rounded-3xl border border-dashed border-slate-700 bg-slate-950/80 p-6 text-slate-400">
         <p className="text-sm">
-          {selectedAgent && selectedMap
+          {selectedAgent || selectedMap
             ? 'Nenhuma lineup encontrada com os filtros atuais.'
-            : 'Selecione agente e mapa para visualizar lineups.'}
+            : 'Selecione agente e mapa para ver lineups.'}
         </p>
       </div>
     );
   }
 
   return (
-    <>
-      <div className="space-y-4">
-        {lineups.map((lineup) => (
-          <article
-            key={lineup.id}
-            onClick={() => syncFromLineup(lineup)}
-            className="group cursor-pointer rounded-3xl border border-slate-800 bg-slate-900/90 p-4 shadow-sm shadow-slate-950/20 transition hover:border-cyan-500/40 hover:bg-slate-900"
-          >
-            <div className="flex items-start justify-between gap-4">
-              <div className="flex-1">
-                <h3 className="text-lg font-semibold text-white transition group-hover:text-cyan-100">
-                  {lineup.title}
-                </h3>
-
-                <p className="mt-2 text-sm text-slate-400 line-clamp-2">
-                  {lineup.description}
-                </p>
+    <div className="space-y-2 p-2">
+      {visibleLineups.map((lineup) => (
+        <button
+          key={lineup.id}
+          onClick={() => syncFromLineup(lineup)}
+          className={classNames(
+            "w-full text-left p-3 rounded-xl border transition-all duration-200 group",
+            selectedLineup?.id === lineup.id
+              ? "bg-primary/10 border-primary shadow-sm"
+              : "bg-white/5 border-transparent hover:bg-white/10"
+          )}
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-black/40 rounded flex items-center justify-center p-1">
+               {lineup.ability?.displayIcon && (
+                 <img src={lineup.ability.displayIcon} alt="" className="w-full h-full object-contain" />
+               )}
+            </div>
+            <div className="flex-1 min-w-0">
+              <h3 className="text-xs font-bold truncate group-hover:text-primary transition-colors">
+                {lineup.title}
+              </h3>
+              <div className="flex gap-2 mt-1 opacity-60">
+                <span className="text-[9px] uppercase tracking-tighter">{lineup.difficulty}</span>
+                <span className="text-[9px]">•</span>
+                <span className="text-[9px] uppercase tracking-tighter">{lineup.side}</span>
               </div>
-
-              <span className="rounded-full bg-cyan-500/20 px-3 py-1 text-xs uppercase text-cyan-300">
-                {lineup.abilityName}
-              </span>
             </div>
-
-            <div className="mt-4 flex flex-wrap gap-2 text-xs text-slate-400">
-              {lineup.difficulty && (
-                <span className="rounded-full bg-slate-800 px-2 py-1">
-                  {lineup.difficulty}
-                </span>
-              )}
-
-              {lineup.side && (
-                <span className="rounded-full bg-slate-800 px-2 py-1">
-                  {lineup.side}
-                </span>
-              )}
-            </div>
-          </article>
-        ))}
-      </div>
-
-    </>
+          </div>
+        </button>
+      ))}
+    </div>
   );
 }

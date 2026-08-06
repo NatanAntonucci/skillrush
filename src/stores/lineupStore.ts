@@ -34,6 +34,8 @@ interface LineupState {
 
   toggleFilter: (filter: string) => void;
 
+  clearSelectedLineup: () => void;
+
   resetFilters: () => void;
 
   syncFromLineup: (lineup: Lineup) => void;
@@ -129,6 +131,9 @@ export const useLineupStore = create<LineupState>((set) => ({
         : [...state.filters, filter],
     })),
 
+  clearSelectedLineup: () =>
+    set({ selectedLineup: null }),
+
   resetFilters: () =>
     set({
       filters: [],
@@ -143,15 +148,10 @@ export const useLineupStore = create<LineupState>((set) => ({
   syncFromLineup: (lineup) =>
     set({
       selectedLineup: lineup,
-
       selectedAgent: lineup.agent ?? null,
-
       selectedMap: lineup.map ?? null,
-
       selectedDifficulty: lineup.difficulty ?? null,
-
       selectedSide: lineup.side ?? null,
-
       filters: lineup.abilityName
         ? [lineup.abilityName]
         : [],
