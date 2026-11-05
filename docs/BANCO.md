@@ -43,7 +43,8 @@ Espelho de `auth.users` com o papel do usuário. Criado por trigger no cadastro.
 | `reviewed_by`, `reviewed_at` | uuid / timestamptz | moderação |
 | `created_at`, `updated_at` | timestamptz | |
 
-Índices: `(map_id, agent_id, status)`, `(status, created_at desc)`, `slug`, `video_url` (unique).
+Índices: `slug` (unique), `(map_id, agent_id, status)`, `(status, created_at desc)`, `author_id`, `video_url`
+(“video_url” não é unique — o mesmo vídeo pode servir para mais de uma lineup; a moderação evita duplicata).
 
 ## Row Level Security
 
