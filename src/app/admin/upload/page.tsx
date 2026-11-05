@@ -1,23 +1,30 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState, type FormEvent, type MouseEvent } from 'react';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
-import { supabase } from '@/services/supabase/client';
 import { fetchAgents } from '@/services/supabase/agents';
 import { fetchMaps } from '@/services/supabase/maps';
 import { fetchAbilitiesByAgent } from '@/services/supabase/abilities';
+import { createLineup } from '@/services/supabase/lineups';
+import { useAdmin } from '@/hooks/useAdmin';
+import { pointToPercentage } from '@/utils/video';
 
 import type { Agent, Ability, MapData } from '@/types';
 
-const difficultyOptions = ['easy', 'medium', 'hard'];
-const sideOptions = ['attack', 'defense'];
-const uploadEnabled = process.env.NEXT_PUBLIC_UPLOAD_ENABLED !== 'false';
+const difficultyOptions = [
+  { value: 'easy', label: 'Fácil' },
+  { value: 'medium', label: 'Médio' },
+  { value: 'hard', label: 'Difícil' },
+];
+
+const sideOptions = [
+  { value: 'attack', label: 'Ataque' },
+  { value: 'defense', label: 'Defesa' },
+];
 
 export default function UploadPage() {
-  const router = useRouter();
-
-  const [loadingAuth, setLoadingAuth] = useState(true);
+  const admin = useAdmin();
 
   const [agents, setAgents] = useState<Agent[]>([]);
   const [maps, setMaps] = useState<MapData[]>([]);
@@ -29,8 +36,8 @@ export default function UploadPage() {
   const [abilityId, setAbilityId] = useState('');
   const [abilityName, setAbilityName] = useState('');
 
-  const [difficulty, setDifficulty] = useState(difficultyOptions[0]);
-  const [side, setSide] = useState(sideOptions[0]);
+  const [difficulty, setDifficulty] = useState(difficultyOptions[0].value);
+  const [side, setSide] = useState(sideOptions[0].value);
 
   const [description, setDescription] = useState('');
   const [videoUrl, setVideoUrl] = useState('');
@@ -40,54 +47,34 @@ export default function UploadPage() {
   const [hotspotY, setHotspotY] = useState(50);
 
   const [status, setStatus] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const imgRef = useRef<HTMLImageElement | null>(null);
 
   const selectedMap = useMemo(
     () => maps.find((map) => map.id === mapId) ?? null,
     [maps, mapId],
   );
 
-  const mapImage =
-    selectedMap?.displayIcon ||
-    selectedMap?.splash ||
-    '';
+  const mapImage = selectedMap?.displayIcon || selectedMap?.splash || '';
 
-  // 🔐 AUTH GUARD (ESSENCIAL)
   useEffect(() => {
-    const checkAuth = async () => {
-      const { data } = await supabase.auth.getUser();
+    if (!admin.isAdmin) return;
 
-      if (!data.user) {
-        router.push('/admin/login');
-        return;
-      }
-
-      setLoadingAuth(false);
-    };
-
-    checkAuth();
-  }, [router]);
-
-  // LOAD INITIAL DATA
-  useEffect(() => {
     async function loadData() {
       try {
-        const [agentData, mapData] = await Promise.all([
-          fetchAgents(),
-          fetchMaps(),
-        ]);
-
+        const [agentData, mapData] = await Promise.all([fetchAgents(), fetchMaps()]);
         setAgents(agentData);
         setMaps(mapData.filter((item) => item.displayName !== 'Menu'));
       } catch {
-        setStatus('Erro ao carregar agentes ou mapas.');
+        setError('Erro ao carregar agentes ou mapas.');
       }
     }
 
     loadData();
-  }, []);
+  }, [admin.isAdmin]);
 
-  // LOAD ABILITIES
   useEffect(() => {
     if (!agentId) {
       setAbilities([]);
@@ -106,7 +93,7 @@ export default function UploadPage() {
           setAbilityName('');
         }
       } catch {
-        setStatus('Erro ao carregar utilitários do agente.');
+        setError('Erro ao carregar utilitários do agente.');
       }
     }
 
@@ -114,7 +101,7 @@ export default function UploadPage() {
   }, [agentId, abilityId]);
 
   const selectedAbility = useMemo(
-    () => abilities.find((a) => a.id === abilityId) ?? null,
+    () => abilities.find((ability) => ability.id === abilityId) ?? null,
     [abilities, abilityId],
   );
 
@@ -122,65 +109,32 @@ export default function UploadPage() {
     setAbilityName(selectedAbility?.displayName ?? '');
   }, [selectedAbility]);
 
-  const imgRef = useRef<HTMLImageElement | null>(null);
+  function handleMapClick(event: MouseEvent<HTMLDivElement>) {
+    const image = imgRef.current;
+    if (!image) return;
 
-  const handleMapClick = (event: MouseEvent<HTMLButtonElement>) => {
-    // Prefer to compute relative to the displayed image box (handles letterboxing from object-contain)
-    const imgEl = imgRef.current;
-    if (imgEl) {
-      const imgRect = imgEl.getBoundingClientRect();
+    const point = pointToPercentage(event.clientX, event.clientY, image);
+    if (!point) return;
 
-      const x = Math.round(((event.clientX - imgRect.left) / imgRect.width) * 100);
-      const y = Math.round(((event.clientY - imgRect.top) / imgRect.height) * 100);
+    setHotspotX(point.x);
+    setHotspotY(point.y);
+  }
 
-      setHotspotX(Math.min(100, Math.max(0, x)));
-      setHotspotY(Math.min(100, Math.max(0, y)));
-      return;
-    }
-
-    // Fallback to container if image not available
-    const rect = event.currentTarget.getBoundingClientRect();
-    const x = Math.round(((event.clientX - rect.left) / rect.width) * 100);
-    const y = Math.round(((event.clientY - rect.top) / rect.height) * 100);
-
-    setHotspotX(Math.min(100, Math.max(0, x)));
-    setHotspotY(Math.min(100, Math.max(0, y)));
-  };
-
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setStatus(null);
-    setIsSubmitting(true);
-
-    if (!uploadEnabled) {
-      setStatus('Upload desativado.');
-      setIsSubmitting(false);
-      return;
-    }
+    setError(null);
 
     if (!title || !agentId || !mapId || !abilityId || !description || !videoUrl) {
-      setStatus('Preencha todos os campos obrigatórios.');
-      setIsSubmitting(false);
+      setError('Preencha todos os campos obrigatórios.');
       return;
     }
 
+    setIsSubmitting(true);
+
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-
-      if (!session?.access_token) {
-        setStatus('Sessão expirada. Faça login novamente.');
-        setIsSubmitting(false);
-        router.push('/admin/login');
-        return;
-      }
-
-      const response = await fetch('/api/lineups', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.access_token}`,
-        },
-        body: JSON.stringify({
+      await createLineup(
+        {
           title,
           agentId,
           mapId,
@@ -190,20 +144,12 @@ export default function UploadPage() {
           videoUrl,
           difficulty,
           side,
-          hotspot: {
-            x: hotspotX,
-            y: hotspotY,
-            label: hotspotLabel,
-          },
-        }),
-      });
+          hotspot: { x: hotspotX, y: hotspotY, label: hotspotLabel },
+        },
+        { status: 'approved' },
+      );
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Erro ao enviar lineup');
-      }
-
-      setStatus('Lineup enviada com sucesso!');
+      setStatus('Lineup publicada com sucesso.');
 
       setTitle('');
       setAgentId('');
@@ -216,125 +162,186 @@ export default function UploadPage() {
       setHotspotX(50);
       setHotspotY(50);
       setAbilities([]);
-    } catch (error) {
-      setStatus(error instanceof Error ? error.message : 'Erro ao enviar.');
+    } catch (submitError) {
+      setError(submitError instanceof Error ? submitError.message : 'Erro ao publicar.');
     } finally {
       setIsSubmitting(false);
     }
-  };
+  }
 
-  // 🔐 LOADING AUTH
-  if (loadingAuth) {
+  if (admin.loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white">
+      <main className="flex min-h-screen items-center justify-center bg-slate-950 text-white">
         Verificando acesso...
-      </div>
+      </main>
+    );
+  }
+
+  if (!admin.isAdmin) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-slate-950 px-6 text-center text-white">
+        <div className="max-w-md space-y-4">
+          <h1 className="text-xl font-semibold">Acesso restrito</h1>
+          <p className="text-sm text-slate-400">
+            Esta área é exclusiva para administradores e moderadores.
+          </p>
+          <Link
+            href="/admin"
+            className="inline-block rounded-xl bg-cyan-500 px-5 py-2.5 text-sm font-semibold text-slate-950 transition hover:bg-cyan-400"
+          >
+            Ir para o login
+          </Link>
+        </div>
+      </main>
     );
   }
 
   return (
     <main className="min-h-screen bg-slate-950 text-slate-100">
-      <section className="mx-auto max-w-6xl px-6 py-10">
+      <section className="mx-auto max-w-4xl px-6 py-10">
+        <header className="mb-6">
+          <p className="text-xs uppercase tracking-[0.28em] text-slate-500">Admin</p>
+          <h1 className="mt-2 text-2xl font-semibold">Nova lineup</h1>
+          <p className="mt-1 text-sm text-slate-400">
+            Publicada como {admin.role === 'admin' ? 'administrador' : 'moderador'} • {admin.email}
+          </p>
+        </header>
 
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-6 rounded-3xl border border-slate-800 bg-slate-900/80 p-6"
-        >
-
+        <form onSubmit={handleSubmit} className="space-y-5 rounded-3xl border border-slate-800 bg-slate-900/80 p-6">
           <input
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="w-full p-3 bg-slate-950 rounded-xl"
-            placeholder="Título"
+            onChange={(event) => setTitle(event.target.value)}
+            className="w-full rounded-xl bg-slate-950 p-3 outline-none ring-1 ring-slate-800 focus:ring-cyan-500"
+            placeholder="Título (ex.: Smoke A-site da base)"
+            maxLength={120}
           />
 
-          <div className="grid grid-cols-2 gap-4">
-            <select value={agentId} onChange={(e) => setAgentId(e.target.value)} className="p-3 bg-slate-950 rounded-xl">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <select
+              value={agentId}
+              onChange={(event) => setAgentId(event.target.value)}
+              className="rounded-xl bg-slate-950 p-3 outline-none ring-1 ring-slate-800 focus:ring-cyan-500"
+            >
               <option value="">Agente</option>
-              {agents.map((a) => (
-                <option key={a.id} value={a.id}>{a.displayName}</option>
+              {agents.map((agent) => (
+                <option key={agent.id} value={agent.id}>{agent.displayName}</option>
               ))}
             </select>
 
-            <select value={mapId} onChange={(e) => setMapId(e.target.value)} className="p-3 bg-slate-950 rounded-xl">
+            <select
+              value={mapId}
+              onChange={(event) => setMapId(event.target.value)}
+              className="rounded-xl bg-slate-950 p-3 outline-none ring-1 ring-slate-800 focus:ring-cyan-500"
+            >
               <option value="">Mapa</option>
-              {maps.map((m) => (
-                <option key={m.id} value={m.id}>{m.displayName}</option>
+              {maps.map((map) => (
+                <option key={map.id} value={map.id}>{map.displayName}</option>
               ))}
             </select>
           </div>
 
-          <select value={abilityId} onChange={(e) => setAbilityId(e.target.value)} className="w-full p-3 bg-slate-950 rounded-xl">
+          <select
+            value={abilityId}
+            onChange={(event) => setAbilityId(event.target.value)}
+            className="w-full rounded-xl bg-slate-950 p-3 outline-none ring-1 ring-slate-800 focus:ring-cyan-500"
+          >
             <option value="">Habilidade</option>
-            {abilities.map((a) => (
-              <option key={a.id} value={a.id}>{a.displayName}</option>
+            {abilities.map((ability) => (
+              <option key={ability.id} value={ability.id}>{ability.displayName}</option>
             ))}
           </select>
 
-          <div className="grid grid-cols-2 gap-4">
-            <select value={difficulty} onChange={(e) => setDifficulty(e.target.value)} className="p-3 bg-slate-950 rounded-xl">
-              {difficultyOptions.map((d) => (
-                <option key={d} value={d}>{d}</option>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <select
+              value={difficulty}
+              onChange={(event) => setDifficulty(event.target.value)}
+              className="rounded-xl bg-slate-950 p-3 outline-none ring-1 ring-slate-800 focus:ring-cyan-500"
+            >
+              {difficultyOptions.map((option) => (
+                <option key={option.value} value={option.value}>{option.label}</option>
               ))}
             </select>
 
-            <select value={side} onChange={(e) => setSide(e.target.value)} className="p-3 bg-slate-950 rounded-xl">
-              {sideOptions.map((s) => (
-                <option key={s} value={s}>{s}</option>
+            <select
+              value={side}
+              onChange={(event) => setSide(event.target.value)}
+              className="rounded-xl bg-slate-950 p-3 outline-none ring-1 ring-slate-800 focus:ring-cyan-500"
+            >
+              {sideOptions.map((option) => (
+                <option key={option.value} value={option.value}>{option.label}</option>
               ))}
             </select>
           </div>
 
           <input
             value={videoUrl}
-            onChange={(e) => setVideoUrl(e.target.value)}
-            className="w-full p-3 bg-slate-950 rounded-xl"
-            placeholder="YouTube URL"
+            onChange={(event) => setVideoUrl(event.target.value)}
+            className="w-full rounded-xl bg-slate-950 p-3 outline-none ring-1 ring-slate-800 focus:ring-cyan-500"
+            placeholder="URL do vídeo (YouTube, Twitch, Streamable)"
           />
 
-          <div className="relative rounded-xl overflow-hidden border border-slate-800" style={{ aspectRatio: '16 / 9' }}>
-            {mapImage ? (
-              <img ref={imgRef} src={mapImage} className="h-full w-full object-contain" />
-            ) : (
-              <div className="flex items-center justify-center h-full">
-                Selecione um mapa
-              </div>
-            )}
+          <div>
+            <p className="mb-2 text-sm text-slate-400">
+              Clique no mapa para marcar onde a lineup acontece
+              {selectedMap ? ` (${hotspotX}%, ${hotspotY}%)` : ''}
+            </p>
 
-            <button
-              type="button"
+            <div
+              className="relative cursor-crosshair overflow-hidden rounded-xl border border-slate-800 bg-slate-950"
+              style={{ aspectRatio: '16 / 9' }}
               onClick={handleMapClick}
-              className="absolute inset-0"
-            />
+            >
+              {mapImage ? (
+                <img
+                  ref={imgRef}
+                  src={mapImage}
+                  alt={selectedMap?.displayName ?? 'Mapa'}
+                  className="pointer-events-none h-full w-full object-contain select-none"
+                />
+              ) : (
+                <div className="flex h-full items-center justify-center text-sm text-slate-500">
+                  Selecione um mapa
+                </div>
+              )}
 
-            {selectedMap && (
-              <span
-                className="absolute -translate-x-1/2 -translate-y-1/2 bg-cyan-500 px-3 py-1 rounded-full text-black text-xs"
-                style={{ left: `${hotspotX}%`, top: `${hotspotY}%` }}
-              >
-                {hotspotLabel}
-              </span>
-            )}
+              {selectedMap && (
+                <span
+                  className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-500 px-3 py-1 text-xs font-bold text-black"
+                  style={{ left: `${hotspotX}%`, top: `${hotspotY}%` }}
+                >
+                  {hotspotLabel}
+                </span>
+              )}
+            </div>
+
+            <input
+              value={hotspotLabel}
+              onChange={(event) => setHotspotLabel(event.target.value.slice(0, 3).toUpperCase())}
+              className="mt-3 w-24 rounded-xl bg-slate-950 p-2 text-center outline-none ring-1 ring-slate-800 focus:ring-cyan-500"
+              placeholder="A"
+              aria-label="Rótulo do hotspot"
+            />
           </div>
 
           <textarea
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="w-full p-3 bg-slate-950 rounded-xl"
-            placeholder="Descrição"
+            onChange={(event) => setDescription(event.target.value)}
+            className="min-h-[110px] w-full rounded-xl bg-slate-950 p-3 outline-none ring-1 ring-slate-800 focus:ring-cyan-500"
+            placeholder="Como executar, de onde jogar, referências visuais…"
+            maxLength={2000}
           />
 
           <button
+            type="submit"
             disabled={isSubmitting}
-            className="bg-cyan-500 text-black px-6 py-3 rounded-xl"
+            className="rounded-xl bg-cyan-500 px-6 py-3 font-semibold text-slate-950 transition hover:bg-cyan-400 disabled:opacity-50"
           >
-            {isSubmitting ? 'Enviando...' : 'Enviar'}
+            {isSubmitting ? 'Publicando...' : 'Publicar lineup'}
           </button>
 
-          {status && <p className="text-sm text-slate-300">{status}</p>}
-
+          {status && <p className="text-sm text-emerald-400">{status}</p>}
+          {error && <p className="text-sm text-rose-400">{error}</p>}
         </form>
-
       </section>
     </main>
   );

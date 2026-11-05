@@ -1,6 +1,6 @@
 import { supabase } from './client';
 
-import type { Lineup } from '@/types';
+import type { Lineup, LineupStatus } from '@/types';
 
 interface LineupFilters {
   agentId?: string;
@@ -8,10 +8,11 @@ interface LineupFilters {
   difficulty?: string | null;
   side?: string | null;
   abilities?: string[];
+  status?: LineupStatus | 'all';
   limit?: number;
 }
 
-interface CreateLineupPayload {
+export interface CreateLineupInput {
   title: string;
   agentId: string;
   mapId: string;
@@ -19,9 +20,8 @@ interface CreateLineupPayload {
   abilityName: string;
   description: string;
   videoUrl: string;
-  difficulty?: string;
-  side?: string;
-
+  difficulty: string;
+  side: string;
   hotspot: {
     x: number;
     y: number;
@@ -29,15 +29,77 @@ interface CreateLineupPayload {
   };
 }
 
+const LINEUP_SELECT = `
+  *,
+  agent:agents(*),
+  map:maps(*),
+  ability:abilities(*)
+`;
+
+function mapLineup(row: any): Lineup {
+  return {
+    id: row.id,
+    slug: row.slug,
+    title: row.title,
+    description: row.description,
+    videoUrl: row.video_url,
+    difficulty: row.difficulty,
+    side: row.side,
+    status: row.status,
+    authorId: row.author_id ?? null,
+    createdAt: row.created_at ?? null,
+    hotspot: {
+      x: row.hotspot_x,
+      y: row.hotspot_y,
+      label: row.hotspot_label,
+    },
+    agentId: row.agent_id,
+    mapId: row.map_id,
+    abilityId: row.ability_id,
+    abilityName: row.ability_name,
+    agent: row.agent
+      ? {
+          id: row.agent.id,
+          displayName: row.agent.display_name,
+          displayIcon: row.agent.display_icon,
+          description: row.agent.description,
+          role: row.agent.role_display_name
+            ? {
+                displayName: row.agent.role_display_name,
+                displayIcon: row.agent.role_display_icon,
+              }
+            : null,
+        }
+      : undefined,
+    map: row.map
+      ? {
+          id: row.map.id,
+          displayName: row.map.display_name,
+          listViewIcon: row.map.list_view_icon,
+          splash: row.map.splash,
+          displayIcon: row.map.display_icon,
+          isCompetitive: row.map.is_competitive,
+        }
+      : undefined,
+    ability: row.ability
+      ? {
+          id: row.ability.id,
+          agentId: row.ability.agent_id,
+          slot: row.ability.slot,
+          displayName: row.ability.display_name,
+          displayIcon: row.ability.display_icon,
+        }
+      : undefined,
+  };
+}
+
 export async function fetchLineups(filters?: LineupFilters) {
-  let query = supabase
-    .from('lineups')
-    .select(`
-      *,
-      agent:agents(*),
-      map:maps(*),
-      ability:abilities(*)
-    `);
+  let query = supabase.from('lineups').select(LINEUP_SELECT);
+
+  const status = filters?.status ?? 'approved';
+  if (status !== 'all') {
+    query = query.eq('status', status);
+  }
 
   if (filters?.agentId) {
     query = query.eq('agent_id', filters.agentId);
@@ -61,116 +123,67 @@ export async function fetchLineups(filters?: LineupFilters) {
 
   query = query
     .order('created_at', { ascending: false })
-    .limit(filters?.limit ?? 50);
+    .limit(filters?.limit ?? 200);
 
   const { data, error } = await query;
 
   if (error) {
-    throw new Error(`Failed to fetch lineups: ${error.message}`);
+    throw new Error(`Falha ao carregar lineups: ${error.message}`);
   }
 
-  return (data || []).map((lineup: any) => ({
-    id: lineup.id,
-
-    title: lineup.title,
-
-    description: lineup.description,
-
-    videoUrl: lineup.video_url,
-
-    difficulty: lineup.difficulty,
-
-    side: lineup.side,
-
-    hotspot: {
-      x: lineup.hotspot_x,
-      y: lineup.hotspot_y,
-      label: lineup.hotspot_label,
-    },
-
-    agentId: lineup.agent_id,
-
-    mapId: lineup.map_id,
-
-    abilityId: lineup.ability_id,
-
-    abilityName: lineup.ability_name,
-
-    agent: lineup.agent
-      ? {
-          id: lineup.agent.id,
-          displayName: lineup.agent.display_name,
-          displayIcon: lineup.agent.display_icon,
-          description: lineup.agent.description,
-        }
-      : undefined,
-
-    map: lineup.map
-      ? {
-          id: lineup.map.id,
-          displayName: lineup.map.display_name,
-          listViewIcon: lineup.map.list_view_icon,
-          splash: lineup.map.splash,
-          displayIcon: lineup.map.display_icon,
-        }
-      : undefined,
-
-    ability: lineup.ability
-      ? {
-          id: lineup.ability.id,
-          agentId: lineup.ability.agent_id,
-          slot: lineup.ability.slot,
-          displayName: lineup.ability.display_name,
-          displayIcon: lineup.ability.display_icon,
-        }
-      : undefined,
-  })) as Lineup[];
+  return (data || []).map(mapLineup);
 }
 
-export async function createLineup(payload: CreateLineupPayload) {
+/**
+ * Cria uma lineup direto no Supabase, autenticado pela sessão do usuário.
+ * A permissão é aplicada pelo RLS: admin/moderador insere `approved`,
+ * usuário comum só consegue inserir `pending`.
+ */
+export async function createLineup(
+  input: CreateLineupInput,
+  options?: { status?: LineupStatus },
+) {
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  if (authError || !user) {
+    throw new Error('Sessão expirada. Faça login novamente.');
+  }
+
   const { data, error } = await supabase
     .from('lineups')
-    .insert([
-      {
-        title: payload.title,
-        agent_id: payload.agentId,
-        map_id: payload.mapId,
-        ability_id: payload.abilityId,
-        ability_name: payload.abilityName,
-        description: payload.description,
-        video_url: payload.videoUrl,
-        difficulty: payload.difficulty,
-        side: payload.side,
-        hotspot_x: payload.hotspot.x,
-        hotspot_y: payload.hotspot.y,
-        hotspot_label: payload.hotspot.label,
-      },
-    ])
-    .select()
+    .insert({
+      title: input.title.trim(),
+      agent_id: input.agentId,
+      map_id: input.mapId,
+      ability_id: input.abilityId,
+      ability_name: input.abilityName,
+      description: input.description.trim(),
+      video_url: input.videoUrl.trim(),
+      difficulty: input.difficulty,
+      side: input.side,
+      hotspot_x: input.hotspot.x,
+      hotspot_y: input.hotspot.y,
+      hotspot_label: input.hotspot.label,
+      author_id: user.id,
+      status: options?.status ?? 'pending',
+    })
+    .select(LINEUP_SELECT)
     .single();
 
   if (error) {
-    throw new Error(`Failed to create lineup: ${error.message}`);
+    throw new Error(`Não foi possível salvar a lineup: ${error.message}`);
   }
 
-  return data;
+  return mapLineup(data);
 }
 
-export async function fetchLineupById(id: string) {
-  const { data, error } = await supabase
-    .from('lineups')
-    .select(`
-      *,
-      agent:agents(*),
-      map:maps(*),
-      ability:abilities(*)
-    `)
-    .eq('id', id)
-    .single();
+export async function deleteLineup(id: string) {
+  const { error } = await supabase.from('lineups').delete().eq('id', id);
 
   if (error) {
-    throw new Error(`Failed to fetch lineup: ${error.message}`);
+    throw new Error(`Não foi possível excluir a lineup: ${error.message}`);
   }
-
-  return data;
 }

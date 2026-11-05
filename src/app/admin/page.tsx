@@ -88,12 +88,6 @@ export default function AdminLoginPage() {
           >
             Esqueceu a senha?
           </Link>
-          <Link
-            href="/admin/debug"
-            className="block text-center text-slate-500 hover:text-slate-400 text-xs mt-2"
-          >
-            Debug
-          </Link>
         </div>
       </form>
     </div>
