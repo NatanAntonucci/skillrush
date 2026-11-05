@@ -71,30 +71,53 @@ exception when duplicate_object then null;
 end $$;
 
 -- chaves estrangeiras para a metadata oficial
+-- Só cria se a coluna ainda não tiver nenhuma FK: em bancos que já tinham
+-- lineups_agent_id_fkey (criada pelo dashboard), duplicar quebra o PostgREST
+-- (erro PGRST201: "more than one relationship").
 do $$
 begin
-  alter table public.lineups
-    add constraint lineups_agent_fk foreign key (agent_id) references public.agents (id) not valid;
-exception when duplicate_object then null;
+  if not exists (
+    select 1
+    from pg_constraint c
+    join pg_attribute a on a.attrelid = c.conrelid and a.attnum = any (c.conkey)
+    where c.conrelid = 'public.lineups'::regclass
+      and c.contype = 'f'
+      and a.attname = 'agent_id'
+  ) then
+    alter table public.lineups
+      add constraint lineups_agent_fk foreign key (agent_id) references public.agents (id);
+  end if;
 end $$;
 
 do $$
 begin
-  alter table public.lineups
-    add constraint lineups_map_fk foreign key (map_id) references public.maps (id) not valid;
-exception when duplicate_object then null;
+  if not exists (
+    select 1
+    from pg_constraint c
+    join pg_attribute a on a.attrelid = c.conrelid and a.attnum = any (c.conkey)
+    where c.conrelid = 'public.lineups'::regclass
+      and c.contype = 'f'
+      and a.attname = 'map_id'
+  ) then
+    alter table public.lineups
+      add constraint lineups_map_fk foreign key (map_id) references public.maps (id);
+  end if;
 end $$;
 
 do $$
 begin
-  alter table public.lineups
-    add constraint lineups_ability_fk foreign key (ability_id) references public.abilities (id) not valid;
-exception when duplicate_object then null;
+  if not exists (
+    select 1
+    from pg_constraint c
+    join pg_attribute a on a.attrelid = c.conrelid and a.attnum = any (c.conkey)
+    where c.conrelid = 'public.lineups'::regclass
+      and c.contype = 'f'
+      and a.attname = 'ability_id'
+  ) then
+    alter table public.lineups
+      add constraint lineups_ability_fk foreign key (ability_id) references public.abilities (id);
+  end if;
 end $$;
-
-alter table public.lineups validate constraint lineups_agent_fk;
-alter table public.lineups validate constraint lineups_map_fk;
-alter table public.lineups validate constraint lineups_ability_fk;
 
 -- slug automático e updated_at
 create or replace function public.lineups_prepare()
