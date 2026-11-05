@@ -8,6 +8,7 @@ drop policy if exists "profiles admin update" on public.profiles;
 drop trigger if exists on_auth_user_created on auth.users;
 
 drop function if exists public.handle_new_user();
+drop function if exists public.is_super_admin();
 drop function if exists public.is_admin();
 drop table if exists public.profiles;
 

@@ -35,6 +35,25 @@ $$;
 revoke all on function public.is_admin() from public;
 grant execute on function public.is_admin() to anon, authenticated;
 
+-- administrador "estrito": moderadores não podem alterar papéis (evita autopromoção)
+create or replace function public.is_super_admin()
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select exists (
+    select 1
+    from public.profiles
+    where id = auth.uid()
+      and role = 'admin'
+  );
+$$;
+
+revoke all on function public.is_super_admin() from public;
+grant execute on function public.is_super_admin() to authenticated;
+
 -- cria perfil automaticamente no cadastro
 create or replace function public.handle_new_user()
 returns trigger
@@ -73,7 +92,7 @@ create policy "profiles admin read"
 drop policy if exists "profiles admin update" on public.profiles;
 create policy "profiles admin update"
   on public.profiles for update to authenticated
-  using (public.is_admin())
-  with check (public.is_admin());
+  using (public.is_super_admin())
+  with check (public.is_super_admin());
 
 commit;
