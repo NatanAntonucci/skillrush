@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useMemo } from 'react';
+import Image from 'next/image';
 import { fetchAgents } from '@/services/supabase/agents';
 import { useLineupStore } from '@/stores/lineupStore';
 import type { Agent } from '@/types';
@@ -94,11 +95,12 @@ export function AgentSelect() {
                 title={agent.displayName}
               >
                 {agent.displayIcon ? (
-                  <img 
-                    src={agent.displayIcon} 
-                    alt={agent.displayName} 
+                  <Image
+                    src={agent.displayIcon}
+                    alt={agent.displayName}
+                    width={40}
+                    height={40}
                     className="h-10 w-10 rounded-lg object-cover"
-                    loading="lazy" 
                   />
                 ) : (
                   <span className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-slate-700 text-xs font-semibold text-slate-200">

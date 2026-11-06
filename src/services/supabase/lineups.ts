@@ -187,3 +187,45 @@ export async function deleteLineup(id: string) {
     throw new Error(`Não foi possível excluir a lineup: ${error.message}`);
   }
 }
+
+export async function updateLineup(id: string, input: CreateLineupInput) {
+  const { data, error } = await supabase
+    .from('lineups')
+    .update({
+      title: input.title.trim(),
+      agent_id: input.agentId,
+      map_id: input.mapId,
+      ability_id: input.abilityId,
+      ability_name: input.abilityName,
+      description: input.description.trim(),
+      video_url: input.videoUrl.trim(),
+      difficulty: input.difficulty,
+      side: input.side,
+      hotspot_x: input.hotspot.x,
+      hotspot_y: input.hotspot.y,
+      hotspot_label: input.hotspot.label,
+    })
+    .eq('id', id)
+    .select(LINEUP_SELECT)
+    .single();
+
+  if (error) {
+    throw new Error(`Não foi possível salvar as alterações: ${error.message}`);
+  }
+
+  return mapLineup(data);
+}
+
+export async function fetchLineupById(id: string) {
+  const { data, error } = await supabase
+    .from('lineups')
+    .select(LINEUP_SELECT)
+    .eq('id', id)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(`Falha ao carregar a lineup: ${error.message}`);
+  }
+
+  return data ? mapLineup(data) : null;
+}

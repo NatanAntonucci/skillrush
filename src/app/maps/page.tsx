@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { fetchMaps } from '@/services/supabase/maps';
@@ -55,11 +56,12 @@ export default function MapsPage() {
                 className="overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/80 shadow-xl shadow-slate-950/40"
               >
                 {map.splash ? (
-                  <img
+                  <Image
                     src={map.splash}
                     alt={map.displayName}
+                    width={400}
+                    height={128}
                     className="h-32 w-full object-cover"
-                    loading="lazy"
                   />
                 ) : (
                   <div className="flex h-32 w-full items-center justify-center bg-slate-900 text-slate-600">

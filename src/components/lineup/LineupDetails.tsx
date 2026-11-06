@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
+import Image from 'next/image';
 
 import { useLineupStore } from '@/stores/lineupStore';
 import { getVideoEmbedUrl } from '@/utils/video';
@@ -89,9 +90,11 @@ export default function LineupDetails() {
 
           <div className="mt-3 flex items-center gap-3">
             {selectedLineup.agent?.displayIcon && (
-              <img
+              <Image
                 src={selectedLineup.agent.displayIcon}
                 alt={selectedLineup.agent.displayName}
+                width={40}
+                height={40}
                 className="h-10 w-10 rounded-full object-cover"
               />
             )}
@@ -112,9 +115,11 @@ export default function LineupDetails() {
 
           <div className="mt-3 flex items-center gap-3">
             {selectedLineup.map?.listViewIcon && (
-              <img
+              <Image
                 src={selectedLineup.map.listViewIcon}
                 alt={selectedLineup.map.displayName}
+                width={40}
+                height={40}
                 className="h-10 w-10 rounded-full object-cover"
               />
             )}

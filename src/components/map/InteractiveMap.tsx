@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, type SyntheticEvent } from 'react';
+import Image from 'next/image';
 
 import { MapHotspot } from './MapHotspot';
 import { useLineupData } from '@/features/lineups/LineupProvider';
@@ -78,12 +79,14 @@ export default function InteractiveMap() {
 
       {activeMap && (
         <div className="relative aspect-video overflow-hidden rounded-3xl border border-slate-800 bg-slate-900">
-          <img
+          <Image
             key={mapImage}
             src={mapImage}
             alt={activeMap.displayName}
+            fill
+            sizes="(max-width: 1280px) 100vw, 60vw"
             onLoad={handleImageLoad}
-            className="absolute inset-0 h-full w-full object-contain"
+            className="object-contain"
           />
 
           <div

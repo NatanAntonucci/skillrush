@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { Menu, X, LogOut, Upload } from 'lucide-react';
 
@@ -28,7 +29,7 @@ export default function Header() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center transition-opacity hover:opacity-90">
-            <img src="/logo.svg" alt="Skillrush" className="h-16 w-auto max-w-[220px]" />
+            <Image src="/logo.svg" alt="Skillrush" width={220} height={102} priority className="h-16 w-auto" />
           </Link>
 
           <nav className="hidden items-center gap-8 lg:flex">

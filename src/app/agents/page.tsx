@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
+
 import { fetchAgents } from '@/services/supabase/agents';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import type { Agent } from '@/types';
@@ -48,7 +50,13 @@ export default function AgentsPage() {
               <div key={agent.id} className="rounded-3xl border border-slate-800 bg-slate-900/80 p-6 shadow-xl shadow-slate-950/40">
                 <div className="flex items-center gap-4 mb-4">
                   {agent.displayIcon && (
-                    <img src={agent.displayIcon} alt={agent.displayName} className="h-12 w-12 rounded-full object-cover" loading="lazy" />
+                    <Image
+                      src={agent.displayIcon}
+                      alt={agent.displayName}
+                      width={48}
+                      height={48}
+                      className="h-12 w-12 rounded-full object-cover"
+                    />
                   )}
                   <div>
                     <h3 className="text-lg font-semibold text-white">{agent.displayName}</h3>
@@ -65,7 +73,13 @@ export default function AgentsPage() {
                       {agent.abilities.map((ability) => (
                         <div key={ability.id} className="flex items-center gap-2">
                           {ability.displayIcon && (
-                            <img src={ability.displayIcon} alt={ability.displayName} className="h-6 w-6 rounded" loading="lazy" />
+                            <Image
+                              src={ability.displayIcon}
+                              alt={ability.displayName}
+                              width={24}
+                              height={24}
+                              className="h-6 w-6 rounded"
+                            />
                           )}
                           <span className="text-sm text-slate-300">{ability.displayName}</span>
                         </div>

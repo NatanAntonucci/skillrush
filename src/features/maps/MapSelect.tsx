@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 import { fetchMaps } from '@/services/supabase/maps';
 import { useLineupStore } from '@/stores/lineupStore';
@@ -55,11 +56,12 @@ export function MapSelect() {
               title={map.displayName}
             >
               {map.listViewIcon ? (
-                <img
+                <Image
                   src={map.listViewIcon}
                   alt={map.displayName}
+                  width={48}
+                  height={48}
                   className="h-12 w-12 rounded-full border border-slate-700 object-cover"
-                  loading="lazy"
                 />
               ) : (
                 <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-slate-800 text-xs font-semibold text-slate-300">
