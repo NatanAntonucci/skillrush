@@ -29,6 +29,8 @@ Abre em http://localhost:3000.
 ## Documentação
 
 - [Arquitetura](docs/ARQUITETURA.md) — stack, fluxo de dados e princípios
-- [Banco de dados](docs/BANCO.md) — schema, RLS e migrations
+- [Banco de dados](docs/BANCO.md) — schema, RLS, migrations e imagens
 - [Admin](docs/ADMIN.md) — como publicar uma lineup
 - [Deploy](docs/DEPLOY.md) — export estático e HostGator
+- [Status](docs/STATUS.md) — o que está pronto e o que falta
+- [Revisão de UX/UI](docs/UX-REVIEW.md) — diagnóstico de design e prioridades
