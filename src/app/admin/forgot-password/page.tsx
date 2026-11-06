@@ -52,7 +52,7 @@ export default function ForgotPasswordPage() {
           </p>
           <button
             onClick={() => router.push('/admin')}
-            className="w-full bg-cyan-500 text-black p-2 font-bold rounded-lg hover:bg-cyan-400"
+            className="w-full bg-accent-500 text-black p-2 font-bold rounded-lg hover:bg-accent-400"
           >
             Voltar ao Login
           </button>
@@ -72,7 +72,7 @@ export default function ForgotPasswordPage() {
         </div>
 
         <input
-          className="w-full p-2 bg-slate-900 rounded-lg border border-slate-800 focus:border-cyan-500 focus:outline-none"
+          className="w-full p-2 bg-slate-900 rounded-lg border border-slate-800 focus:border-accent-500 focus:outline-none"
           placeholder="seu@email.com"
           type="email"
           value={email}
@@ -85,7 +85,7 @@ export default function ForgotPasswordPage() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-cyan-500 text-black p-2 font-bold rounded-lg hover:bg-cyan-400 disabled:opacity-50"
+          className="w-full bg-accent-500 text-black p-2 font-bold rounded-lg hover:bg-accent-400 disabled:opacity-50"
         >
           {loading ? 'Enviando...' : 'Enviar Email de Reset'}
         </button>
@@ -93,7 +93,7 @@ export default function ForgotPasswordPage() {
         <button
           type="button"
           onClick={() => router.push('/admin')}
-          className="w-full text-cyan-400 p-2 font-medium hover:text-cyan-300"
+          className="w-full text-accent-400 p-2 font-medium hover:text-accent-300"
         >
           Voltar ao Login
         </button>

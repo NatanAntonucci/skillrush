@@ -173,7 +173,7 @@ export function AgentSelect() {
                     aria-pressed={active}
                     className={`group relative flex aspect-square items-center justify-center overflow-hidden rounded-lg border transition ${
                       active
-                        ? 'border-cyan-400 ring-2 ring-cyan-400/30'
+                        ? 'border-accent-400 ring-2 ring-accent-400/30'
                         : 'border-transparent hover:border-slate-600'
                     }`}
                   >
@@ -193,7 +193,7 @@ export function AgentSelect() {
 
                     {active && (
                       <span className="absolute inset-0 flex items-center justify-center bg-slate-950/50">
-                        <Check size={16} className="text-cyan-300" />
+                        <Check size={16} className="text-accent-300" />
                       </span>
                     )}
                   </button>

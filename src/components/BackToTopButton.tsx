@@ -38,7 +38,7 @@ export default function BackToTopButton({ threshold = 300, className = '' }: Bac
   return (
     <button
       onClick={scrollToTop}
-      className={`fixed bottom-6 right-6 bg-primary hover:bg-primary-dark text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg z-[100]
+      className={`fixed bottom-6 right-6 bg-accent-500 hover:bg-accent-400 text-slate-950 rounded-full w-14 h-14 flex items-center justify-center shadow-lg z-[100]
         transform transition-all duration-500 ease-out
         hover:scale-110 hover:shadow-2xl hover:-translate-y-1
         active:scale-95

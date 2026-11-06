@@ -63,7 +63,7 @@ export default async function AgentPage({ params }: AgentPageProps) {
     <main className="min-h-screen bg-slate-950 text-slate-100">
       <section className="mx-auto max-w-5xl px-6 py-10 lg:px-8">
         <nav className="mb-6 text-sm text-slate-500">
-          <Link href="/agents" className="hover:text-cyan-300">
+          <Link href="/agents" className="hover:text-accent-300">
             Agentes
           </Link>{' '}
           / <span className="text-slate-300">{agent.displayName}</span>
@@ -82,7 +82,7 @@ export default async function AgentPage({ params }: AgentPageProps) {
 
           <div>
             <h1 className="text-3xl font-bold text-white">{agent.displayName}</h1>
-            <p className="mt-1 text-sm uppercase tracking-wide text-cyan-300">
+            <p className="mt-1 text-sm uppercase tracking-wide text-accent-300">
               {agent.role?.displayName ?? 'Sem função'}
             </p>
             {agent.description && (
@@ -136,7 +136,7 @@ export default async function AgentPage({ params }: AgentPageProps) {
                     <h3 className="font-semibold text-white">{map.name}</h3>
                     <Link
                       href={`/maps/${map.slug}/${slugify(agent.displayName)}`}
-                      className="text-sm text-cyan-300 hover:text-cyan-200"
+                      className="text-sm text-accent-300 hover:text-accent-200"
                     >
                       Página do mapa →
                     </Link>

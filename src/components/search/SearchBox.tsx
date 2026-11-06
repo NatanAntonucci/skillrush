@@ -25,7 +25,7 @@ export function SearchBox({ autoFocus = false }: { autoFocus?: boolean }) {
         value={value}
         onChange={(event) => setValue(event.target.value)}
         placeholder="Buscar agente, mapa ou lineup…"
-        className="w-full rounded-2xl border border-slate-800 bg-slate-900/80 py-4 pl-12 pr-4 text-base text-white outline-none placeholder:text-slate-500 focus:border-cyan-500"
+        className="w-full rounded-2xl border border-slate-800 bg-slate-900/80 py-4 pl-12 pr-4 text-base text-white outline-none placeholder:text-slate-500 focus:border-accent-500"
       />
     </form>
   );

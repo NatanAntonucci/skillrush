@@ -5,12 +5,25 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Brand colors
-        primary: '#9f7aea',
-        'primary-hover': '#805ad5',
-        secondary: '#0ea5e9',
-        'secondary-hover': '#0284c7',
-        // Slate palette (overrides Tailwind defaults for consistency)
+        // Cor de acento do tema (troca via `data-theme` no <html>).
+        accent: {
+          50: 'rgb(var(--accent-50) / <alpha-value>)',
+          100: 'rgb(var(--accent-100) / <alpha-value>)',
+          200: 'rgb(var(--accent-200) / <alpha-value>)',
+          300: 'rgb(var(--accent-300) / <alpha-value>)',
+          400: 'rgb(var(--accent-400) / <alpha-value>)',
+          500: 'rgb(var(--accent-500) / <alpha-value>)',
+          600: 'rgb(var(--accent-600) / <alpha-value>)',
+          700: 'rgb(var(--accent-700) / <alpha-value>)',
+          800: 'rgb(var(--accent-800) / <alpha-value>)',
+          900: 'rgb(var(--accent-900) / <alpha-value>)',
+          950: 'rgb(var(--accent-950) / <alpha-value>)',
+        },
+        primary: 'rgb(var(--accent-500) / <alpha-value>)',
+        'primary-hover': 'rgb(var(--accent-400) / <alpha-value>)',
+        secondary: 'rgb(var(--accent-400) / <alpha-value>)',
+        'secondary-hover': 'rgb(var(--accent-500) / <alpha-value>)',
+        // Slate coerente com o restante do projeto
         slate: {
           50: '#f8fafc',
           100: '#f1f5f9',
@@ -24,9 +37,6 @@ export default {
           900: '#0f172a',
           950: '#020617',
         },
-      },
-      backgroundImage: {
-        'gradient-dark': 'radial-gradient(circle at top, rgba(99, 102, 241, 0.12), transparent 30%), radial-gradient(circle at bottom, rgba(14, 165, 233, 0.1), transparent 25%), #020617',
       },
     },
   },

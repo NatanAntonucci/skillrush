@@ -37,7 +37,7 @@ export default async function MapsPage() {
               <Link
                 key={map.id}
                 href={`/maps/${slugify(map.displayName)}`}
-                className="group animate-fade-up overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/80 shadow-xl shadow-slate-950/40 transition duration-300 hover:-translate-y-1 hover:border-cyan-500/50"
+                className="group animate-fade-up overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/80 shadow-xl shadow-slate-950/40 transition duration-300 hover:-translate-y-1 hover:border-accent-500/50"
               >
                 {map.splash ? (
                   <div className="relative h-32 w-full overflow-hidden">
@@ -63,7 +63,7 @@ export default async function MapsPage() {
                 )}
 
                 <div className="p-6">
-                  <h3 className="text-lg font-semibold text-white group-hover:text-cyan-300">
+                  <h3 className="text-lg font-semibold text-white group-hover:text-accent-300">
                     {map.displayName}
                   </h3>
                   <p className="mt-1 text-sm text-slate-400">

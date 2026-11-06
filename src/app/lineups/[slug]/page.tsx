@@ -51,13 +51,13 @@ export default async function LineupPage({ params }: LineupPageProps) {
     <main className="min-h-screen bg-slate-950 text-slate-100">
       <section className="mx-auto max-w-4xl px-6 py-10 lg:px-8">
         <nav className="mb-6 flex flex-wrap gap-1 text-sm text-slate-500">
-          <Link href="/maps" className="hover:text-cyan-300">
+          <Link href="/maps" className="hover:text-accent-300">
             Mapas
           </Link>
           {mapSlug && (
             <>
               <span>/</span>
-              <Link href={`/maps/${mapSlug}`} className="hover:text-cyan-300">
+              <Link href={`/maps/${mapSlug}`} className="hover:text-accent-300">
                 {lineup.map?.displayName}
               </Link>
             </>
@@ -65,7 +65,7 @@ export default async function LineupPage({ params }: LineupPageProps) {
           {mapSlug && agentSlug && (
             <>
               <span>/</span>
-              <Link href={`/maps/${mapSlug}/${agentSlug}`} className="hover:text-cyan-300">
+              <Link href={`/maps/${mapSlug}/${agentSlug}`} className="hover:text-accent-300">
                 {lineup.agent?.displayName}
               </Link>
             </>
@@ -76,7 +76,7 @@ export default async function LineupPage({ params }: LineupPageProps) {
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex flex-wrap gap-2">
               {lineup.abilityName && (
-                <span className="rounded-full bg-cyan-500/15 px-3 py-1 text-xs font-medium uppercase tracking-wide text-cyan-200">
+                <span className="rounded-full bg-accent-500/15 px-3 py-1 text-xs font-medium uppercase tracking-wide text-accent-200">
                   {lineup.abilityName}
                 </span>
               )}
@@ -118,7 +118,7 @@ export default async function LineupPage({ params }: LineupPageProps) {
                 href={lineup.videoUrl}
                 target="_blank"
                 rel="noreferrer noopener"
-                className="rounded-full border border-slate-700 px-4 py-2 text-cyan-300 hover:border-cyan-500"
+                className="rounded-full border border-slate-700 px-4 py-2 text-accent-300 hover:border-accent-500"
               >
                 Abrir vídeo
               </a>

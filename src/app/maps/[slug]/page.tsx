@@ -49,11 +49,11 @@ export default async function MapPage({ params }: MapPageProps) {
     <main className="min-h-screen bg-slate-950 text-slate-100">
       <section className="mx-auto max-w-6xl px-4 py-8 lg:px-8">
         <nav className="mb-4 text-sm text-slate-400">
-          <Link href="/" className="hover:text-cyan-300">
+          <Link href="/" className="hover:text-accent-300">
             Início
           </Link>{' '}
           /{' '}
-          <Link href="/maps" className="hover:text-cyan-300">
+          <Link href="/maps" className="hover:text-accent-300">
             Mapas
           </Link>{' '}
           / <span className="text-slate-200">{map.displayName}</span>
@@ -76,7 +76,7 @@ export default async function MapPage({ params }: MapPageProps) {
           <div className="relative flex flex-wrap items-end justify-between gap-4 p-6">
             <div>
               {map.tacticalDescription && (
-                <span className="mb-2 inline-block rounded-full bg-cyan-500/15 px-2.5 py-1 text-[11px] uppercase tracking-wide text-cyan-200">
+                <span className="mb-2 inline-block rounded-full bg-accent-500/15 px-2.5 py-1 text-[11px] uppercase tracking-wide text-accent-200">
                   {map.tacticalDescription}
                 </span>
               )}
@@ -99,7 +99,7 @@ export default async function MapPage({ params }: MapPageProps) {
         {lineups.length === 0 ? (
           <div className="rounded-3xl border border-dashed border-slate-700 p-10 text-center text-slate-400">
             <p>Ainda não há lineups publicadas para {map.displayName}.</p>
-            <Link href="/maps" className="mt-4 inline-block text-cyan-300 hover:text-cyan-200">
+            <Link href="/maps" className="mt-4 inline-block text-accent-300 hover:text-accent-200">
               Ver outros mapas →
             </Link>
           </div>

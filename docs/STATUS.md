@@ -113,6 +113,8 @@ revisados e painel de detalhe em *bottom sheet* no mobile.
   `prebuild` limpa `.next/cache/fetch-cache` antes de cada build.
 - Sync detectou **agente novo (Hush)** e mapas novos; **Summit** entrou como competitivo (`0008`).
 - **Compartilhar** também no painel completo (detalhe da lineup).
+- **Tema**: alternância entre ciano e vermelho da marca (`#E63A4B`) via `data-theme` + CSS variables,
+  com botão no header e preferência salva em `localStorage`.
 - **Habilidades em pt-BR**: o sync passou a consumir `?language=pt-BR` (habilidades e descrições);
   nomes de agente/mapa ficam em inglês; fallback em inglês quando a Riot ainda não traduziu
   (ex.: `Uncanny Marksman` do Sova). Migration `0009` atualizou o nome já gravado nas lineups.

@@ -34,7 +34,7 @@ export function RecentShortcuts() {
         <Link
           key={`${entry.mapSlug}-${entry.agentSlug ?? 'all'}`}
           href={`/maps/${entry.mapSlug}${entry.agentSlug ? `?agente=${entry.agentSlug}` : ''}`}
-          className="rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-2 text-sm text-slate-200 transition hover:border-cyan-500/60 hover:text-white"
+          className="rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-2 text-sm text-slate-200 transition hover:border-accent-500/60 hover:text-white"
         >
           {entry.mapName}
           {entry.agentName ? ` · ${entry.agentName}` : ''}

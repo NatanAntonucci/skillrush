@@ -2,10 +2,40 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ---------- temas ---------- */
+
+/* Tema padrão: ciano */
 :root {
   color-scheme: dark;
-  --color-primary: #22d3ee;
-  --color-primary-hover: #06b6d4;
+
+  --accent-50: 236 254 255;
+  --accent-100: 207 250 254;
+  --accent-200: 165 243 252;
+  --accent-300: 103 232 249;
+  --accent-400: 34 211 238;
+  --accent-500: 6 182 212;
+  --accent-600: 8 145 178;
+  --accent-700: 14 116 144;
+  --accent-800: 21 94 117;
+  --accent-900: 22 78 99;
+  --accent-950: 8 51 68;
+  --accent-glow: 34 211 238;
+}
+
+/* Tema Skillrush: vermelho/coral da marca (#E63A4B) */
+[data-theme='rush'] {
+  --accent-50: 254 242 243;
+  --accent-100: 253 226 229;
+  --accent-200: 251 204 210;
+  --accent-300: 247 163 170;
+  --accent-400: 240 111 123;
+  --accent-500: 230 58 75;
+  --accent-600: 207 36 54;
+  --accent-700: 173 26 42;
+  --accent-800: 143 26 39;
+  --accent-900: 119 27 37;
+  --accent-950: 65 10 16;
+  --accent-glow: 230 58 75;
 }
 
 html {
@@ -15,7 +45,7 @@ html {
 body {
   min-height: 100vh;
   background:
-    radial-gradient(circle at top, rgba(34, 211, 238, 0.08), transparent 35%),
+    radial-gradient(circle at top, rgb(var(--accent-glow) / 0.09), transparent 35%),
     radial-gradient(circle at bottom, rgba(139, 92, 246, 0.06), transparent 30%),
     #020617;
   color: #e2e8f0;
@@ -33,7 +63,7 @@ textarea {
 }
 
 ::selection {
-  background: rgba(34, 211, 238, 0.35);
+  background: rgb(var(--accent-glow) / 0.35);
   color: white;
 }
 
@@ -67,13 +97,24 @@ textarea {
 
 @keyframes pulse-ring {
   0% {
-    box-shadow: 0 0 0 0 rgba(34, 211, 238, 0.45);
+    box-shadow: 0 0 0 0 rgb(var(--accent-glow) / 0.45);
   }
   70% {
-    box-shadow: 0 0 0 12px rgba(34, 211, 238, 0);
+    box-shadow: 0 0 0 12px rgb(var(--accent-glow) / 0);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(34, 211, 238, 0);
+    box-shadow: 0 0 0 0 rgb(var(--accent-glow) / 0);
+  }
+}
+
+@keyframes theme-pop {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
   }
 }
 
@@ -85,11 +126,9 @@ textarea {
   animation: fade-in 0.25s ease-out both;
 }
 
-.animate-pulse-ring {
-  animation: pulse-ring 2s infinite;
+.animate-theme-pop {
+  animation: theme-pop 0.25s ease-out both;
 }
-
-/* stagger simples via style={{ animationDelay }} */
 
 .skeleton {
   position: relative;
@@ -102,16 +141,10 @@ textarea {
   position: absolute;
   inset: 0;
   transform: translateX(-100%);
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(148, 163, 184, 0.12),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, rgba(148, 163, 184, 0.12), transparent);
   animation: shimmer 1.4s infinite;
 }
 
-/* barra de rolagem discreta */
 .custom-scrollbar::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -129,7 +162,7 @@ textarea {
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-up,
   .animate-fade-in,
-  .animate-pulse-ring {
+  .animate-theme-pop {
     animation: none;
   }
 

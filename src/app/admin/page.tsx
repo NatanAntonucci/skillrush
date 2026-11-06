@@ -50,7 +50,7 @@ export default function AdminLoginPage() {
         </div>
 
         <input
-          className="w-full p-2 bg-slate-900 rounded-lg border border-slate-800 focus:border-cyan-500 focus:outline-none"
+          className="w-full p-2 bg-slate-900 rounded-lg border border-slate-800 focus:border-accent-500 focus:outline-none"
           placeholder="seu@email.com"
           type="email"
           value={email}
@@ -59,7 +59,7 @@ export default function AdminLoginPage() {
         />
 
         <input
-          className="w-full p-2 bg-slate-900 rounded-lg border border-slate-800 focus:border-cyan-500 focus:outline-none"
+          className="w-full p-2 bg-slate-900 rounded-lg border border-slate-800 focus:border-accent-500 focus:outline-none"
           placeholder="Senha"
           type="password"
           value={password}
@@ -76,7 +76,7 @@ export default function AdminLoginPage() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-cyan-500 text-black p-2 font-bold rounded-lg hover:bg-cyan-400 disabled:opacity-50"
+          className="w-full bg-accent-500 text-black p-2 font-bold rounded-lg hover:bg-accent-400 disabled:opacity-50"
         >
           {loading ? 'Entrando...' : 'Entrar'}
         </button>
@@ -84,7 +84,7 @@ export default function AdminLoginPage() {
         <div className="pt-2 border-t border-slate-800">
           <Link
             href="/admin/forgot-password"
-            className="block text-center text-cyan-400 hover:text-cyan-300 text-sm font-medium"
+            className="block text-center text-accent-400 hover:text-accent-300 text-sm font-medium"
           >
             Esqueceu a senha?
           </Link>

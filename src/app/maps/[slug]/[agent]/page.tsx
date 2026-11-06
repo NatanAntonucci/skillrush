@@ -64,11 +64,11 @@ export default async function AgentMapPage({ params }: AgentMapPageProps) {
     <main className="min-h-screen bg-slate-950 text-slate-100">
       <section className="mx-auto max-w-5xl px-6 py-10 lg:px-8">
         <nav className="mb-6 text-sm text-slate-500">
-          <Link href="/maps" className="hover:text-cyan-300">
+          <Link href="/maps" className="hover:text-accent-300">
             Mapas
           </Link>{' '}
           /{' '}
-          <Link href={`/maps/${slugify(map.displayName)}`} className="hover:text-cyan-300">
+          <Link href={`/maps/${slugify(map.displayName)}`} className="hover:text-accent-300">
             {map.displayName}
           </Link>{' '}
           / <span className="text-slate-300">{agent.displayName}</span>

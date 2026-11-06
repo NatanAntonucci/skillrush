@@ -89,7 +89,7 @@ export default function SearchPage() {
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           placeholder="Buscar…"
-          className="mt-6 w-full rounded-2xl border border-slate-800 bg-slate-900 px-5 py-4 text-lg text-white outline-none placeholder:text-slate-500 focus:border-cyan-500"
+          className="mt-6 w-full rounded-2xl border border-slate-800 bg-slate-900 px-5 py-4 text-lg text-white outline-none placeholder:text-slate-500 focus:border-accent-500"
         />
 
         {loading && <p className="mt-8 text-sm text-slate-400">Carregando dados…</p>}
@@ -108,7 +108,7 @@ export default function SearchPage() {
                 <Link
                   key={map.id}
                   href={`/maps/${slugify(map.displayName)}`}
-                  className="rounded-xl border border-slate-800 bg-slate-900 px-4 py-2 text-sm text-slate-200 hover:border-cyan-500/60"
+                  className="rounded-xl border border-slate-800 bg-slate-900 px-4 py-2 text-sm text-slate-200 hover:border-accent-500/60"
                 >
                   {map.displayName}
                 </Link>
@@ -125,7 +125,7 @@ export default function SearchPage() {
                 <Link
                   key={agent.id}
                   href={`/agents/${slugify(agent.displayName)}`}
-                  className="rounded-xl border border-slate-800 bg-slate-900 px-4 py-2 text-sm text-slate-200 hover:border-cyan-500/60"
+                  className="rounded-xl border border-slate-800 bg-slate-900 px-4 py-2 text-sm text-slate-200 hover:border-accent-500/60"
                 >
                   {agent.displayName}
                 </Link>
@@ -142,7 +142,7 @@ export default function SearchPage() {
                 <Link
                   key={lineup.id}
                   href={`/lineups/${lineup.slug}`}
-                  className="block rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-3 text-sm text-slate-200 hover:border-cyan-500/60"
+                  className="block rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-3 text-sm text-slate-200 hover:border-accent-500/60"
                 >
                   <span className="font-medium text-white">{lineup.title}</span>
                   <span className="ml-2 text-slate-400">

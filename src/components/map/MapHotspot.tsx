@@ -33,8 +33,8 @@ export function MapHotspot({
       <span
         className={`flex items-center justify-center rounded-full border transition-all duration-200 ${
           isSelected
-            ? 'h-9 w-9 border-2 border-cyan-200 bg-cyan-400 shadow-lg shadow-cyan-500/50'
-            : 'h-7 w-7 border border-cyan-300/70 bg-cyan-500/85 shadow-md shadow-cyan-900/40 group-hover:h-9 group-hover:w-9 group-hover:bg-cyan-400'
+            ? 'h-9 w-9 border-2 border-accent-200 bg-accent-400 shadow-lg shadow-accent-500/50'
+            : 'h-7 w-7 border border-accent-300/70 bg-accent-500/85 shadow-md shadow-accent-900/40 group-hover:h-9 group-hover:w-9 group-hover:bg-accent-400'
         }`}
       >
         {abilityIcon ? (

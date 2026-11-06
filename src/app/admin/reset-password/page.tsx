@@ -126,7 +126,7 @@ function ResetPasswordContent() {
           <p className="text-slate-400">{error}</p>
           <button
             onClick={() => router.push('/admin/forgot-password')}
-            className="w-full bg-cyan-500 text-black p-2 font-bold rounded-lg hover:bg-cyan-400"
+            className="w-full bg-accent-500 text-black p-2 font-bold rounded-lg hover:bg-accent-400"
           >
             Solicitar novo email
           </button>
@@ -159,7 +159,7 @@ function ResetPasswordContent() {
           <p className="text-red-400">Sessão não validada</p>
           <button
             onClick={() => router.push('/admin/forgot-password')}
-            className="w-full bg-cyan-500 text-black p-2 font-bold rounded-lg hover:bg-cyan-400"
+            className="w-full bg-accent-500 text-black p-2 font-bold rounded-lg hover:bg-accent-400"
           >
             Solicitar novo email
           </button>
@@ -196,7 +196,7 @@ function ResetPasswordContent() {
         <button
           type="submit"
           disabled={status === 'resetting'}
-          className="w-full bg-cyan-500 text-black p-2 font-bold rounded-lg hover:bg-cyan-400 disabled:opacity-50"
+          className="w-full bg-accent-500 text-black p-2 font-bold rounded-lg hover:bg-accent-400 disabled:opacity-50"
         >
           {status === 'resetting' ? 'Resetando...' : 'Resetar Senha'}
         </button>

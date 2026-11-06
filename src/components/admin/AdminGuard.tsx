@@ -30,7 +30,7 @@ export function AdminGuard({ children }: { children: ReactNode }) {
           </p>
           <Link
             href="/admin"
-            className="inline-block rounded-xl bg-cyan-500 px-5 py-2.5 text-sm font-semibold text-slate-950 transition hover:bg-cyan-400"
+            className="inline-block rounded-xl bg-accent-500 px-5 py-2.5 text-sm font-semibold text-slate-950 transition hover:bg-accent-400"
           >
             Ir para o login
           </Link>

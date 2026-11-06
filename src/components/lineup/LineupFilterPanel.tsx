@@ -55,7 +55,7 @@ export function LineupFilterPanel() {
                 onClick={() => setSelectedDifficulty(selectedDifficulty === difficulty.value ? null : difficulty.value)}
                 className={`rounded-2xl border px-4 py-2 text-sm transition ${
                   selectedDifficulty === difficulty.value
-                    ? 'border-cyan-400 bg-cyan-500/15 text-cyan-100'
+                    ? 'border-accent-400 bg-accent-500/15 text-accent-100'
                     : 'border-slate-800 bg-slate-900 text-slate-300 hover:border-slate-600 hover:bg-slate-900/90'
                 }`}
               >
@@ -98,7 +98,7 @@ export function LineupFilterPanel() {
                 onClick={() => toggleFilter(filter)}
                 className={`rounded-2xl border px-3 py-2 text-sm transition ${
                   isActive
-                    ? 'border-cyan-400 bg-cyan-500/15 text-cyan-100'
+                    ? 'border-accent-400 bg-accent-500/15 text-accent-100'
                     : 'border-slate-800 bg-slate-900 text-slate-300 hover:border-slate-600 hover:bg-slate-900/90'
                 }`}
               >

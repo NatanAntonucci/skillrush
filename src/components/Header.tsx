@@ -7,6 +7,7 @@ import { Menu, X, LogOut, Upload, Search } from 'lucide-react';
 
 import { supabase } from '@/services/supabase/client';
 import { useAdmin } from '@/hooks/useAdmin';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 const publicNav = [
   { label: 'Início', href: '/' },
@@ -52,11 +53,13 @@ export default function Header() {
               <Search size={16} />
             </Link>
 
+            <ThemeToggle />
+
             {!loading && isAdmin && (
               <>
                 <Link
                   href="/admin/upload"
-                  className="rounded-2xl bg-cyan-500 px-5 py-2.5 text-sm font-semibold text-slate-950 transition-colors hover:bg-cyan-400"
+                  className="rounded-2xl bg-accent-500 px-5 py-2.5 text-sm font-semibold text-slate-950 transition-colors hover:bg-accent-400"
                 >
                   Upload
                 </Link>
@@ -107,12 +110,17 @@ export default function Header() {
               Buscar
             </Link>
 
+            <div className="flex items-center justify-between rounded-2xl px-4 py-3 text-slate-300">
+              <span className="text-sm">Tema</span>
+              <ThemeToggle />
+            </div>
+
             {!loading && isAdmin && (
               <>
                 <Link
                   href="/admin/upload"
                   onClick={() => setIsMenuOpen(false)}
-                  className="flex items-center gap-2 rounded-2xl bg-cyan-500 px-4 py-3 font-semibold text-slate-950"
+                  className="flex items-center gap-2 rounded-2xl bg-accent-500 px-4 py-3 font-semibold text-slate-950"
                 >
                   <Upload size={16} />
                   Subir lineup

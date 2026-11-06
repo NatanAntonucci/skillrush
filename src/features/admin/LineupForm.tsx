@@ -206,7 +206,7 @@ export function LineupForm({ mode, lineup }: LineupFormProps) {
       <input
         value={title}
         onChange={(event) => setTitle(event.target.value)}
-        className="w-full rounded-xl bg-slate-950 p-3 outline-none ring-1 ring-slate-800 focus:ring-cyan-500"
+        className="w-full rounded-xl bg-slate-950 p-3 outline-none ring-1 ring-slate-800 focus:ring-accent-500"
         placeholder="Título (ex.: Smoke A-site da base)"
         maxLength={120}
       />
@@ -215,7 +215,7 @@ export function LineupForm({ mode, lineup }: LineupFormProps) {
         <select
           value={agentId}
           onChange={(event) => setAgentId(event.target.value)}
-          className="rounded-xl bg-slate-950 p-3 outline-none ring-1 ring-slate-800 focus:ring-cyan-500"
+          className="rounded-xl bg-slate-950 p-3 outline-none ring-1 ring-slate-800 focus:ring-accent-500"
         >
           <option value="">Agente</option>
           {agents.map((agent) => (
@@ -226,7 +226,7 @@ export function LineupForm({ mode, lineup }: LineupFormProps) {
         <select
           value={mapId}
           onChange={(event) => setMapId(event.target.value)}
-          className="rounded-xl bg-slate-950 p-3 outline-none ring-1 ring-slate-800 focus:ring-cyan-500"
+          className="rounded-xl bg-slate-950 p-3 outline-none ring-1 ring-slate-800 focus:ring-accent-500"
         >
           <option value="">Mapa</option>
           {maps.map((map) => (
@@ -238,7 +238,7 @@ export function LineupForm({ mode, lineup }: LineupFormProps) {
       <select
         value={abilityId}
         onChange={(event) => setAbilityId(event.target.value)}
-        className="w-full rounded-xl bg-slate-950 p-3 outline-none ring-1 ring-slate-800 focus:ring-cyan-500"
+        className="w-full rounded-xl bg-slate-950 p-3 outline-none ring-1 ring-slate-800 focus:ring-accent-500"
       >
         <option value="">Habilidade</option>
         {abilities.map((ability) => (
@@ -250,7 +250,7 @@ export function LineupForm({ mode, lineup }: LineupFormProps) {
         <select
           value={difficulty ?? 'easy'}
           onChange={(event) => setDifficulty(event.target.value)}
-          className="rounded-xl bg-slate-950 p-3 outline-none ring-1 ring-slate-800 focus:ring-cyan-500"
+          className="rounded-xl bg-slate-950 p-3 outline-none ring-1 ring-slate-800 focus:ring-accent-500"
         >
           {difficultyOptions.map((option) => (
             <option key={option.value} value={option.value}>{option.label}</option>
@@ -260,7 +260,7 @@ export function LineupForm({ mode, lineup }: LineupFormProps) {
         <select
           value={side ?? 'attack'}
           onChange={(event) => setSide(event.target.value)}
-          className="rounded-xl bg-slate-950 p-3 outline-none ring-1 ring-slate-800 focus:ring-cyan-500"
+          className="rounded-xl bg-slate-950 p-3 outline-none ring-1 ring-slate-800 focus:ring-accent-500"
         >
           {sideOptions.map((option) => (
             <option key={option.value} value={option.value}>{option.label}</option>
@@ -271,7 +271,7 @@ export function LineupForm({ mode, lineup }: LineupFormProps) {
       <input
         value={videoUrl}
         onChange={(event) => setVideoUrl(event.target.value)}
-        className="w-full rounded-xl bg-slate-950 p-3 outline-none ring-1 ring-slate-800 focus:ring-cyan-500"
+        className="w-full rounded-xl bg-slate-950 p-3 outline-none ring-1 ring-slate-800 focus:ring-accent-500"
         placeholder="URL do vídeo (YouTube, Twitch, Streamable)"
       />
 
@@ -301,7 +301,7 @@ export function LineupForm({ mode, lineup }: LineupFormProps) {
 
           {selectedMap && (
             <span
-              className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-500 px-3 py-1 text-xs font-bold text-black"
+              className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent-500 px-3 py-1 text-xs font-bold text-black"
               style={{ left: `${hotspotX}%`, top: `${hotspotY}%` }}
             >
               {hotspotLabel}
@@ -312,7 +312,7 @@ export function LineupForm({ mode, lineup }: LineupFormProps) {
         <input
           value={hotspotLabel}
           onChange={(event) => setHotspotLabel(event.target.value.slice(0, 3).toUpperCase())}
-          className="mt-3 w-24 rounded-xl bg-slate-950 p-2 text-center outline-none ring-1 ring-slate-800 focus:ring-cyan-500"
+          className="mt-3 w-24 rounded-xl bg-slate-950 p-2 text-center outline-none ring-1 ring-slate-800 focus:ring-accent-500"
           placeholder="A"
           aria-label="Rótulo do hotspot"
         />
@@ -321,7 +321,7 @@ export function LineupForm({ mode, lineup }: LineupFormProps) {
       <textarea
         value={description}
         onChange={(event) => setDescription(event.target.value)}
-        className="min-h-[110px] w-full rounded-xl bg-slate-950 p-3 outline-none ring-1 ring-slate-800 focus:ring-cyan-500"
+        className="min-h-[110px] w-full rounded-xl bg-slate-950 p-3 outline-none ring-1 ring-slate-800 focus:ring-accent-500"
         placeholder="Como executar, de onde jogar, referências visuais…"
         maxLength={2000}
       />
@@ -330,7 +330,7 @@ export function LineupForm({ mode, lineup }: LineupFormProps) {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="rounded-xl bg-cyan-500 px-6 py-3 font-semibold text-slate-950 transition hover:bg-cyan-400 disabled:opacity-50"
+          className="rounded-xl bg-accent-500 px-6 py-3 font-semibold text-slate-950 transition hover:bg-accent-400 disabled:opacity-50"
         >
           {isSubmitting ? 'Salvando...' : mode === 'edit' ? 'Salvar alterações' : 'Publicar lineup'}
         </button>

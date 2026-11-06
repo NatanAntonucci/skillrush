@@ -80,7 +80,7 @@ export function MapSelect() {
             id="map-select"
             value={selectedMap?.id ?? ''}
             onChange={(event) => handleChange(event.target.value)}
-            className="w-full appearance-none rounded-lg border border-slate-800 bg-slate-900 py-2 pl-3 pr-10 text-sm text-white outline-none focus:border-cyan-500"
+            className="w-full appearance-none rounded-lg border border-slate-800 bg-slate-900 py-2 pl-3 pr-10 text-sm text-white outline-none focus:border-accent-500"
           >
             <option value="">Todos os mapas</option>
             {maps.map((map) => (

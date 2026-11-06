@@ -91,7 +91,7 @@ function TeamManager() {
             </Link>
             <Link
               href="/admin/upload"
-              className="rounded-xl bg-cyan-500 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-cyan-400"
+              className="rounded-xl bg-accent-500 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-accent-400"
             >
               Nova lineup
             </Link>
@@ -142,7 +142,7 @@ function TeamManager() {
                   value={member.role}
                   disabled={!canManage || savingId === member.id}
                   onChange={(event) => changeRole(member, event.target.value as TeamMember['role'])}
-                  className="rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white outline-none focus:border-cyan-500 disabled:opacity-50"
+                  className="rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white outline-none focus:border-accent-500 disabled:opacity-50"
                 >
                   {roleOptions.map((option) => (
                     <option key={option.value} value={option.value}>

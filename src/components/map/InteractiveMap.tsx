@@ -66,7 +66,7 @@ export default function InteractiveMap() {
         </div>
 
         {selectedLineup && (
-          <span className="rounded-full bg-cyan-500/10 px-3 py-1 text-xs text-cyan-300">
+          <span className="rounded-full bg-accent-500/10 px-3 py-1 text-xs text-accent-300">
             {selectedLineup.title}
           </span>
         )}

@@ -28,7 +28,7 @@ export default async function AgentsPage() {
             <Link
               key={agent.id}
               href={`/agents/${slugify(agent.displayName)}`}
-              className="group rounded-3xl border border-slate-800 bg-slate-900/80 p-6 shadow-xl shadow-slate-950/40 transition hover:border-cyan-500/50"
+              className="group rounded-3xl border border-slate-800 bg-slate-900/80 p-6 shadow-xl shadow-slate-950/40 transition hover:border-accent-500/50"
             >
               <div className="mb-4 flex items-center gap-4">
                 {agent.displayIcon && (
@@ -42,7 +42,7 @@ export default async function AgentsPage() {
                 )}
 
                 <div>
-                  <h2 className="text-lg font-semibold text-white group-hover:text-cyan-300">
+                  <h2 className="text-lg font-semibold text-white group-hover:text-accent-300">
                     {agent.displayName}
                   </h2>
                   <p className="text-sm text-slate-400">{agent.role?.displayName ?? 'Sem função'}</p>

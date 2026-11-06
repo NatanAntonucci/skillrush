@@ -156,7 +156,7 @@ export function MapBoard({
             }}
             className={`rounded-full border px-3 py-1.5 text-sm transition ${
               agentSlug === ''
-                ? 'border-cyan-400 bg-cyan-500/15 text-cyan-100'
+                ? 'border-accent-400 bg-accent-500/15 text-accent-100'
                 : 'border-slate-800 bg-slate-900 text-slate-300 hover:border-slate-600'
             }`}
           >
@@ -173,7 +173,7 @@ export function MapBoard({
               }}
               className={`rounded-full border px-3 py-1.5 text-sm transition ${
                 agentSlug === agent.slug
-                  ? 'border-cyan-400 bg-cyan-500/15 text-cyan-100'
+                  ? 'border-accent-400 bg-accent-500/15 text-accent-100'
                   : 'border-slate-800 bg-slate-900 text-slate-300 hover:border-slate-600'
               }`}
             >
@@ -191,7 +191,7 @@ export function MapBoard({
               onClick={() => setAbility(ability === name ? null : name)}
               className={`rounded-full border px-3 py-1 text-xs uppercase tracking-wide transition ${
                 ability === name
-                  ? 'border-cyan-400 bg-cyan-500/15 text-cyan-100'
+                  ? 'border-accent-400 bg-accent-500/15 text-accent-100'
                   : 'border-slate-800 bg-slate-900 text-slate-400 hover:border-slate-600'
               }`}
             >
@@ -307,7 +307,7 @@ export function MapBoard({
               onClick={() => setSelectedId(lineup.id)}
               className={`flex w-full items-center gap-3 rounded-xl border p-2 text-left transition ${
                 selectedId === lineup.id
-                  ? 'border-cyan-500/60 bg-cyan-500/10'
+                  ? 'border-accent-500/60 bg-accent-500/10'
                   : 'border-slate-800 bg-slate-900/60 hover:border-slate-600'
               }`}
             >
@@ -391,7 +391,7 @@ export function MapBoard({
               <ol className="mt-3 space-y-2 text-sm text-slate-300">
                 {steps.map((step, index) => (
                   <li key={`${index}-${step.slice(0, 12)}`} className="flex gap-2">
-                    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-cyan-500/20 text-[11px] font-bold text-cyan-200">
+                    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-accent-500/20 text-[11px] font-bold text-accent-200">
                       {index + 1}
                     </span>
                     <span>{step}</span>

@@ -45,7 +45,7 @@ export function LineupList() {
           className={classNames(
             'w-full rounded-xl border p-3 text-left transition-all duration-200 group',
             selectedLineup?.id === lineup.id
-              ? 'border-cyan-500/60 bg-cyan-500/10'
+              ? 'border-accent-500/60 bg-accent-500/10'
               : 'border-transparent bg-white/5 hover:bg-white/10',
           )}
         >
@@ -63,7 +63,7 @@ export function LineupList() {
             </div>
 
             <div className="min-w-0 flex-1">
-              <h3 className="truncate text-xs font-bold transition-colors group-hover:text-cyan-300">
+              <h3 className="truncate text-xs font-bold transition-colors group-hover:text-accent-300">
                 {lineup.title}
               </h3>
               <div className="mt-1 flex gap-2 text-[11px] uppercase tracking-tight text-slate-400">

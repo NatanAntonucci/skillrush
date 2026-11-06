@@ -39,7 +39,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" suppressHydrationWarning>
+      <head>
+        {/* aplica o tema salvo antes do primeiro paint, evitando flash */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{if(localStorage.getItem('skillrush:theme')==='rush'){document.documentElement.dataset.theme='rush'}}catch(e){}",
+          }}
+        />
+      </head>
       <body className="bg-slate-950 text-slate-100">
         <Header />
         {children}

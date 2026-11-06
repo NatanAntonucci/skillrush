@@ -29,7 +29,7 @@ export default async function HomePage() {
     <main className="min-h-screen bg-slate-950 text-slate-100">
       <section className="mx-auto max-w-5xl px-6 pb-10 pt-14 text-center">
         <span className="animate-fade-up inline-flex items-center gap-2 rounded-full border border-slate-800 bg-slate-900/60 px-3 py-1 text-xs text-slate-300">
-          <span className="h-1.5 w-1.5 rounded-full bg-cyan-400" />
+          <span className="h-1.5 w-1.5 rounded-full bg-accent-400" />
           Lineups de Valorant, sem enrolação
         </span>
 
@@ -56,7 +56,7 @@ export default async function HomePage() {
           </h2>
           <Link
             href="/painel"
-            className="text-sm text-cyan-300 transition hover:text-cyan-200"
+            className="text-sm text-accent-300 transition hover:text-accent-200"
           >
             Abrir painel completo →
           </Link>
@@ -79,7 +79,7 @@ export default async function HomePage() {
               <Link
                 key={map.id}
                 href={`/maps/${slugify(map.displayName)}`}
-                className="group relative animate-fade-up overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 transition duration-300 hover:-translate-y-1 hover:border-cyan-500/60 hover:shadow-xl hover:shadow-cyan-950/30"
+                className="group relative animate-fade-up overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 transition duration-300 hover:-translate-y-1 hover:border-accent-500/60 hover:shadow-xl hover:shadow-accent-950/30"
                 style={{ animationDelay: `${Math.min(index, 8) * 40}ms` }}
               >
                 <div className="relative h-36 w-full overflow-hidden">
@@ -103,7 +103,7 @@ export default async function HomePage() {
                 </div>
 
                 <div className="flex items-center justify-between px-4 py-3">
-                  <span className="font-semibold text-white group-hover:text-cyan-300">
+                  <span className="font-semibold text-white group-hover:text-accent-300">
                     {map.displayName}
                   </span>
 

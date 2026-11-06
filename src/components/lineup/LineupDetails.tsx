@@ -37,7 +37,7 @@ export default function LineupDetails() {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex flex-wrap items-center gap-2">
             {selectedLineup.abilityName && (
-              <span className="rounded-full bg-cyan-500/15 px-3 py-1 text-xs font-medium uppercase tracking-wide text-cyan-200">
+              <span className="rounded-full bg-accent-500/15 px-3 py-1 text-xs font-medium uppercase tracking-wide text-accent-200">
                 {selectedLineup.abilityName}
               </span>
             )}
@@ -82,7 +82,7 @@ export default function LineupDetails() {
               href={selectedLineup.videoUrl}
               target="_blank"
               rel="noreferrer noopener"
-              className="rounded-full border border-slate-700 px-4 py-1.5 text-xs text-cyan-300 hover:border-cyan-500"
+              className="rounded-full border border-slate-700 px-4 py-1.5 text-xs text-accent-300 hover:border-accent-500"
             >
               Abrir vídeo original
             </a>
