@@ -16,12 +16,21 @@ export default function UploadPage() {
               <h1 className="mt-2 text-2xl font-semibold">Nova lineup</h1>
             </div>
 
-            <Link
-              href="/admin/lineups"
-              className="rounded-xl border border-slate-700 px-4 py-2 text-sm text-slate-300 transition hover:border-slate-500"
-            >
-              Gerenciar lineups
-            </Link>
+            <div className="flex gap-2">
+              <Link
+                href="/admin/lineups"
+                className="rounded-xl border border-slate-700 px-4 py-2 text-sm text-slate-300 transition hover:border-slate-500"
+              >
+                Gerenciar
+              </Link>
+
+              <Link
+                href="/admin/equipe"
+                className="rounded-xl border border-slate-700 px-4 py-2 text-sm text-slate-300 transition hover:border-slate-500"
+              >
+                Equipe
+              </Link>
+            </div>
           </header>
 
           <LineupForm mode="create" />

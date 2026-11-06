@@ -60,12 +60,21 @@ function LineupsManager() {
             <h1 className="mt-2 text-2xl font-semibold">Lineups</h1>
           </div>
 
-          <Link
-            href="/admin/upload"
-            className="rounded-xl bg-cyan-500 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-cyan-400"
-          >
-            Nova lineup
-          </Link>
+          <div className="flex gap-2">
+            <Link
+              href="/admin/equipe"
+              className="rounded-xl border border-slate-700 px-4 py-2 text-sm text-slate-300 transition hover:border-slate-500"
+            >
+              Equipe
+            </Link>
+
+            <Link
+              href="/admin/upload"
+              className="rounded-xl bg-cyan-500 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-cyan-400"
+            >
+              Nova lineup
+            </Link>
+          </div>
         </header>
 
         {loading && <p className="text-sm text-slate-400">Carregando...</p>}
