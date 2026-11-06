@@ -1,73 +1,70 @@
 'use client';
 
-import { MouseEvent, useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
+import { useState } from 'react';
+import Link from 'next/link';
+import { Menu, X, LogOut, Upload } from 'lucide-react';
 
-const navItems = [
+import { supabase } from '@/services/supabase/client';
+import { useAdmin } from '@/hooks/useAdmin';
+
+const publicNav = [
   { label: 'Lineups', href: '/' },
   { label: 'Agentes', href: '/agents' },
   { label: 'Mapas', href: '/maps' },
-  { label: 'Upload', href: '/upload' },
 ];
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
+  const { isAdmin, loading } = useAdmin();
 
-  useEffect(() => {
-    const onScroll = () => setIsScrolled(window.scrollY > 8);
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-
-  const handleNavClick = (event: MouseEvent<HTMLAnchorElement>, href: string) => {
-    if (!href.startsWith('#')) return;
-    event.preventDefault();
-
-    const targetId = href.slice(1);
-    const element = document.getElementById(targetId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      window.history.pushState(null, '', href);
-    }
+  async function handleLogout() {
+    await supabase.auth.signOut();
     setIsMenuOpen(false);
-  };
+    window.location.href = '/';
+  }
 
   return (
-    <header className={`sticky top-0 z-50 border-b border-slate-800 bg-slate-950/95 backdrop-blur transition-shadow duration-200 ${isScrolled ? 'shadow-xl' : ''}`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <a
-            href="/"
-            className="flex items-center text-white transition-opacity hover:opacity-90 focus:outline-2 focus:outline-offset-2 focus:outline-cyan-400"
-          >
+    <header className="sticky top-0 z-50 border-b border-slate-800 bg-slate-950/95 backdrop-blur">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 items-center justify-between">
+          <Link href="/" className="flex items-center transition-opacity hover:opacity-90">
             <img src="/logo.svg" alt="Skillrush" className="h-16 w-auto max-w-[220px]" />
-          </a>
+          </Link>
 
-          <div className="hidden lg:flex items-center gap-8">
-            {navItems.map((item) => (
-              <a
+          <nav className="hidden items-center gap-8 lg:flex">
+            {publicNav.map((item) => (
+              <Link
                 key={item.href}
                 href={item.href}
-                onClick={(event) => handleNavClick(event, item.href)}
-                className="text-slate-200 hover:text-white transition-colors font-medium"
+                className="font-medium text-slate-200 transition-colors hover:text-white"
               >
                 {item.label}
-              </a>
+              </Link>
             ))}
-            <a
-              href="/upload"
-              className="rounded-2xl bg-cyan-500 px-5 py-2.5 text-sm font-semibold text-slate-950 transition-colors hover:bg-cyan-400"
-            >
-              Upload
-            </a>
-          </div>
+
+            {!loading && isAdmin && (
+              <>
+                <Link
+                  href="/admin/upload"
+                  className="rounded-2xl bg-cyan-500 px-5 py-2.5 text-sm font-semibold text-slate-950 transition-colors hover:bg-cyan-400"
+                >
+                  Upload
+                </Link>
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="flex items-center gap-1.5 text-sm text-slate-400 transition-colors hover:text-white"
+                >
+                  <LogOut size={16} />
+                  Sair
+                </button>
+              </>
+            )}
+          </nav>
 
           <button
             type="button"
-            className="lg:hidden p-2 rounded-md text-slate-200 hover:text-white focus:outline-2 focus:outline-offset-2 focus:outline-cyan-400"
+            className="rounded-md p-2 text-slate-200 hover:text-white lg:hidden"
             onClick={() => setIsMenuOpen((current) => !current)}
             aria-label={isMenuOpen ? 'Fechar menu' : 'Abrir menu'}
             aria-expanded={isMenuOpen}
@@ -78,18 +75,39 @@ export default function Header() {
       </div>
 
       {isMenuOpen && (
-        <div className="lg:hidden border-t border-slate-800 bg-slate-950/95 px-4 py-4">
+        <div className="border-t border-slate-800 bg-slate-950/95 px-4 py-4 lg:hidden">
           <div className="space-y-2">
-            {navItems.map((item) => (
-              <a
+            {publicNav.map((item) => (
+              <Link
                 key={item.href}
                 href={item.href}
-                onClick={(event) => handleNavClick(event, item.href)}
+                onClick={() => setIsMenuOpen(false)}
                 className="block rounded-2xl px-4 py-3 text-slate-200 hover:bg-slate-900 hover:text-white"
               >
                 {item.label}
-              </a>
+              </Link>
             ))}
+
+            {!loading && isAdmin && (
+              <>
+                <Link
+                  href="/admin/upload"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="flex items-center gap-2 rounded-2xl bg-cyan-500 px-4 py-3 font-semibold text-slate-950"
+                >
+                  <Upload size={16} />
+                  Subir lineup
+                </Link>
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="flex w-full items-center gap-2 rounded-2xl px-4 py-3 text-left text-slate-400 hover:bg-slate-900 hover:text-white"
+                >
+                  <LogOut size={16} />
+                  Sair
+                </button>
+              </>
+            )}
           </div>
         </div>
       )}

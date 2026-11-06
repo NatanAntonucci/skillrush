@@ -3,43 +3,25 @@
 import { useMemo } from 'react';
 
 import { useLineupStore } from '@/stores/lineupStore';
-
-function getYoutubeEmbedUrl(url: string) {
-  const match = url.match(
-    /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/,
-  );
-
-  const videoId = match?.[1];
-
-  if (!videoId) {
-    return null;
-  }
-
-  return `https://www.youtube.com/embed/${videoId}`;
-}
+import { getVideoEmbedUrl } from '@/utils/video';
+import { labelDifficulty, labelSide } from '@/utils/labels';
 
 export default function LineupDetails() {
   const { selectedLineup } = useLineupStore();
 
   const embedUrl = useMemo(() => {
-    if (!selectedLineup?.videoUrl) {
-      return null;
-    }
-
-    return getYoutubeEmbedUrl(selectedLineup.videoUrl);
+    if (!selectedLineup?.videoUrl) return null;
+    return getVideoEmbedUrl(selectedLineup.videoUrl);
   }, [selectedLineup]);
 
   if (!selectedLineup) {
     return (
-      <div className="flex min-h-[420px] items-center justify-center rounded-3xl border border-dashed border-slate-700 bg-slate-950/60 p-8 text-center">
+      <div className="flex min-h-[320px] items-center justify-center rounded-3xl border border-dashed border-slate-700 bg-slate-950/60 p-8 text-center sm:min-h-[420px]">
         <div className="space-y-3">
-          <p className="text-lg font-semibold text-slate-200">
-            Nenhuma lineup selecionada
-          </p>
-
+          <p className="text-lg font-semibold text-slate-200">Nenhuma lineup selecionada</p>
           <p className="max-w-md text-sm text-slate-400">
-            Clique em uma lineup disponível ou em um hotspot do mapa
-            interativo para visualizar os detalhes da jogada.
+            Clique em uma lineup disponível ou em um hotspot do mapa interativo para visualizar os
+            detalhes da jogada.
           </p>
         </div>
       </div>
@@ -48,7 +30,6 @@ export default function LineupDetails() {
 
   return (
     <div className="space-y-6">
-      {/* HEADER */}
       <div className="space-y-3">
         <div className="flex flex-wrap items-center gap-2">
           {selectedLineup.abilityName && (
@@ -59,29 +40,23 @@ export default function LineupDetails() {
 
           {selectedLineup.difficulty && (
             <span className="rounded-full bg-slate-800 px-3 py-1 text-xs text-slate-300">
-              {selectedLineup.difficulty}
+              {labelDifficulty(selectedLineup.difficulty)}
             </span>
           )}
 
           {selectedLineup.side && (
             <span className="rounded-full bg-violet-500/15 px-3 py-1 text-xs text-violet-200">
-              {selectedLineup.side}
+              {labelSide(selectedLineup.side)}
             </span>
           )}
         </div>
 
         <div>
-          <h2 className="text-2xl font-bold text-white">
-            {selectedLineup.title}
-          </h2>
-
-          <p className="mt-3 text-sm leading-relaxed text-slate-400">
-            {selectedLineup.description}
-          </p>
+          <h2 className="text-2xl font-bold text-white">{selectedLineup.title}</h2>
+          <p className="mt-3 text-sm leading-relaxed text-slate-400">{selectedLineup.description}</p>
         </div>
       </div>
 
-      {/* VIDEO */}
       <div className="overflow-hidden rounded-3xl border border-slate-800 bg-black">
         {embedUrl ? (
           <div className="aspect-video">
@@ -94,18 +69,23 @@ export default function LineupDetails() {
             />
           </div>
         ) : (
-          <div className="flex aspect-video items-center justify-center bg-slate-950 text-sm text-slate-400">
-            URL de vídeo inválida ou não cadastrada.
+          <div className="flex aspect-video flex-col items-center justify-center gap-3 bg-slate-950 p-6 text-center text-sm text-slate-400">
+            <p>Não foi possível embutir este vídeo.</p>
+            <a
+              href={selectedLineup.videoUrl}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="rounded-full border border-slate-700 px-4 py-1.5 text-xs text-cyan-300 hover:border-cyan-500"
+            >
+              Abrir vídeo original
+            </a>
           </div>
         )}
       </div>
 
-      {/* INFO */}
       <div className="grid gap-4 md:grid-cols-2">
         <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-4">
-          <p className="text-xs uppercase tracking-wide text-slate-500">
-            Agente
-          </p>
+          <p className="text-xs uppercase tracking-wide text-slate-500">Agente</p>
 
           <div className="mt-3 flex items-center gap-3">
             {selectedLineup.agent?.displayIcon && (
@@ -120,7 +100,6 @@ export default function LineupDetails() {
               <p className="font-medium text-white">
                 {selectedLineup.agent?.displayName ?? 'Não definido'}
               </p>
-
               <p className="text-sm text-slate-400">
                 {selectedLineup.agent?.role?.displayName ?? 'Sem função'}
               </p>
@@ -129,9 +108,7 @@ export default function LineupDetails() {
         </div>
 
         <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-4">
-          <p className="text-xs uppercase tracking-wide text-slate-500">
-            Mapa
-          </p>
+          <p className="text-xs uppercase tracking-wide text-slate-500">Mapa</p>
 
           <div className="mt-3 flex items-center gap-3">
             {selectedLineup.map?.listViewIcon && (
@@ -146,10 +123,7 @@ export default function LineupDetails() {
               <p className="font-medium text-white">
                 {selectedLineup.map?.displayName ?? 'Não definido'}
               </p>
-
-              <p className="text-sm text-slate-400">
-                Hotspot {selectedLineup.hotspot.label}
-              </p>
+              <p className="text-sm text-slate-400">Hotspot {selectedLineup.hotspot.label}</p>
             </div>
           </div>
         </div>

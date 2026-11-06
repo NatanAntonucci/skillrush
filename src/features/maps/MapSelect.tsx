@@ -1,8 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+
 import { fetchMaps } from '@/services/supabase/maps';
 import { useLineupStore } from '@/stores/lineupStore';
+import { competitiveMaps } from '@/utils/maps';
+
 import type { MapData } from '@/types';
 
 export function MapSelect() {
@@ -15,10 +18,11 @@ export function MapSelect() {
     async function loadMaps() {
       setLoading(true);
       setError(null);
+
       try {
         const data = await fetchMaps();
-        setMaps(data.filter((map) => map.isCompetitive !== false).sort((a, b) => a.displayName.localeCompare(b.displayName)));
-      } catch (err) {
+        setMaps(competitiveMaps(data));
+      } catch {
         setError('Não foi possível carregar mapas.');
       } finally {
         setLoading(false);
@@ -31,12 +35,13 @@ export function MapSelect() {
   return (
     <div className="space-y-2 rounded-3xl border border-slate-800 bg-slate-950/80 p-4">
       <label className="block text-sm font-semibold text-slate-200">Mapa</label>
+
       {loading ? (
         <p className="text-sm text-slate-400">Carregando mapas...</p>
       ) : error ? (
         <p className="text-sm text-rose-400">{error}</p>
       ) : (
-        <div className="space-y-3 max-h-[600px] overflow-y-auto custom-scrollbar">
+        <div className="custom-scrollbar max-h-[420px] space-y-3 overflow-y-auto lg:max-h-[600px]">
           {maps.map((map) => (
             <button
               key={map.id}
@@ -50,24 +55,27 @@ export function MapSelect() {
               title={map.displayName}
             >
               {map.listViewIcon ? (
-                <img 
-                  src={map.listViewIcon} 
-                  alt={map.displayName} 
-                  className="h-12 w-12 rounded-full object-cover border border-slate-700"
-                  loading="lazy" 
+                <img
+                  src={map.listViewIcon}
+                  alt={map.displayName}
+                  className="h-12 w-12 rounded-full border border-slate-700 object-cover"
+                  loading="lazy"
                 />
               ) : (
                 <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-slate-800 text-xs font-semibold text-slate-300">
                   {map.displayName.slice(0, 2).toUpperCase()}
                 </span>
               )}
+
               <div className="text-left">
-                <p className={`text-sm font-medium ${
-                  selectedMap?.id === map.id ? 'text-violet-100' : 'text-slate-200'
-                }`}>
+                <p
+                  className={`text-sm font-medium ${
+                    selectedMap?.id === map.id ? 'text-violet-100' : 'text-slate-200'
+                  }`}
+                >
                   {map.displayName}
                 </p>
-                <p className="text-xs text-slate-500">Mapa</p>
+                <p className="text-xs text-slate-500">Mapa competitivo</p>
               </div>
             </button>
           ))}

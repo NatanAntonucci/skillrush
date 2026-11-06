@@ -38,6 +38,8 @@ interface LineupState {
 
   resetFilters: () => void;
 
+  clearFilters: () => void;
+
   syncFromLineup: (lineup: Lineup) => void;
 }
 
@@ -143,6 +145,14 @@ export const useLineupStore = create<LineupState>((set) => ({
       selectedMap: null,
       selectedLineup: null,
       selectedRole: null,
+    }),
+
+  // Limpa apenas os filtros: mantém mapa, agente e lineup selecionados.
+  clearFilters: () =>
+    set({
+      filters: [],
+      selectedDifficulty: null,
+      selectedSide: null,
     }),
 
   syncFromLineup: (lineup) =>

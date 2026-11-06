@@ -17,7 +17,7 @@ export function LineupFilterPanel() {
   const {
     filters: activeFilters,
     toggleFilter,
-    resetFilters,
+    clearFilters,
     selectedDifficulty,
     selectedSide,
     setSelectedDifficulty,
@@ -37,10 +37,10 @@ export function LineupFilterPanel() {
         </div>
         <button
           type="button"
-          onClick={resetFilters}
+          onClick={clearFilters}
           className="rounded-full border border-slate-700 px-3 py-1 text-xs text-slate-300 transition hover:bg-slate-800"
         >
-          Limpar
+          Limpar filtros
         </button>
       </div>
 

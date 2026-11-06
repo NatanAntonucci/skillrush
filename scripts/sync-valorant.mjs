@@ -23,6 +23,7 @@ const COMPETITIVE_MAPS = new Set([
   'Ascent',
   'Bind',
   'Breeze',
+  'Corrode',
   'Fracture',
   'Haven',
   'Icebox',

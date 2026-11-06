@@ -8,7 +8,7 @@ Atualizado em 05/11/2026 · branch `refactor/hostgator-static` · base `main` in
 |---|---|---|
 | 1 | Higiene do repositório e documentação | ✅ concluída |
 | 2 | Segurança (RLS, fim das API routes, banco) | ✅ concluída e **aplicada em produção** |
-| 3 | Correções funcionais e UX (bugs) | ⏳ próxima |
+| 3 | Correções funcionais e UX (bugs) | 🟡 13 de 16 itens |
 | 4 | URLs, navegação e SEO | ⏳ pendente |
 | 5 | Export estático + deploy HostGator | ⏳ pendente |
 | 6 | Comunidade (envio público + moderação) | ⏳ futura |
@@ -21,23 +21,45 @@ Atualizado em 05/11/2026 · branch `refactor/hostgator-static` · base `main` in
 
 - `.next` removido do controle de versão (150 arquivos de build); repo caiu de **254 para 60 arquivos**.
 - `.gitignore` reescrito: passou a ignorar `.next/`, `out/` e a **não** esconder mais `*.md`.
-- Removidas sobras do template: `src/assets/**` (25 imagens), types sem uso (`news`, `projects`, `events`,
-  `documents`, `accounts`, `edits`, `training`, `partners`), `Footer.tsx`, `useScrollAnimation.ts`,
-  `constants/ui.ts`, `utils/format.ts`, `vite-env.d.ts`, `netlify.toml` e os scripts de imagem do Vite.
-- Lint funcional: `.eslintrc.json` (`next/core-web-vitals`) no lugar do flat config quebrado;
-  devDependencies coerentes.
+- Removidas sobras do template: `src/assets/**` (25 imagens), types sem uso, `Footer.tsx`,
+  `useScrollAnimation.ts`, `constants/ui.ts`, `utils/format.ts`, `vite-env.d.ts`, `netlify.toml`
+  e os scripts de imagem do Vite.
+- Lint funcional: `.eslintrc.json` (`next/core-web-vitals`) no lugar do flat config quebrado.
 - Node 20 fixado (`.nvmrc` + `engines`), scripts `typecheck` e `sync`.
-- Documentação em `docs/` (arquitetura, banco, admin, deploy) + README enxuto.
+- Documentação em `docs/` + README enxuto.
 
 ### Etapa 2 — segurança
 
 - **Removidas as 3 API routes** que eram o furo: `/api/lineups`, `/api/admin/create-user`, `/api/valorant-sync`.
-- Upload passa a gravar **direto no Supabase** com a sessão do usuário; quem autoriza é o RLS.
+- Upload grava **direto no Supabase** com a sessão do usuário; quem autoriza é o RLS.
 - `useAdmin()` lê `profiles.role` para a interface (a tela esconde; o banco proíbe).
-- Service role key saiu do caminho do cliente — **0 ocorrências no build** (verificado).
-- Sync do Valorant virou script Node: `npm run sync` (`scripts/sync-valorant.mjs`).
-- Telas `admin/setup` e `admin/debug` apagadas (a primeira criava usuários sem autenticação).
-- Utilitários novos: `utils/video.ts` (parser de vídeo + conversão clique→percentual considerando letterbox).
+- Service role key fora do caminho do cliente — **0 ocorrências no build**.
+- Sync virou script Node: `npm run sync`.
+- Telas `admin/setup` e `admin/debug` apagadas.
+
+### Etapa 3 — correções funcionais (em andamento)
+
+- **3.1** Header não aponta mais para `/upload` (404): o item "Upload" só existe para admin e leva a
+  `/admin/upload`; inclui botão **Sair** (desktop e mobile).
+- **3.2** Filtro de habilidade passou de AND (`every`) para OR (`some`) — dois filtros não zeram mais a lista.
+- **3.3** Mapa e lista usam a mesma função de filtro (`utils/filters.ts`): hotspot que a lista esconde
+  também some do mapa.
+- **3.4** `LineupProvider` centraliza a busca — uma requisição por seleção em vez de duas.
+- **3.5/3.6** Competitividade vem do banco (`maps.is_competitive`), com Abyss e Corrode incluídos e os mapas
+  de TDM (District, Kasbah, Piazza, Glitch, Drift) fora. `MapSelect`, página de mapas e upload de lineup
+  usam o mesmo helper (`utils/maps.ts`), com deduplicação por nome (a API tem dois "The Range").
+- **3.7** "Limpar filtros" limpa só filtros; não desmonta mapa/agente/lineup (`clearFilters` no store).
+- **3.8** Hotspot na exibição agora é calculado sobre a área desenhada da imagem (fim do deslocamento por
+  letterbox) — mesma matemática do upload.
+- **3.9** Parser de vídeo compartilhado (`utils/video.ts`): YouTube (watch/shorts/embed/live/youtu.be),
+  Twitch, Streamable e Medal, com fallback de link quando não dá para embutir.
+- **3.10** Rótulos PT-BR para dificuldade e lado (`utils/labels.ts`).
+- **3.11** Layout responsivo: grids 40/60 e `1fr/380px` só a partir de `lg`/`xl`; lista e mapa empilham no mobile.
+- **3.12** `error.tsx` e `not-found.tsx` globais.
+- **3.16** Item "Upload" do menu só aparece após login com papel admin/moderador.
+
+Faltam na Etapa 3: **3.13** `next/image`, **3.14** CRUD no admin (editar/excluir lineup),
+**3.15** testes unitários (Vitest).
 
 ### Migrations aplicadas
 
@@ -48,8 +70,9 @@ Atualizado em 05/11/2026 · branch `refactor/hostgator-static` · base `main` in
 | `0003_rls.sql` | policies de leitura/escrita por papel |
 | `0004_hardening.sql` | limite de 5 pendências por usuário, check de `video_url` |
 | `0005_cleanup_legacy_policies.sql` | remove policies antigas do dashboard |
+| `0006_map_competitiveness.sql` | curadoria de `maps.is_competitive` (Abyss/Corrode dentro, TDM fora) |
 
-Rollbacks em `supabase/rollback/`.
+Rollbacks em `supabase/rollback/` (0005 e 0006 são de limpeza/curadoria, sem rollback).
 
 ### Modelo de permissão (validado no banco)
 
@@ -61,16 +84,16 @@ Rollbacks em `supabase/rollback/`.
 
 ### Incidentes encontrados ao aplicar (já corrigidos)
 
-1. **Policy `public read lineups` com `USING (true)`** criada manualmente no dashboard — expunha lineups
-   `pending` publicamente (policies se somam por OR). Removida em `0005`.
+1. **Policy `public read lineups` com `USING (true)`** criada no dashboard — expunha lineups `pending`
+   (policies se somam por OR). Removida em `0005`.
 2. **FKs duplicadas** (`lineups_agent_fk` + `lineups_agent_id_fkey`) → PostgREST recusava o embed
-   `agent:agents(*)` com `PGRST201`, ou seja, a home ficaria sem carregar lineups. Duplicatas removidas e
-   `0002` reescrita para só criar FK se a coluna ainda não tiver nenhuma.
+   `agent:agents(*)` com `PGRST201` e a home ficaria sem lineups. Duplicatas removidas e `0002` reescrita
+   para só criar FK se a coluna ainda não tiver nenhuma.
 
 ### Estado atual do banco
 
 - `lineups`: 1 registro (a de teste), `status = approved`.
-- `agents` 29 · `abilities` 121 · `maps` 23.
+- `agents` 29 · `abilities` 121 · `maps` 23 (12 marcados como competitivos).
 - Admin: `natanantonucci9@gmail.com`. `natanantonucci15@gmail.com` segue como `user`.
 
 ---
@@ -85,37 +108,25 @@ git branch --show-current        # deve ser refactor/hostgator-static
 npm run dev                      # http://localhost:3000
 ```
 
-Se algo reclamar de dependência, rode `npm install` uma vez.
-
 Checklist manual:
 
 1. `/` carrega mapa + agentes sem erro no console.
-2. Selecionar mapa + agente mostra hotspots e lista.
-3. `/admin` → login com a conta admin.
-4. `/admin/upload` → publicar uma lineup clicando no mapa.
-5. Voltar para `/` e confirmar que ela aparece **na hora** (sem rebuild).
-6. Conferir no Supabase (Table editor → `lineups`) que a linha entrou com `status = approved` e `slug`.
+2. Só mapas competitivos aparecem (sem Range, Skirmish, District…); Abyss e Corrode aparecem.
+3. Selecionar mapa + agente mostra hotspots e lista coerentes entre si.
+4. Marcar dois filtros de habilidade mostra a união, não lista vazia.
+5. Selecionar um mapa e clicar em "Limpar filtros" mantém o mapa.
+6. `/admin` → login com a conta admin; o menu passa a mostrar "Upload" e "Sair".
+7. `/admin/upload`: o seletor de mapas mostra só competitivos.
+8. Publicar uma lineup → aparece na hora na home.
 
 ---
 
 ## Pendências
 
-### Etapa 3 — correções funcionais (próxima)
+### Etapa 3 (restante)
 
-- [ ] 3.1 Header: link `/upload` → `/admin/upload` (hoje 404)
-- [ ] 3.2 Filtro de habilidade com `every()` (AND) → `some()` (OR)
-- [ ] 3.3 Hotspots do mapa ignoram dificuldade/lado/habilidade — usar um `applyFilters` único
-- [ ] 3.4 `useLineups` chamado duas vezes por seleção (mapa + lista) — buscar uma vez e distribuir
-- [ ] 3.5 Competitividade de mapa vinda do banco (`maps.is_competitive`) em vez de lista fixa no código
-- [ ] 3.6 Abyss/Corrode fora do seletor; `maps` mostra Skirmish/Range e duplicata "The Range"
-- [ ] 3.7 Botão "Limpar" apaga agente/mapa/lineup — deve limpar só filtros
-- [ ] 3.8 Coordenada do hotspot na exibição ainda usa a caixa do container (upload já corrigido)
-- [ ] 3.9 Parser de vídeo integrado ao `LineupDetails` (hoje só usa regex de YouTube inline)
-- [ ] 3.10 Rótulos PT-BR para `easy/medium/hard` e `attack/defense`
-- [ ] 3.11 Layout mobile-first (grid 40/60 + 380px fixo quebra no celular)
-- [ ] 3.12 `error.tsx`, `not-found.tsx`, estados de loading consistentes
-- [ ] 3.13 `next/image` nas imagens externas (agente/mapa)
-- [ ] 3.14 CRUD no admin: editar/excluir lineup (hoje só cria)
+- [ ] 3.13 `next/image` nas imagens externas (agente/mapa) — avaliar junto com o export estático
+- [ ] 3.14 CRUD no admin: editar e excluir lineup
 - [ ] 3.15 Testes unitários (Vitest) para `applyFilters`, parser de vídeo e clamp de coordenadas
 
 ### Etapa 4 — URLs e SEO
@@ -167,7 +178,7 @@ git tag -l                 # a tag pre-refactor marca o ponto de partida
 
 **Rollback de banco**: rodar `supabase/rollback/000X_*.sql` na ordem inversa (0004 → 0001).
 
-**Backup dos dados anterior às migrations**: `backup-pre-migrations.json` (fora do repo).
+**Backup anterior às migrations**: `backup-pre-migrations.json` (fora do repo).
 
 **Se o PostgREST reclamar de relação duplicada após mexer em FK**
 

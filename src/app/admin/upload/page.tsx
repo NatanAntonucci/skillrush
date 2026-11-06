@@ -9,6 +9,7 @@ import { fetchAbilitiesByAgent } from '@/services/supabase/abilities';
 import { createLineup } from '@/services/supabase/lineups';
 import { useAdmin } from '@/hooks/useAdmin';
 import { pointToPercentage } from '@/utils/video';
+import { competitiveMaps } from '@/utils/maps';
 
 import type { Agent, Ability, MapData } from '@/types';
 
@@ -66,7 +67,7 @@ export default function UploadPage() {
       try {
         const [agentData, mapData] = await Promise.all([fetchAgents(), fetchMaps()]);
         setAgents(agentData);
-        setMaps(mapData.filter((item) => item.displayName !== 'Menu'));
+        setMaps(competitiveMaps(mapData));
       } catch {
         setError('Erro ao carregar agentes ou mapas.');
       }
