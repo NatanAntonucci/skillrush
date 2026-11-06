@@ -84,6 +84,20 @@ Atualizado em 05/11/2026 · branch `refactor/hostgator-static` · base `main` in
 - `npm run sync` agora imprime o que mudou (agentes/habilidades/mapas novos) e avisa quando aparece mapa
   sem curadoria de competitividade.
 
+### Onda de UX/UI (implementada)
+
+| Superfície | O que é |
+|---|---|
+| `/` | landing: busca, "continuar de onde parei", mapa grid e últimas lineups |
+| `/buscar` | busca por agente, mapa, habilidade e título da lineup |
+| `/maps/[slug]` | **página de resultado**: mapa + chips + lista + painel de detalhe (sem rolar), modo rápido e copiar link |
+| `/maps/[slug]/[agent]` | página de SEO por agente no mapa |
+| `/agents/[slug]`, `/lineups/[slug]` | perfis e detalhe da lineup |
+| `/painel` | o painel interativo antigo, preservado |
+
+Detalhes: hotspots de 44 px, thumbnails de vídeo, recentes em `localStorage`, contraste/tipografia
+revisados e painel de detalhe em *bottom sheet* no mobile.
+
 ### Migrations aplicadas
 
 | Arquivo | Conteúdo |

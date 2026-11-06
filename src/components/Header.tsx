@@ -3,15 +3,16 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Menu, X, LogOut, Upload } from 'lucide-react';
+import { Menu, X, LogOut, Upload, Search } from 'lucide-react';
 
 import { supabase } from '@/services/supabase/client';
 import { useAdmin } from '@/hooks/useAdmin';
 
 const publicNav = [
-  { label: 'Lineups', href: '/' },
-  { label: 'Agentes', href: '/agents' },
+  { label: 'Início', href: '/' },
   { label: 'Mapas', href: '/maps' },
+  { label: 'Agentes', href: '/agents' },
+  { label: 'Painel', href: '/painel' },
 ];
 
 export default function Header() {
@@ -32,7 +33,7 @@ export default function Header() {
             <Image src="/logo.svg" alt="Skillrush" width={220} height={102} priority className="h-16 w-auto" />
           </Link>
 
-          <nav className="hidden items-center gap-8 lg:flex">
+          <nav className="hidden items-center gap-6 lg:flex">
             {publicNav.map((item) => (
               <Link
                 key={item.href}
@@ -42,6 +43,14 @@ export default function Header() {
                 {item.label}
               </Link>
             ))}
+
+            <Link
+              href="/buscar"
+              aria-label="Buscar"
+              className="rounded-full border border-slate-800 p-2 text-slate-300 transition hover:border-slate-600 hover:text-white"
+            >
+              <Search size={16} />
+            </Link>
 
             {!loading && isAdmin && (
               <>
@@ -88,6 +97,15 @@ export default function Header() {
                 {item.label}
               </Link>
             ))}
+
+            <Link
+              href="/buscar"
+              onClick={() => setIsMenuOpen(false)}
+              className="flex items-center gap-2 rounded-2xl px-4 py-3 text-slate-200 hover:bg-slate-900 hover:text-white"
+            >
+              <Search size={16} />
+              Buscar
+            </Link>
 
             {!loading && isAdmin && (
               <>

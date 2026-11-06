@@ -1,14 +1,11 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 
 import { LineupCard } from '@/components/lineup/LineupCard';
+import { MapBoard } from '@/components/map/MapBoard';
 import { getCompetitiveMaps, getLineupsByMap, getMapBySlug } from '@/services/queries';
-import { resolveImage } from '@/utils/images';
 import { slugify } from '@/utils/slug';
-
-import type { Lineup } from '@/types';
 
 interface MapPageProps {
   params: { slug: string };
@@ -46,75 +43,60 @@ export default async function MapPage({ params }: MapPageProps) {
 
   const lineups = await getLineupsByMap(map.id);
 
-  const byAgent = new Map<string, { name: string; slug: string; lineups: Lineup[] }>();
-
-  for (const lineup of lineups) {
-    const agentName = lineup.agent?.displayName ?? lineup.agentId;
-    const slug = slugify(agentName);
-    const entry = byAgent.get(slug) ?? { name: agentName, slug, lineups: [] };
-    entry.lineups.push(lineup);
-    byAgent.set(slug, entry);
-  }
-
-  const agents = Array.from(byAgent.values()).sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
-
   return (
     <main className="min-h-screen bg-slate-950 text-slate-100">
-      <section className="mx-auto max-w-6xl px-6 py-10 lg:px-8">
-        <nav className="mb-6 text-sm text-slate-500">
+      <section className="mx-auto max-w-6xl px-4 py-8 lg:px-8">
+        <nav className="mb-4 text-sm text-slate-400">
+          <Link href="/" className="hover:text-cyan-300">
+            Início
+          </Link>{' '}
+          /{' '}
           <Link href="/maps" className="hover:text-cyan-300">
             Mapas
           </Link>{' '}
-          / <span className="text-slate-300">{map.displayName}</span>
+          / <span className="text-slate-200">{map.displayName}</span>
         </nav>
 
-        <header className="flex flex-col gap-6 sm:flex-row sm:items-start">
-          {map.displayIcon && (
-            <Image
-              src={resolveImage(map.displayIcon)!}
-              alt={map.displayName}
-              width={160}
-              height={160}
-              className="h-32 w-32 rounded-2xl border border-slate-800 object-cover"
-            />
-          )}
-
+        <header className="mb-6 flex flex-wrap items-end justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold text-white">Lineups de {map.displayName}</h1>
-            <p className="mt-2 max-w-2xl text-sm text-slate-400">
-              {lineups.length === 0
-                ? 'Ainda não há lineups publicadas para este mapa.'
-                : `${lineups.length} lineups publicadas neste mapa.`}
+            <p className="mt-1 text-sm text-slate-400">
+              Escolha o agente no topo, clique no hotspot e veja a execução sem sair da página.
             </p>
           </div>
+
+          <Link
+            href="/painel"
+            className="rounded-xl border border-slate-700 px-4 py-2 text-sm text-slate-300 transition hover:border-slate-500"
+          >
+            Painel completo
+          </Link>
         </header>
 
         {lineups.length === 0 ? (
-          <div className="mt-8 rounded-3xl border border-dashed border-slate-700 p-8 text-center text-slate-400">
-            Em breve. Enquanto isso, veja os outros mapas.
+          <div className="rounded-3xl border border-dashed border-slate-700 p-10 text-center text-slate-400">
+            <p>Ainda não há lineups publicadas para {map.displayName}.</p>
+            <Link href="/maps" className="mt-4 inline-block text-cyan-300 hover:text-cyan-200">
+              Ver outros mapas →
+            </Link>
           </div>
         ) : (
-          <div className="mt-10 space-y-10">
-            {agents.map((agent) => (
-              <div key={agent.slug}>
-                <div className="mb-4 flex items-center justify-between">
-                  <h2 className="text-lg font-semibold text-white">{agent.name}</h2>
-                  <Link
-                    href={`/maps/${slugify(map.displayName)}/${agent.slug}`}
-                    className="text-sm text-cyan-300 hover:text-cyan-200"
-                  >
-                    Ver só {agent.name} →
-                  </Link>
-                </div>
+          <>
+            <MapBoard map={map} lineups={lineups} />
 
-                <div className="grid gap-3 md:grid-cols-2">
-                  {agent.lineups.map((lineup) => (
-                    <LineupCard key={lineup.id} lineup={lineup} />
-                  ))}
-                </div>
+            {/* lista completa — também serve de conteúdo para indexação */}
+            <section className="mt-12 border-t border-slate-800 pt-8">
+              <h2 className="text-lg font-semibold text-white">
+                Todas as lineups de {map.displayName}
+              </h2>
+
+              <div className="mt-4 grid gap-3 md:grid-cols-2">
+                {lineups.map((lineup) => (
+                  <LineupCard key={lineup.id} lineup={lineup} />
+                ))}
               </div>
-            ))}
-          </div>
+            </section>
+          </>
         )}
       </section>
     </main>

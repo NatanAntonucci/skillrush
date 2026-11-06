@@ -93,7 +93,7 @@ export function MapSelect() {
                 >
                   {map.displayName}
                 </p>
-                <p className="text-xs text-slate-500">Mapa competitivo</p>
+                <p className="text-xs text-slate-400">Mapa competitivo</p>
               </div>
             </button>
           ))}

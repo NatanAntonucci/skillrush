@@ -3,10 +3,13 @@ import Link from 'next/link';
 
 import { labelDifficulty, labelSide } from '@/utils/labels';
 import { resolveImage } from '@/utils/images';
+import { getVideoThumbnail } from '@/utils/video';
 
 import type { Lineup } from '@/types';
 
 export function LineupCard({ lineup }: { lineup: Lineup }) {
+  const thumbnail = getVideoThumbnail(lineup.videoUrl);
+
   return (
     <Link
       href={`/lineups/${lineup.slug}`}
@@ -29,7 +32,7 @@ export function LineupCard({ lineup }: { lineup: Lineup }) {
 
         <p className="mt-1 line-clamp-2 text-sm text-slate-400">{lineup.description}</p>
 
-        <div className="mt-2 flex flex-wrap gap-2 text-[11px] uppercase tracking-wide text-slate-500">
+        <div className="mt-2 flex flex-wrap gap-2 text-[11px] uppercase tracking-wide text-slate-400">
           {lineup.agent?.displayName && <span>{lineup.agent.displayName}</span>}
           {lineup.map?.displayName && <span>· {lineup.map.displayName}</span>}
           {lineup.abilityName && <span>· {lineup.abilityName}</span>}
@@ -37,6 +40,18 @@ export function LineupCard({ lineup }: { lineup: Lineup }) {
           {lineup.side && <span>· {labelSide(lineup.side)}</span>}
         </div>
       </div>
+
+      {thumbnail && (
+        <div className="hidden h-16 w-28 shrink-0 overflow-hidden rounded-lg bg-black/40 sm:block">
+          <Image
+            src={thumbnail}
+            alt=""
+            width={112}
+            height={64}
+            className="h-full w-full object-cover opacity-90 transition group-hover:opacity-100"
+          />
+        </div>
+      )}
     </Link>
   );
 }

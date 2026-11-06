@@ -39,18 +39,32 @@ export function clamp(value: number, min: number, max: number) {
   return Math.min(max, Math.max(min, value));
 }
 
+/** Extrai o ID de um vídeo do YouTube, quando houver. */
+export function getYoutubeId(url: string): string | null {
+  if (!url) return null;
+
+  const match = url
+    .trim()
+    .match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/shorts\/|youtube\.com\/live\/)([\w-]{6,})/);
+
+  return match?.[1] ?? null;
+}
+
+/** Thumbnail do YouTube em resolução de card. */
+export function getVideoThumbnail(url: string): string | null {
+  const id = getYoutubeId(url);
+  return id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : null;
+}
+
 /** Converte a URL do vídeo em uma URL de embed, quando reconhecida. */
 export function getVideoEmbedUrl(url: string): string | null {
   if (!url) return null;
 
   const trimmed = url.trim();
 
-  const youtube =
-    trimmed.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/shorts\/|youtube\.com\/live\/)([\w-]{6,})/) ??
-    null;
-
-  if (youtube?.[1]) {
-    return `https://www.youtube.com/embed/${youtube[1]}`;
+  const youtubeId = getYoutubeId(trimmed);
+  if (youtubeId) {
+    return `https://www.youtube.com/embed/${youtubeId}`;
   }
 
   const twitch = trimmed.match(/twitch\.tv\/videos\/(\d+)/);

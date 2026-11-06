@@ -4,34 +4,36 @@ interface MapHotspotProps {
   abilityIcon?: string | null;
   x: number;
   y: number;
+  label?: string;
   isSelected?: boolean;
   onClick: () => void;
 }
 
-export function MapHotspot({ abilityIcon, x, y, isSelected = false, onClick }: MapHotspotProps) {
+export function MapHotspot({
+  abilityIcon,
+  x,
+  y,
+  label,
+  isSelected = false,
+  onClick,
+}: MapHotspotProps) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`absolute -translate-x-1/2 -translate-y-1/2 flex items-center justify-center rounded-full transition shadow-lg ${ 
+      className={`absolute z-10 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full shadow-lg transition-all ${
         isSelected
-          ? 'h-10 w-10 border-2 border-cyan-400 bg-cyan-500/95 shadow-cyan-500/40'
-          : 'h-6 w-6 border border-cyan-500 bg-cyan-500/80 shadow-cyan-500/20 hover:h-8 hover:w-8 hover:bg-cyan-400'
+          ? 'h-12 w-12 border-2 border-cyan-300 bg-cyan-500 shadow-cyan-500/50'
+          : 'h-11 w-11 border border-cyan-400/80 bg-cyan-500/85 shadow-cyan-500/30 hover:bg-cyan-400'
       }`}
-      style={{
-        left: `${x}%`,
-        top: `${y}%`,
-      }}
-      title="Clique para selecionar"
+      style={{ left: `${x}%`, top: `${y}%` }}
+      title={label ? `Hotspot ${label} — clique para ver a lineup` : 'Clique para ver a lineup'}
+      aria-label={label ? `Hotspot ${label}` : 'Hotspot'}
     >
       {abilityIcon ? (
-        <img
-          src={abilityIcon}
-          alt="Habilidade"
-          className="h-5 w-5 rounded-full object-cover"
-        />
+        <img src={abilityIcon} alt="" className="h-6 w-6 rounded-full object-contain" />
       ) : (
-        <span className="text-xs font-bold text-white">•</span>
+        <span className="text-sm font-bold text-slate-950">{label ?? '•'}</span>
       )}
     </button>
   );

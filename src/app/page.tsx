@@ -1,94 +1,96 @@
-'use client';
+import Image from 'next/image';
+import Link from 'next/link';
+import type { Metadata } from 'next';
 
-import { useEffect, useRef } from 'react';
+import { LineupCard } from '@/components/lineup/LineupCard';
+import { SearchBox } from '@/components/search/SearchBox';
+import { RecentShortcuts } from '@/features/home/RecentShortcuts';
+import { getAllLineups, getCompetitiveMaps } from '@/services/queries';
+import { resolveImage } from '@/utils/images';
+import { slugify } from '@/utils/slug';
 
-import { LineupProvider } from '@/features/lineups/LineupProvider';
-import { UrlSync } from '@/features/lineups/UrlSync';
-import { AgentSelect } from '@/features/agents/AgentSelect';
-import { MapSelect } from '@/features/maps/MapSelect';
-import { LineupFilterPanel } from '@/components/lineup/LineupFilterPanel';
-import { LineupList } from '@/features/lineups/LineupList';
-import LineupDetails from '@/components/lineup/LineupDetails';
-import InteractiveMap from '@/components/map/InteractiveMap';
-import { useLineupStore } from '@/stores/lineupStore';
+export const metadata: Metadata = {
+  title: 'Skillrush — lineups de Valorant para consultar em segundos',
+  description:
+    'Ache a lineup do seu agente no mapa em segundos: hotspots no mapa, vídeo e execução passo a passo.',
+};
 
-export default function LineupsPage() {
-  const { selectedLineup } = useLineupStore();
-  const lineupDetailsRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (selectedLineup && lineupDetailsRef.current) {
-      lineupDetailsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  }, [selectedLineup]);
+export default async function HomePage() {
+  const [maps, lineups] = await Promise.all([getCompetitiveMaps(), getAllLineups()]);
+  const latest = lineups.slice(0, 6);
 
   return (
-    <LineupProvider>
-      <UrlSync />
-      <div className="flex min-h-screen flex-col gap-6 bg-slate-950 p-4 text-white sm:p-6">
-        {/* Mapas | Agentes */}
-        <div className="grid gap-6 lg:grid-cols-[40%_60%]">
-          <div className="flex flex-col">
-            <div className="mb-4">
-              <p className="text-xs uppercase tracking-[0.28em] text-slate-500">Seleção de Mapas</p>
-              <h2 className="mt-2 text-lg font-semibold text-white">Mapas</h2>
-            </div>
-            <div className="custom-scrollbar flex-1 overflow-y-auto">
-              <MapSelect />
-            </div>
-          </div>
+    <main className="min-h-screen bg-slate-950 text-slate-100">
+      <section className="mx-auto max-w-5xl px-6 pb-8 pt-12 text-center lg:pt-16">
+        <h1 className="text-3xl font-bold text-white sm:text-4xl">
+          Ache a lineup antes da partida
+        </h1>
+        <p className="mx-auto mt-3 max-w-xl text-slate-400">
+          Escolha o mapa, o agente e veja onde jogar — com vídeo e execução em segundos.
+        </p>
 
-          <div className="flex flex-col">
-            <div className="mb-4">
-              <p className="text-xs uppercase tracking-[0.28em] text-slate-500">Seleção de Agentes</p>
-              <h2 className="mt-2 text-lg font-semibold text-white">Agentes</h2>
-            </div>
-            <div className="custom-scrollbar flex-1 overflow-auto">
-              <AgentSelect />
-            </div>
-          </div>
+        <div className="mx-auto mt-8 max-w-xl">
+          <SearchBox />
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-5xl px-6">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 className="text-xs uppercase tracking-[0.2em] text-slate-400">Continuar de onde parei</h2>
+          <Link href="/painel" className="text-sm text-cyan-300 hover:text-cyan-200">
+            Abrir painel completo →
+          </Link>
         </div>
 
-        {/* Filtros */}
-        <div>
-          <div className="mb-4">
-            <p className="text-xs uppercase tracking-[0.28em] text-slate-500">Filtros</p>
-          </div>
-          <LineupFilterPanel />
+        <div className="mt-3">
+          <RecentShortcuts />
         </div>
+      </section>
 
-        {/* Mapa interativo | Lista */}
-        <div className="grid flex-1 gap-6 xl:grid-cols-[1fr_380px]">
-          <div className="flex flex-col">
-            <div className="mb-4">
-              <p className="text-xs uppercase tracking-[0.28em] text-slate-500">Painel Tático</p>
-              <h3 className="mt-2 text-lg font-semibold text-white">Mapa Interativo</h3>
-            </div>
-            <div className="flex-1 overflow-hidden">
-              <InteractiveMap />
-            </div>
-          </div>
+      <section className="mx-auto max-w-5xl px-6 py-10">
+        <h2 className="text-xs uppercase tracking-[0.2em] text-slate-400">Mapas</h2>
 
-          <div className="flex max-h-[600px] flex-col">
-            <div className="mb-4">
-              <p className="text-xs uppercase tracking-[0.28em] text-slate-500">Lineups</p>
-              <h3 className="mt-2 text-lg font-semibold text-white">Disponíveis</h3>
-            </div>
-            <div className="custom-scrollbar flex-1 overflow-y-auto">
-              <LineupList />
-            </div>
-          </div>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {maps.map((map) => (
+            <Link
+              key={map.id}
+              href={`/maps/${slugify(map.displayName)}`}
+              className="group overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/70 transition hover:border-cyan-500/60"
+            >
+              <div className="relative h-28 w-full bg-slate-900">
+                {map.displayIcon && (
+                  <Image
+                    src={resolveImage(map.displayIcon)!}
+                    alt={map.displayName}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="object-cover opacity-80 transition group-hover:opacity-100"
+                  />
+                )}
+              </div>
+
+              <div className="flex items-center justify-between px-4 py-3">
+                <span className="font-medium text-white group-hover:text-cyan-300">
+                  {map.displayName}
+                </span>
+                <span className="text-xs text-slate-400">lineups →</span>
+              </div>
+            </Link>
+          ))}
         </div>
+      </section>
 
-        {/* Detalhes */}
-        <div ref={lineupDetailsRef} className="flex flex-col border-t border-slate-800 pt-6">
-          <div className="mb-4">
-            <p className="text-xs uppercase tracking-[0.28em] text-slate-500">Detalhes</p>
-            <h3 className="mt-2 text-lg font-semibold text-white">Lineup Selecionada</h3>
+      {latest.length > 0 && (
+        <section className="mx-auto max-w-5xl px-6 pb-16">
+          <h2 className="text-xs uppercase tracking-[0.2em] text-slate-400">Últimas lineups</h2>
+
+          <div className="mt-4 grid gap-3 md:grid-cols-2">
+            {latest.map((lineup) => (
+              <LineupCard key={lineup.id} lineup={lineup} />
+            ))}
           </div>
-          <LineupDetails />
-        </div>
-      </div>
-    </LineupProvider>
+        </section>
+      )}
+    </main>
   );
 }

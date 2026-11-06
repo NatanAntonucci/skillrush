@@ -65,7 +65,7 @@ export function LineupList() {
               <h3 className="truncate text-xs font-bold transition-colors group-hover:text-cyan-300">
                 {lineup.title}
               </h3>
-              <div className="mt-1 flex gap-2 text-[10px] uppercase tracking-tight text-slate-400">
+              <div className="mt-1 flex gap-2 text-[11px] uppercase tracking-tight text-slate-400">
                 <span>{labelDifficulty(lineup.difficulty)}</span>
                 {lineup.side && (
                   <>

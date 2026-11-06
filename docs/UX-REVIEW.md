@@ -2,6 +2,22 @@
 
 Revisão sênior de design · 05/11/2026 · base: código e telas atuais do projeto
 
+> **Estado:** a onda 1 descrita no item 6 já está implementada (ver seção 0). As ondas 2 e 3 seguem pendentes.
+
+## 0. O que já foi implementado
+
+- **Home virou ponto de partida** (`/`): busca, "continuar de onde parei", grid de mapas e últimas lineups.
+- **`/maps/[slug]` virou a página de resultado**: mapa + chips de agente/habilidade/dificuldade/lado +
+  lista + painel de detalhe, sem rolar. Modo rápido e "copiar link" inclusos.
+- **Busca** (`/buscar`) por agente, mapa, habilidade e nome da lineup.
+- **Recentes** em `localStorage` (3 últimos mapas/agentes) com atalho de um clique.
+- **Hotspots de 44 px** com rótulo e tooltip.
+- **Thumbnail do vídeo** nos cards.
+- **Contraste e tipografia** revisados (texto mínimo 11–12 px, `slate-400` no lugar de `slate-500`).
+- **Painel antigo preservado** em `/painel` (não quebrar o que funcionava).
+- Lista completa abaixo do board em `/maps/[slug]` para manter conteúdo no HTML (SEO).
+
+
 ---
 
 ## 1. Qual é o trabalho do produto

@@ -87,7 +87,7 @@ export default function LineupDetails() {
 
       <div className="grid gap-4 md:grid-cols-2">
         <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-4">
-          <p className="text-xs uppercase tracking-wide text-slate-500">Agente</p>
+          <p className="text-xs uppercase tracking-wide text-slate-400">Agente</p>
 
           <div className="mt-3 flex items-center gap-3">
             {selectedLineup.agent?.displayIcon && (
@@ -112,7 +112,7 @@ export default function LineupDetails() {
         </div>
 
         <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-4">
-          <p className="text-xs uppercase tracking-wide text-slate-500">Mapa</p>
+          <p className="text-xs uppercase tracking-wide text-slate-400">Mapa</p>
 
           <div className="mt-3 flex items-center gap-3">
             {selectedLineup.map?.listViewIcon && (
