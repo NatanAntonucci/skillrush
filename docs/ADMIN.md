@@ -27,8 +27,22 @@ Não é necessário buildar nem subir arquivos: o upload grava direto no Supabas
 
 ## Criar novos administradores
 
-Pelo dashboard do Supabase (Authentication → Users) ou via SQL:
+1. **Criar a conta**: Supabase → *Authentication → Users → Add user* (marque **Auto Confirm**).
+   O trigger cria o `profile` automaticamente.
+2. **Dar o papel**: abra `/admin/equipe`, encontre o e-mail e troque para **Administrador** ou **Moderador**.
+3. Alternativa por SQL:
 
 ```sql
-update profiles set role = 'admin' where id = (select id from auth.users where email = 'pessoa@email.com');
+update profiles set role = 'admin'
+where id = (select id from auth.users where email = 'pessoa@email.com');
 ```
+
+Papéis: `user` (só lê e envia pendente), `moderator` (publica, edita e exclui lineups) e `admin`
+(tudo acima + gerencia a equipe). A tela de equipe é visível apenas para `admin`.
+
+## Tela de equipe (`/admin/equipe`)
+
+- Lista e-mails, papel e data de criação via `list_profiles()` (`security definer`, só admin).
+- Permite promover/rebaixar usuários.
+- **Não** cria contas: isso exige a Admin API do Supabase (service role), que não roda em site estático —
+  por isso o passo 1 é feito no dashboard. A tela continua funcionando com o site publicado.
