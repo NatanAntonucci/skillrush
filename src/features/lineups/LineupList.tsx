@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useLineupData } from '@/features/lineups/LineupProvider';import { useLineupStore } from '@/stores/lineupStore';
 import { classNames } from '@/utils/classNames';
 import { labelDifficulty, labelSide } from '@/utils/labels';
+import { resolveImage } from '@/utils/images';
 
 export function LineupList() {
   const { visibleLineups, loading, error } = useLineupData();
@@ -51,7 +52,7 @@ export function LineupList() {
             <div className="flex h-10 w-10 items-center justify-center rounded bg-black/40 p-1">
               {lineup.ability?.displayIcon && (
                 <Image
-                  src={lineup.ability.displayIcon}
+                  src={resolveImage(lineup.ability.displayIcon)!}
                   alt=""
                   width={40}
                   height={40}

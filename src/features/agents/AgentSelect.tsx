@@ -4,6 +4,7 @@ import { useEffect, useState, useMemo, useRef } from 'react';
 import Image from 'next/image';
 import { fetchAgents } from '@/services/supabase/agents';
 import { useLineupStore } from '@/stores/lineupStore';
+import { resolveImage } from '@/utils/images';
 import { slugify } from '@/utils/slug';
 import type { Agent } from '@/types';
 
@@ -111,7 +112,7 @@ export function AgentSelect() {
               >
                 {agent.displayIcon ? (
                   <Image
-                    src={agent.displayIcon}
+                    src={resolveImage(agent.displayIcon)!}
                     alt={agent.displayName}
                     width={40}
                     height={40}

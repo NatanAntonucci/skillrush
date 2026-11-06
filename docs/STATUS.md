@@ -75,6 +75,15 @@ Atualizado em 05/11/2026 · branch `refactor/hostgator-static` · base `main` in
 - Build gera 12 páginas de mapa, 29 de agente, as lineups publicadas e os pares mapa/agente existentes.
 - Falta: imagem OG padrão (hoje usa splash do mapa/ícone do agente) e home como landing com destaques.
 
+### Imagens locais e relatório do sync
+
+- `npm run assets` baixa e otimiza (WebP) os ícones de agentes/habilidades e imagens de mapa para
+  `public/assets/valorant/`, gerando `src/data/assets.json` (187 entradas, ~1,1 MB — antes 21 MB em PNG).
+- `resolveImage()` prefere o arquivo local e cai na URL remota quando não houver, então o build funciona
+  mesmo sem rodar o script.
+- `npm run sync` agora imprime o que mudou (agentes/habilidades/mapas novos) e avisa quando aparece mapa
+  sem curadoria de competitividade.
+
 ### Migrations aplicadas
 
 | Arquivo | Conteúdo |

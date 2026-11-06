@@ -96,14 +96,25 @@ async function main() {
     })),
   );
 
-  // preserva a curadoria de mapas competitivos já feita no banco
-  const { data: existingMaps, error: existingMapsError } = await supabase
-    .from('maps')
-    .select('id, is_competitive');
+  // snapshot do que já existe, para relatar novidades no final
+  const [{ data: existingAgents }, { data: existingAbilities, error: existingAbilitiesError }, { data: existingMaps, error: existingMapsError }] =
+    await Promise.all([
+      supabase.from('agents').select('id'),
+      supabase.from('abilities').select('id'),
+      supabase.from('maps').select('id, is_competitive'),
+    ]);
 
   if (existingMapsError) {
     throw new Error(`Falha ao ler mapas existentes: ${existingMapsError.message}`);
   }
+
+  if (existingAbilitiesError) {
+    throw new Error(`Falha ao ler habilidades existentes: ${existingAbilitiesError.message}`);
+  }
+
+  const knownAgentIds = new Set((existingAgents ?? []).map((row) => row.id));
+  const knownAbilityIds = new Set((existingAbilities ?? []).map((row) => row.id));
+  const knownMapIds = new Set((existingMaps ?? []).map((row) => row.id));
 
   const competitiveById = new Map((existingMaps ?? []).map((map) => [map.id, map.is_competitive]));
 
@@ -131,7 +142,24 @@ async function main() {
     console.log(`  ${table}: ${rows.length} registros`);
   }
 
-  console.log('Sync concluído.');
+  const newAgents = agentRows.filter((row) => !knownAgentIds.has(row.id));
+  const newAbilities = abilityRows.filter((row) => !knownAbilityIds.has(row.id));
+  const newMaps = mapRows.filter((row) => !knownMapIds.has(row.id));
+
+  console.log('\nResumo:');
+  console.log(`  agentes: ${agentRows.length}${newAgents.length ? ` (novos: ${newAgents.map((row) => row.display_name).join(', ')})` : ''}`);
+  console.log(`  habilidades: ${abilityRows.length}${newAbilities.length ? ` (novas: ${newAbilities.length})` : ''}`);
+  console.log(`  mapas: ${mapRows.length}${newMaps.length ? ` (novos: ${newMaps.map((row) => row.display_name).join(', ')})` : ''}`);
+
+  const mapsWithoutCuration = newMaps.filter((row) => !COMPETITIVE_MAPS.has(row.display_name) && !competitiveById.has(row.id));
+
+  if (mapsWithoutCuration.length > 0) {
+    console.log('\n⚠ Mapas novos sem curadoria de competitividade:');
+    console.log(`   ${mapsWithoutCuration.map((row) => row.display_name).join(', ')}`);
+    console.log('   Ajuste em maps.is_competitive (ver docs/BANCO.md).');
+  }
+
+  console.log('\nSync concluído.');
 }
 
 main().catch((error) => {

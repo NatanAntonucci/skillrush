@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { fetchMaps } from '@/services/supabase/maps';
 import { useLineupStore } from '@/stores/lineupStore';
 import { competitiveMaps } from '@/utils/maps';
+import { resolveImage } from '@/utils/images';
 import { slugify } from '@/utils/slug';
 
 import type { MapData } from '@/types';
@@ -72,7 +73,7 @@ export function MapSelect() {
             >
               {map.listViewIcon ? (
                 <Image
-                  src={map.listViewIcon}
+                  src={resolveImage(map.listViewIcon)!}
                   alt={map.displayName}
                   width={48}
                   height={48}

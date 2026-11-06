@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import { labelDifficulty, labelSide } from '@/utils/labels';
+import { resolveImage } from '@/utils/images';
 
 import type { Lineup } from '@/types';
 
@@ -14,7 +15,7 @@ export function LineupCard({ lineup }: { lineup: Lineup }) {
       <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-black/40 p-1">
         {lineup.ability?.displayIcon && (
           <Image
-            src={lineup.ability.displayIcon}
+            src={resolveImage(lineup.ability.displayIcon)!}
             alt={lineup.abilityName}
             width={40}
             height={40}

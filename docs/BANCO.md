@@ -78,3 +78,27 @@ npm run sync
 ```
 
 Requer `SUPABASE_SERVICE_ROLE_KEY` no `.env.local` (nunca no bundle do cliente).
+O script faz *upsert* de agentes, habilidades e mapas e imprime um resumo com o que é novo:
+
+```
+Resumo:
+  agentes: 29 (novos: Tejo)
+  habilidades: 121 (novas: 4)
+  mapas: 23 (novos: Kasbah)
+⚠ Mapas novos sem curadoria de competitividade:
+   Kasbah → ajuste maps.is_competitive
+```
+
+Fluxo sugerido a cada patch da Riot (ou 1×/mês): `npm run sync` → ler o resumo → se aparecer mapa novo,
+decidir se é competitivo (`update maps set is_competitive = ...`) → `npm run assets` → rebuild.
+
+## Imagens do jogo
+
+`npm run assets` baixa ícones de agentes/habilidades e imagens de mapa, otimiza para **WebP** (160 px para
+agente, 96 px habilidade, 1024/320 px mapa) em `public/assets/valorant/` e gera `src/data/assets.json`.
+O app usa `resolveImage()`: prefere o arquivo local e cai na URL remota se não existir.
+
+- `npm run assets` — baixa só o que falta
+- `npm run assets -- --force` — reprocessa tudo
+
+Tamanho atual: ~1,1 MB para 187 imagens (antes: ~21 MB em PNG).

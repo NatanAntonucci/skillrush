@@ -4,6 +4,7 @@ import type { Metadata } from 'next';
 
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { getAgents } from '@/services/queries';
+import { resolveImage } from '@/utils/images';
 import { slugify } from '@/utils/slug';
 
 export const metadata: Metadata = {
@@ -32,7 +33,7 @@ export default async function AgentsPage() {
               <div className="mb-4 flex items-center gap-4">
                 {agent.displayIcon && (
                   <Image
-                    src={agent.displayIcon}
+                    src={resolveImage(agent.displayIcon)!}
                     alt={agent.displayName}
                     width={48}
                     height={48}

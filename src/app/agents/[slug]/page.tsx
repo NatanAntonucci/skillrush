@@ -5,6 +5,7 @@ import type { Metadata } from 'next';
 
 import { LineupCard } from '@/components/lineup/LineupCard';
 import { getAgentBySlug, getAgents, getLineupsByAgent } from '@/services/queries';
+import { resolveImage } from '@/utils/images';
 import { slugify } from '@/utils/slug';
 
 interface AgentPageProps {
@@ -71,7 +72,7 @@ export default async function AgentPage({ params }: AgentPageProps) {
         <header className="flex flex-col gap-6 sm:flex-row sm:items-center">
           {agent.displayIcon && (
             <Image
-              src={agent.displayIcon}
+              src={resolveImage(agent.displayIcon)!}
               alt={agent.displayName}
               width={112}
               height={112}
@@ -102,7 +103,7 @@ export default async function AgentPage({ params }: AgentPageProps) {
                 >
                   {ability.displayIcon && (
                     <Image
-                      src={ability.displayIcon}
+                      src={resolveImage(ability.displayIcon)!}
                       alt={ability.displayName}
                       width={40}
                       height={40}

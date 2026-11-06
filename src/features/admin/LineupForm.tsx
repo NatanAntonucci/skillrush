@@ -8,6 +8,7 @@ import { fetchMaps } from '@/services/supabase/maps';
 import { fetchAbilitiesByAgent } from '@/services/supabase/abilities';
 import { createLineup, deleteLineup, updateLineup } from '@/services/supabase/lineups';
 import { competitiveMaps } from '@/utils/maps';
+import { resolveImage } from '@/utils/images';
 import { pointToPercentage } from '@/utils/video';
 
 import type { Ability, Agent, Lineup, MapData } from '@/types';
@@ -63,7 +64,7 @@ export function LineupForm({ mode, lineup }: LineupFormProps) {
     [maps, mapId],
   );
 
-  const mapImage = selectedMap?.displayIcon || selectedMap?.splash || '';
+  const mapImage = resolveImage(selectedMap?.displayIcon || selectedMap?.splash || '') ?? '';
 
   useEffect(() => {
     async function loadData() {

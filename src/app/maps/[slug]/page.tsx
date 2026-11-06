@@ -5,6 +5,7 @@ import type { Metadata } from 'next';
 
 import { LineupCard } from '@/components/lineup/LineupCard';
 import { getCompetitiveMaps, getLineupsByMap, getMapBySlug } from '@/services/queries';
+import { resolveImage } from '@/utils/images';
 import { slugify } from '@/utils/slug';
 
 import type { Lineup } from '@/types';
@@ -70,7 +71,7 @@ export default async function MapPage({ params }: MapPageProps) {
         <header className="flex flex-col gap-6 sm:flex-row sm:items-start">
           {map.displayIcon && (
             <Image
-              src={map.displayIcon}
+              src={resolveImage(map.displayIcon)!}
               alt={map.displayName}
               width={160}
               height={160}

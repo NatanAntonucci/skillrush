@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { AdminGuard } from '@/components/admin/AdminGuard';
 import { deleteLineup, fetchLineups } from '@/services/supabase/lineups';
 import { labelDifficulty, labelSide, labelStatus } from '@/utils/labels';
+import { resolveImage } from '@/utils/images';
 
 import type { Lineup } from '@/types';
 
@@ -84,7 +85,7 @@ function LineupsManager() {
               className="flex flex-wrap items-center gap-4 rounded-2xl border border-slate-800 bg-slate-900/60 p-4"
             >
               {lineup.ability?.displayIcon && (
-                <Image src={lineup.ability.displayIcon} alt="" width={40} height={40} className="h-10 w-10 object-contain" />
+                <Image src={resolveImage(lineup.ability.displayIcon)!} alt="" width={40} height={40} className="h-10 w-10 object-contain" />
               )}
 
               <div className="min-w-0 flex-1">

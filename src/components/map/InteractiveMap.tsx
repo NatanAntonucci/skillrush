@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { MapHotspot } from './MapHotspot';
 import { useLineupData } from '@/features/lineups/LineupProvider';
 import { useLineupStore } from '@/stores/lineupStore';
+import { resolveImage } from '@/utils/images';
 
 interface ImageBox {
   left: number;
@@ -23,7 +24,7 @@ export default function InteractiveMap() {
   const [imageBox, setImageBox] = useState<ImageBox>(FULL_BOX);
 
   const activeMap = selectedMap ?? selectedLineup?.map ?? null;
-  const mapImage = activeMap?.displayIcon || activeMap?.splash || '';
+  const mapImage = resolveImage(activeMap?.displayIcon || activeMap?.splash || '') ?? '';
 
   const hotspots = activeMap
     ? visibleLineups.filter((lineup) => lineup.mapId === activeMap.id)

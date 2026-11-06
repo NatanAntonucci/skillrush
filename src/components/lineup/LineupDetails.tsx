@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useLineupStore } from '@/stores/lineupStore';
 import { getVideoEmbedUrl } from '@/utils/video';
 import { labelDifficulty, labelSide } from '@/utils/labels';
+import { resolveImage } from '@/utils/images';
 
 export default function LineupDetails() {
   const { selectedLineup } = useLineupStore();
@@ -91,7 +92,7 @@ export default function LineupDetails() {
           <div className="mt-3 flex items-center gap-3">
             {selectedLineup.agent?.displayIcon && (
               <Image
-                src={selectedLineup.agent.displayIcon}
+                src={resolveImage(selectedLineup.agent.displayIcon)!}
                 alt={selectedLineup.agent.displayName}
                 width={40}
                 height={40}
@@ -116,7 +117,7 @@ export default function LineupDetails() {
           <div className="mt-3 flex items-center gap-3">
             {selectedLineup.map?.listViewIcon && (
               <Image
-                src={selectedLineup.map.listViewIcon}
+                src={resolveImage(selectedLineup.map.listViewIcon)!}
                 alt={selectedLineup.map.displayName}
                 width={40}
                 height={40}
