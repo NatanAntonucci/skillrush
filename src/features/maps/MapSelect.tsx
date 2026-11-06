@@ -54,7 +54,17 @@ export function MapSelect() {
       <label className="block text-sm font-semibold text-slate-200">Mapa</label>
 
       {loading ? (
-        <p className="text-sm text-slate-400">Carregando mapas...</p>
+        <div className="space-y-3">
+          {Array.from({ length: 4 }).map((_, index) => (
+            <div key={index} className="flex items-center gap-3">
+              <div className="skeleton h-12 w-20 rounded-lg" />
+              <div className="flex-1 space-y-2">
+                <div className="skeleton h-3 w-24 rounded" />
+                <div className="skeleton h-2.5 w-16 rounded" />
+              </div>
+            </div>
+          ))}
+        </div>
       ) : error ? (
         <p className="text-sm text-rose-400">{error}</p>
       ) : (
@@ -71,16 +81,16 @@ export function MapSelect() {
               }`}
               title={map.displayName}
             >
-              {map.listViewIcon ? (
+              {map.splash || map.listViewIcon ? (
                 <Image
-                  src={resolveImage(map.listViewIcon)!}
+                  src={resolveImage(map.splash ?? map.listViewIcon)!}
                   alt={map.displayName}
-                  width={48}
+                  width={80}
                   height={48}
-                  className="h-12 w-12 rounded-full border border-slate-700 object-cover"
+                  className="h-12 w-20 shrink-0 rounded-lg border border-slate-700 object-cover"
                 />
               ) : (
-                <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-slate-800 text-xs font-semibold text-slate-300">
+                <span className="inline-flex h-12 w-20 shrink-0 items-center justify-center rounded-lg bg-slate-800 text-xs font-semibold text-slate-300">
                   {map.displayName.slice(0, 2).toUpperCase()}
                 </span>
               )}

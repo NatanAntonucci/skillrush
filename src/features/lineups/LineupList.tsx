@@ -6,13 +6,14 @@ import { useLineupData } from '@/features/lineups/LineupProvider';import { useLi
 import { classNames } from '@/utils/classNames';
 import { labelDifficulty, labelSide } from '@/utils/labels';
 import { resolveImage } from '@/utils/images';
+import { SkeletonList } from '@/components/ui/Skeleton';
 
 export function LineupList() {
   const { visibleLineups, loading, error } = useLineupData();
   const { selectedLineup, selectedAgent, selectedMap, syncFromLineup } = useLineupStore();
 
   if (loading) {
-    return <div className="p-4 text-center text-sm opacity-50">Carregando táticas...</div>;
+    return <SkeletonList items={3} />;
   }
 
   if (error) {

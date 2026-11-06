@@ -111,6 +111,17 @@ export function MapBoard({
     }
   }, [filtered, selectedId]);
 
+  useEffect(() => {
+    if (!selected) return;
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') setSelectedId(null);
+    }
+
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [selected]);
+
   function handleImageLoad(event: SyntheticEvent<HTMLImageElement>) {
     const image = event.currentTarget;
     const rect = image.getBoundingClientRect();
@@ -337,10 +348,16 @@ export function MapBoard({
 
         {selected && (
           <div
-            className="fixed inset-x-0 bottom-0 z-40 max-h-[75vh] overflow-y-auto rounded-t-3xl border-t border-slate-700 bg-slate-950 p-4 lg:static lg:max-h-none lg:rounded-2xl lg:border lg:p-4"
+            className="fixed inset-0 z-50 flex items-end justify-center bg-slate-950/80 p-0 backdrop-blur-sm sm:items-center sm:p-6"
             role="dialog"
+            aria-modal="true"
             aria-label={selected.title}
+            onClick={() => setSelectedId(null)}
           >
+            <div
+              className="animate-fade-up max-h-[92vh] w-full overflow-y-auto rounded-t-3xl border border-slate-800 bg-slate-950 p-4 sm:max-w-3xl sm:rounded-3xl sm:p-6"
+              onClick={(event) => event.stopPropagation()}
+            >
             <div className="flex items-start justify-between gap-3">
               <div>
                 <h3 className="font-semibold text-white">{selected.title}</h3>
@@ -411,6 +428,7 @@ export function MapBoard({
               >
                 Página da lineup
               </Link>
+            </div>
             </div>
           </div>
         )}

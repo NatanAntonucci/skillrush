@@ -26,7 +26,7 @@ export default function PanelPage() {
     <LineupProvider>
       <UrlSync />
       <div className="flex min-h-screen flex-col gap-6 bg-slate-950 p-4 text-white sm:p-6">
-        <div className="grid gap-6 lg:grid-cols-[40%_60%]">
+        <div className="animate-fade-up grid gap-6 lg:grid-cols-[40%_60%]">
           <div className="flex flex-col">
             <div className="mb-4">
               <p className="text-xs uppercase tracking-[0.28em] text-slate-400">Seleção de Mapas</p>
@@ -66,7 +66,7 @@ export default function PanelPage() {
             </div>
           </div>
 
-          <div className="flex max-h-[600px] flex-col">
+          <div className="flex max-h-[600px] flex-col xl:sticky xl:top-20 xl:self-start">
             <div className="mb-4">
               <p className="text-xs uppercase tracking-[0.28em] text-slate-400">Lineups</p>
               <h3 className="mt-2 text-lg font-semibold text-white">Disponíveis</h3>

@@ -93,7 +93,14 @@ export function AgentSelect() {
       </div>
 
       {loading ? (
-        <p className="text-sm text-slate-400">Carregando agentes...</p>
+        <div className="grid grid-cols-6 gap-2 sm:grid-cols-7 md:grid-cols-8 lg:grid-cols-9">
+          {Array.from({ length: 14 }).map((_, index) => (
+            <div key={index} className="flex flex-col items-center gap-1">
+              <div className="skeleton h-10 w-10 rounded-lg" />
+              <div className="skeleton h-2 w-8 rounded" />
+            </div>
+          ))}
+        </div>
       ) : error ? (
         <p className="text-sm text-rose-400">{error}</p>
       ) : (

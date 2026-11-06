@@ -90,7 +90,7 @@ async function main() {
   const [agents, abilities, maps] = await Promise.all([
     supabase.from('agents').select('id, display_icon'),
     supabase.from('abilities').select('id, display_icon'),
-    supabase.from('maps').select('id, display_icon, list_view_icon'),
+    supabase.from('maps').select('id, display_icon, list_view_icon, splash'),
   ]);
 
   for (const result of [agents, abilities, maps]) {
@@ -119,6 +119,9 @@ async function main() {
     }
     if (row.list_view_icon) {
       targets.push({ url: row.list_view_icon, folder: 'maps', name: `${row.id}-list`, size: 320 });
+    }
+    if (row.splash) {
+      targets.push({ url: row.splash, folder: 'maps', name: `${row.id}-splash`, size: 1280 });
     }
   }
 

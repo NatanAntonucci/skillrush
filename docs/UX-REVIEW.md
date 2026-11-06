@@ -17,6 +17,19 @@ Revisão sênior de design · 05/11/2026 · base: código e telas atuais do proj
 - **Painel antigo preservado** em `/painel` (não quebrar o que funcionava).
 - Lista completa abaixo do board em `/maps/[slug]` para manter conteúdo no HTML (SEO).
 
+### Onda 2 (também implementada)
+
+- **Arte dos mapas**: cards da home e seletor do painel usam o *splash* oficial (1280×720 WebP), não o mapa tático.
+- **Vídeo em modal**: clicar no hotspot abre um overlay centralizado (até 3xl de largura) com vídeo grande,
+  passos, "copiar link" e "página da lineup" — antes abria num painel de 380 px.
+- **Loader animado** global (`loading.tsx`) + skeletons nas listas de agentes, mapas e lineups.
+- **Microinterações**: fade-up com stagger nos cards, hover com elevação, `active` nos botões, anel pulsante
+  no hotspot selecionado, `prefers-reduced-motion` respeitado.
+- **Imagens sem espera**: `images.unoptimized` (o WebP já vem otimizado do `npm run assets`), eliminando o
+  atraso do otimizador em dev.
+- **Aviso de mapa sem conteúdo**: selo "Em breve" e texto "sem lineups" nos cards da home.
+- **Banner do mapa** com a arte do mapa na página de resultado.
+
 
 ---
 
