@@ -32,6 +32,7 @@ const COMPETITIVE_MAPS = new Set([
   'Split',
   'Sunset',
   'Abyss',
+  'Summit',
 ]);
 
 function loadEnv() {
@@ -126,6 +127,7 @@ async function main() {
       display_icon: map.displayIcon,
       list_view_icon: map.listViewIcon,
       splash: map.splash,
+      tactical_description: map.tacticalDescription ?? null,
       is_competitive:
         competitiveById.get(map.uuid) ?? COMPETITIVE_MAPS.has(map.displayName),
     }));

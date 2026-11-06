@@ -1,12 +1,10 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import Image from 'next/image';
 
 import { fetchMaps } from '@/services/supabase/maps';
 import { useLineupStore } from '@/stores/lineupStore';
 import { competitiveMaps } from '@/utils/maps';
-import { resolveImage } from '@/utils/images';
 import { slugify } from '@/utils/slug';
 
 import type { MapData } from '@/types';
@@ -15,6 +13,7 @@ export function MapSelect() {
   const [maps, setMaps] = useState<MapData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
   const { selectedMap, setSelectedMap } = useLineupStore();
   const restoredFromUrl = useRef(false);
 
@@ -49,65 +48,45 @@ export function MapSelect() {
     loadMaps();
   }, []);
 
+  function handleChange(id: string) {
+    if (!id) {
+      setSelectedMap(null);
+      return;
+    }
+
+    const map = maps.find((item) => item.id === id) ?? null;
+    if (map && map.id !== selectedMap?.id) {
+      setSelectedMap(map);
+    }
+  }
+
   return (
-    <div className="space-y-2 rounded-3xl border border-slate-800 bg-slate-950/80 p-4">
-      <label className="block text-sm font-semibold text-slate-200">Mapa</label>
+    <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-3">
+      <label
+        htmlFor="map-select"
+        className="text-xs uppercase tracking-[0.2em] text-slate-400"
+      >
+        Mapa
+      </label>
 
       {loading ? (
-        <div className="space-y-3">
-          {Array.from({ length: 4 }).map((_, index) => (
-            <div key={index} className="flex items-center gap-3">
-              <div className="skeleton h-12 w-20 rounded-lg" />
-              <div className="flex-1 space-y-2">
-                <div className="skeleton h-3 w-24 rounded" />
-                <div className="skeleton h-2.5 w-16 rounded" />
-              </div>
-            </div>
-          ))}
-        </div>
+        <div className="skeleton mt-2 h-10 w-full rounded-lg" />
       ) : error ? (
-        <p className="text-sm text-rose-400">{error}</p>
+        <p className="mt-2 text-xs text-rose-400">{error}</p>
       ) : (
-        <div className="custom-scrollbar max-h-[420px] space-y-3 overflow-y-auto lg:max-h-[600px]">
+        <select
+          id="map-select"
+          value={selectedMap?.id ?? ''}
+          onChange={(event) => handleChange(event.target.value)}
+          className="mt-2 w-full rounded-lg border border-slate-800 bg-slate-900 px-3 py-2 text-sm text-white outline-none focus:border-cyan-500"
+        >
+          <option value="">Todos os mapas</option>
           {maps.map((map) => (
-            <button
-              key={map.id}
-              type="button"
-              onClick={() => setSelectedMap(map)}
-              className={`flex w-full items-center gap-3 rounded-2xl border p-3 transition ${
-                selectedMap?.id === map.id
-                  ? 'border-violet-400 bg-violet-500/10'
-                  : 'border-slate-800 bg-slate-900 hover:border-slate-600 hover:bg-slate-900/90'
-              }`}
-              title={map.displayName}
-            >
-              {map.splash || map.listViewIcon ? (
-                <Image
-                  src={resolveImage(map.splash ?? map.listViewIcon)!}
-                  alt={map.displayName}
-                  width={80}
-                  height={48}
-                  className="h-12 w-20 shrink-0 rounded-lg border border-slate-700 object-cover"
-                />
-              ) : (
-                <span className="inline-flex h-12 w-20 shrink-0 items-center justify-center rounded-lg bg-slate-800 text-xs font-semibold text-slate-300">
-                  {map.displayName.slice(0, 2).toUpperCase()}
-                </span>
-              )}
-
-              <div className="text-left">
-                <p
-                  className={`text-sm font-medium ${
-                    selectedMap?.id === map.id ? 'text-violet-100' : 'text-slate-200'
-                  }`}
-                >
-                  {map.displayName}
-                </p>
-                <p className="text-xs text-slate-400">Mapa competitivo</p>
-              </div>
-            </button>
+            <option key={map.id} value={map.id}>
+              {map.displayName}
+            </option>
           ))}
-        </div>
+        </select>
       )}
     </div>
   );

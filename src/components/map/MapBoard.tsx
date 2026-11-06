@@ -3,9 +3,10 @@
 import { useEffect, useMemo, useRef, useState, type SyntheticEvent } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { X, Copy, Check, Zap } from 'lucide-react';
+import { X, Zap } from 'lucide-react';
 
 import { MapHotspot } from './MapHotspot';
+import { ShareMenu } from '@/components/share/ShareMenu';
 import { useRecent } from '@/hooks/useRecent';
 import { applyFilters } from '@/utils/filters';
 import { labelDifficulty, labelSide } from '@/utils/labels';
@@ -50,7 +51,6 @@ export function MapBoard({
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [quick, setQuick] = useState(false);
   const [box, setBox] = useState<ImageBox>(FULL_BOX);
-  const [copied, setCopied] = useState(false);
 
   const { remember } = useRecent();
   const remembered = useRef(false);
@@ -132,18 +132,6 @@ export function MapBoard({
     const height = ((image.naturalHeight * scale) / rect.height) * 100;
 
     setBox({ left: (100 - width) / 2, top: (100 - height) / 2, width, height });
-  }
-
-  async function copyLink() {
-    if (!selected) return;
-
-    try {
-      await navigator.clipboard.writeText(`${window.location.origin}/lineups/${selected.slug}`);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1800);
-    } catch {
-      // clipboard bloqueado — ignora
-    }
   }
 
   const embedUrl = selected ? getVideoEmbedUrl(selected.videoUrl) : null;
@@ -413,18 +401,11 @@ export function MapBoard({
             )}
 
             <div className="mt-4 flex flex-wrap gap-2">
-              <button
-                type="button"
-                onClick={copyLink}
-                className="flex items-center gap-1.5 rounded-lg border border-slate-700 px-3 py-1.5 text-xs text-slate-200 hover:border-slate-500"
-              >
-                {copied ? <Check size={13} /> : <Copy size={13} />}
-                {copied ? 'Link copiado' : 'Copiar link'}
-              </button>
+              <ShareMenu title={selected.title} path={`/lineups/${selected.slug}`} align="left" />
 
               <Link
                 href={`/lineups/${selected.slug}`}
-                className="rounded-lg border border-slate-700 px-3 py-1.5 text-xs text-slate-200 hover:border-slate-500"
+                className="rounded-lg border border-slate-700 px-3 py-1.5 text-xs text-slate-200 transition hover:border-slate-500"
               >
                 Página da lineup
               </Link>

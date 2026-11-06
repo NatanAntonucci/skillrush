@@ -9,5 +9,7 @@ export interface MapData {
 
   splash: string | null;
 
+  tacticalDescription?: string | null;
+
   isCompetitive?: boolean;
 }

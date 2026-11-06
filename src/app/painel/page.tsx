@@ -26,26 +26,9 @@ export default function PanelPage() {
     <LineupProvider>
       <UrlSync />
       <div className="flex min-h-screen flex-col gap-6 bg-slate-950 p-4 text-white sm:p-6">
-        <div className="animate-fade-up grid gap-6 lg:grid-cols-[40%_60%]">
-          <div className="flex flex-col">
-            <div className="mb-4">
-              <p className="text-xs uppercase tracking-[0.28em] text-slate-400">Seleção de Mapas</p>
-              <h2 className="mt-2 text-lg font-semibold text-white">Mapas</h2>
-            </div>
-            <div className="custom-scrollbar flex-1 overflow-y-auto">
-              <MapSelect />
-            </div>
-          </div>
-
-          <div className="flex flex-col">
-            <div className="mb-4">
-              <p className="text-xs uppercase tracking-[0.28em] text-slate-400">Seleção de Agentes</p>
-              <h2 className="mt-2 text-lg font-semibold text-white">Agentes</h2>
-            </div>
-            <div className="custom-scrollbar flex-1 overflow-auto">
-              <AgentSelect />
-            </div>
-          </div>
+        <div className="animate-fade-up grid gap-3 lg:grid-cols-[220px_1fr]">
+          <MapSelect />
+          <AgentSelect />
         </div>
 
         <div>

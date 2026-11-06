@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 
 import { getAllLineups, getLineupBySlug } from '@/services/queries';
+import { ShareMenu } from '@/components/share/ShareMenu';
 import { getVideoEmbedUrl } from '@/utils/video';
 import { labelDifficulty, labelSide } from '@/utils/labels';
 import { slugify } from '@/utils/slug';
@@ -72,22 +73,26 @@ export default async function LineupPage({ params }: LineupPageProps) {
         </nav>
 
         <header className="space-y-3">
-          <div className="flex flex-wrap gap-2">
-            {lineup.abilityName && (
-              <span className="rounded-full bg-cyan-500/15 px-3 py-1 text-xs font-medium uppercase tracking-wide text-cyan-200">
-                {lineup.abilityName}
-              </span>
-            )}
-            {lineup.difficulty && (
-              <span className="rounded-full bg-slate-800 px-3 py-1 text-xs text-slate-300">
-                {labelDifficulty(lineup.difficulty)}
-              </span>
-            )}
-            {lineup.side && (
-              <span className="rounded-full bg-violet-500/15 px-3 py-1 text-xs text-violet-200">
-                {labelSide(lineup.side)}
-              </span>
-            )}
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex flex-wrap gap-2">
+              {lineup.abilityName && (
+                <span className="rounded-full bg-cyan-500/15 px-3 py-1 text-xs font-medium uppercase tracking-wide text-cyan-200">
+                  {lineup.abilityName}
+                </span>
+              )}
+              {lineup.difficulty && (
+                <span className="rounded-full bg-slate-800 px-3 py-1 text-xs text-slate-300">
+                  {labelDifficulty(lineup.difficulty)}
+                </span>
+              )}
+              {lineup.side && (
+                <span className="rounded-full bg-violet-500/15 px-3 py-1 text-xs text-violet-200">
+                  {labelSide(lineup.side)}
+                </span>
+              )}
+            </div>
+
+            <ShareMenu title={lineup.title} path={`/lineups/${lineup.slug}`} />
           </div>
 
           <h1 className="text-3xl font-bold text-white">{lineup.title}</h1>

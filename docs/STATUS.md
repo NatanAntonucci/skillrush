@@ -98,6 +98,21 @@ Atualizado em 05/11/2026 · branch `refactor/hostgator-static` · base `main` in
 Detalhes: hotspots de 44 px, thumbnails de vídeo, recentes em `localStorage`, contraste/tipografia
 revisados e painel de detalhe em *bottom sheet* no mobile.
 
+### Onda 3 — ajustes de UI e conteúdo
+
+- Hotspot com alvo de 44 px e círculo visual de 28 px (não cobre lineups vizinhas).
+- Botão **Compartilhar** nas lineups: WhatsApp, X/Twitter, Telegram, Facebook, copiar link e share nativo
+  (com aviso de que o Instagram não aceita link direto).
+- `/maps` voltou a usar as imagens locais (estava carregando o splash remoto em tamanho cheio).
+- **Painel compacto**: mapa virou `<select>` e os agentes viraram uma faixa horizontal com busca —
+  os controles saíram de ~meia tela para ~120 px.
+- `/maps` e `/agents` reforçadas como páginas de conteúdo: arte, descrição tática ("A/B Sites"),
+  contagem de lineups e link para a página interativa.
+- `maps.tactical_description` (migration `0007`) preenchido pelo sync.
+- **Cache de fetch do Next** entre builds impediria conteúdo novo de aparecer no HTML estático;
+  `prebuild` limpa `.next/cache/fetch-cache` antes de cada build.
+- Sync detectou **agente novo (Hush)** e mapas novos; **Summit** entrou como competitivo (`0008`).
+
 ### Migrations aplicadas
 
 | Arquivo | Conteúdo |

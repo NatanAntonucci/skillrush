@@ -10,6 +10,7 @@ export async function fetchMaps() {
       list_view_icon,
       display_icon,
       splash,
+      tactical_description,
       is_competitive
     `)
     .order('display_name', { ascending: true });
@@ -28,6 +29,8 @@ export async function fetchMaps() {
     displayIcon: map.display_icon,
 
     splash: map.splash,
+
+    tacticalDescription: map.tactical_description,
 
     isCompetitive: map.is_competitive,
   })) as MapData[];
