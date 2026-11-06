@@ -25,8 +25,8 @@ export default function PanelPage() {
   return (
     <LineupProvider>
       <UrlSync />
-      <div className="flex min-h-screen flex-col gap-6 bg-slate-950 p-4 text-white sm:p-6">
-        <div className="animate-fade-up grid gap-3 lg:grid-cols-[220px_1fr]">
+      <div className="flex min-h-screen flex-col gap-6 overflow-x-hidden bg-slate-950 p-4 text-white sm:p-6">
+        <div className="animate-fade-up grid gap-3 lg:grid-cols-[220px_minmax(0,1fr)]">
           <MapSelect />
           <AgentSelect />
         </div>
@@ -38,8 +38,8 @@ export default function PanelPage() {
           <LineupFilterPanel />
         </div>
 
-        <div className="grid flex-1 gap-6 xl:grid-cols-[1fr_380px]">
-          <div className="flex flex-col">
+        <div className="grid flex-1 gap-6 xl:grid-cols-[minmax(0,1fr)_380px]">
+          <div className="flex min-w-0 flex-col">
             <div className="mb-4">
               <p className="text-xs uppercase tracking-[0.28em] text-slate-400">Painel Tático</p>
               <h3 className="mt-2 text-lg font-semibold text-white">Mapa Interativo</h3>
@@ -49,7 +49,7 @@ export default function PanelPage() {
             </div>
           </div>
 
-          <div className="flex max-h-[600px] flex-col xl:sticky xl:top-20 xl:self-start">
+          <div className="flex min-w-0 max-h-[600px] flex-col xl:sticky xl:top-20 xl:self-start">
             <div className="mb-4">
               <p className="text-xs uppercase tracking-[0.28em] text-slate-400">Lineups</p>
               <h3 className="mt-2 text-lg font-semibold text-white">Disponíveis</h3>
