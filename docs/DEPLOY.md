@@ -20,6 +20,19 @@ Não existe Node em produção.
 
 ---
 
+## 0.1 Staging: impedir indexação
+
+Build de staging deve sair com `NEXT_PUBLIC_NOINDEX=true` (no `.env.local` ou na linha de comando):
+
+```bash
+NEXT_PUBLIC_NOINDEX=true npm run build     # PowerShell: $env:NEXT_PUBLIC_NOINDEX="true"; npm run build
+```
+
+Isso injeta `<meta name="robots" content="noindex, nofollow, nocache">` em todas as páginas.
+O build de produção **não** deve ter essa variável (ou deixá-la como `false`).
+
+---
+
 ## 1. Gerar o build
 
 ```bash

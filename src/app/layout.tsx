@@ -7,6 +7,9 @@ import Header from '@/components/Header';
 import BackToTopButton from '@/components/BackToTopButton';
 import { siteUrl } from '@/utils/site';
 
+// Builds de staging usam NEXT_PUBLIC_NOINDEX=true para não competir com o domínio final no Google.
+const noindex = process.env.NEXT_PUBLIC_NOINDEX === 'true';
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
   title: {
@@ -29,10 +32,9 @@ export const metadata: Metadata = {
     title: 'Skillrush — lineups de Valorant',
     description: 'Lineups de Valorant com mapa interativo e vídeos.',
   },
-  robots: {
-    index: true,
-    follow: true,
-  },
+  robots: noindex
+    ? { index: false, follow: false, nocache: true }
+    : { index: true, follow: true },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
