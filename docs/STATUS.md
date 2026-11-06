@@ -112,6 +112,10 @@ revisados e painel de detalhe em *bottom sheet* no mobile.
 - **Cache de fetch do Next** entre builds impediria conteúdo novo de aparecer no HTML estático;
   `prebuild` limpa `.next/cache/fetch-cache` antes de cada build.
 - Sync detectou **agente novo (Hush)** e mapas novos; **Summit** entrou como competitivo (`0008`).
+- **Compartilhar** também no painel completo (detalhe da lineup).
+- **Habilidades em pt-BR**: o sync passou a consumir `?language=pt-BR` (habilidades e descrições);
+  nomes de agente/mapa ficam em inglês; fallback em inglês quando a Riot ainda não traduziu
+  (ex.: `Uncanny Marksman` do Sova). Migration `0009` atualizou o nome já gravado nas lineups.
 
 ### Migrations aplicadas
 

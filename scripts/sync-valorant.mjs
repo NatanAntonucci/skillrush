@@ -73,16 +73,28 @@ async function main() {
   });
 
   console.log('Buscando metadata do Valorant…');
-  const [agentsResponse, mapsResponse] = await Promise.all([
+  const [agentsResponse, agentsPtResponse, mapsResponse] = await Promise.all([
     valorantFetch('/agents?isPlayableCharacter=true'),
+    valorantFetch('/agents?language=pt-BR&isPlayableCharacter=true'),
     valorantFetch('/maps'),
   ]);
+
+  // Textos em pt-BR (a API já entrega traduzido). Nomes de agente e de mapa são
+  // iguais em pt-BR; o que muda mesmo são habilidades e descrições.
+  const ptByUuid = new Map((agentsPtResponse.data ?? []).map((agent) => [agent.uuid, agent]));
+
+  const ptAbilityNames = new Map();
+  for (const agent of agentsPtResponse.data ?? []) {
+    for (const ability of agent.abilities ?? []) {
+      ptAbilityNames.set(`${agent.uuid}-${ability.slot}`, ability.displayName);
+    }
+  }
 
   const agentRows = agentsResponse.data.map((agent) => ({
     id: agent.uuid,
     display_name: agent.displayName,
     display_icon: agent.displayIcon,
-    description: agent.description,
+    description: ptByUuid.get(agent.uuid)?.description ?? agent.description,
     role_display_name: agent.role?.displayName ?? null,
     role_display_icon: agent.role?.displayIcon ?? null,
   }));
@@ -92,7 +104,7 @@ async function main() {
       id: `${agent.uuid}-${ability.slot}`,
       agent_id: agent.uuid,
       slot: ability.slot,
-      display_name: ability.displayName,
+      display_name: ptAbilityNames.get(`${agent.uuid}-${ability.slot}`) ?? ability.displayName,
       display_icon: ability.displayIcon,
     })),
   );

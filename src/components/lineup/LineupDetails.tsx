@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import Image from 'next/image';
 
 import { useLineupStore } from '@/stores/lineupStore';
+import { ShareMenu } from '@/components/share/ShareMenu';
 import { getVideoEmbedUrl } from '@/utils/video';
 import { labelDifficulty, labelSide } from '@/utils/labels';
 import { resolveImage } from '@/utils/images';
@@ -33,24 +34,28 @@ export default function LineupDetails() {
   return (
     <div className="space-y-6">
       <div className="space-y-3">
-        <div className="flex flex-wrap items-center gap-2">
-          {selectedLineup.abilityName && (
-            <span className="rounded-full bg-cyan-500/15 px-3 py-1 text-xs font-medium uppercase tracking-wide text-cyan-200">
-              {selectedLineup.abilityName}
-            </span>
-          )}
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex flex-wrap items-center gap-2">
+            {selectedLineup.abilityName && (
+              <span className="rounded-full bg-cyan-500/15 px-3 py-1 text-xs font-medium uppercase tracking-wide text-cyan-200">
+                {selectedLineup.abilityName}
+              </span>
+            )}
 
-          {selectedLineup.difficulty && (
-            <span className="rounded-full bg-slate-800 px-3 py-1 text-xs text-slate-300">
-              {labelDifficulty(selectedLineup.difficulty)}
-            </span>
-          )}
+            {selectedLineup.difficulty && (
+              <span className="rounded-full bg-slate-800 px-3 py-1 text-xs text-slate-300">
+                {labelDifficulty(selectedLineup.difficulty)}
+              </span>
+            )}
 
-          {selectedLineup.side && (
-            <span className="rounded-full bg-violet-500/15 px-3 py-1 text-xs text-violet-200">
-              {labelSide(selectedLineup.side)}
-            </span>
-          )}
+            {selectedLineup.side && (
+              <span className="rounded-full bg-violet-500/15 px-3 py-1 text-xs text-violet-200">
+                {labelSide(selectedLineup.side)}
+              </span>
+            )}
+          </div>
+
+          <ShareMenu title={selectedLineup.title} path={`/lineups/${selectedLineup.slug}`} />
         </div>
 
         <div>

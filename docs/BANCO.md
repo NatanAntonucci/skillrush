@@ -92,6 +92,11 @@ Resumo:
 Fluxo sugerido a cada patch da Riot (ou 1×/mês): `npm run sync` → ler o resumo → se aparecer mapa novo,
 decidir se é competitivo (`update maps set is_competitive = ...`) → `npm run assets` → rebuild.
 
+**Idioma:** o sync busca também `?language=pt-BR`. Descrições de agente e nomes de habilidade vêm
+traduzidos (`Flecha Rastreadora`, `Fúria do Caçador`); nomes de agente e de mapa permanecem em inglês
+(igual ao jogo e às URLs). Se a Riot ainda não traduziu uma habilidade nova, o script mantém o nome em
+inglês como fallback. Agentes novos entram já traduzidos na próxima execução — sem trabalho manual.
+
 ## Imagens do jogo
 
 `npm run assets` baixa ícones de agentes/habilidades e imagens de mapa, otimiza para **WebP** (160 px para
