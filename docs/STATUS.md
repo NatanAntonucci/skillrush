@@ -8,8 +8,8 @@ Atualizado em 05/11/2026 · branch `refactor/hostgator-static` · base `main` in
 |---|---|---|
 | 1 | Higiene do repositório e documentação | ✅ concluída |
 | 2 | Segurança (RLS, fim das API routes, banco) | ✅ concluída e **aplicada em produção** |
-| 3 | Correções funcionais e UX (bugs) | 🟡 13 de 16 itens |
-| 4 | URLs, navegação e SEO | ⏳ pendente |
+| 3 | Correções funcionais e UX (bugs) | ✅ concluída |
+| 4 | URLs, navegação e SEO | 🟡 4 de 5 itens |
 | 5 | Export estático + deploy HostGator | ⏳ pendente |
 | 6 | Comunidade (envio público + moderação) | ⏳ futura |
 
@@ -37,7 +37,7 @@ Atualizado em 05/11/2026 · branch `refactor/hostgator-static` · base `main` in
 - Sync virou script Node: `npm run sync`.
 - Telas `admin/setup` e `admin/debug` apagadas.
 
-### Etapa 3 — correções funcionais (em andamento)
+### Etapa 3 — correções funcionais (concluída)
 
 - **3.1** Header não aponta mais para `/upload` (404): o item "Upload" só existe para admin e leva a
   `/admin/upload`; inclui botão **Sair** (desktop e mobile).
@@ -58,8 +58,22 @@ Atualizado em 05/11/2026 · branch `refactor/hostgator-static` · base `main` in
 - **3.12** `error.tsx` e `not-found.tsx` globais.
 - **3.16** Item "Upload" do menu só aparece após login com papel admin/moderador.
 
-Faltam na Etapa 3: **3.13** `next/image`, **3.14** CRUD no admin (editar/excluir lineup),
-**3.15** testes unitários (Vitest).
+- **3.13** `next/image` em logos, ícones de agente/habilidade/mapa, splash e minimapa (o preview de hotspot
+  do formulário continua com `<img>` porque depende do `getBoundingClientRect` do elemento).
+- **3.14** CRUD no admin: `/admin/lineups` (lista com status, editar e excluir) e `/admin/lineups/[id]`
+  (edição), com `LineupForm` compartilhado entre criar e editar e `AdminGuard` nas telas.
+- **3.15** Vitest configurado (`vitest.config.ts`, alias `@`) com **15 testes**: filtros (incluindo OR de
+  habilidades), parser de vídeo e curadoria de mapas.
+
+### Etapa 4 — URLs e SEO (quase concluída)
+
+- Rotas dinâmicas com Server Components e `generateStaticParams`: `/maps/[slug]`, `/maps/[slug]/[agent]`,
+  `/agents/[slug]` e `/lineups/[slug]`; `/maps` e `/agents` passaram a ser renderizados no servidor.
+- `generateMetadata` por página (título/descrição/OG), com `metadataBase` e template de título no layout.
+- `sitemap.xml` e `robots.txt` gerados a partir do banco (mapas, agentes e lineups).
+- Seleção da home espelhada na URL (`?mapa=bind&agente=sova`), com restauração ao carregar a página.
+- Build gera 12 páginas de mapa, 29 de agente, as lineups publicadas e os pares mapa/agente existentes.
+- Falta: imagem OG padrão (hoje usa splash do mapa/ícone do agente) e home como landing com destaques.
 
 ### Migrations aplicadas
 
@@ -123,19 +137,10 @@ Checklist manual:
 
 ## Pendências
 
-### Etapa 3 (restante)
+### Etapa 4 (restante)
 
-- [ ] 3.13 `next/image` nas imagens externas (agente/mapa) — avaliar junto com o export estático
-- [ ] 3.14 CRUD no admin: editar e excluir lineup
-- [ ] 3.15 Testes unitários (Vitest) para `applyFilters`, parser de vídeo e clamp de coordenadas
-
-### Etapa 4 — URLs e SEO
-
-- [ ] `/mapas/[map]`, `/mapas/[map]/[agent]`, `/lineups/[slug]`, `/agentes/[agent]`
-- [ ] Server Components + `generateStaticParams` + `generateMetadata`
-- [ ] Estado de seleção na URL (searchParams) em vez de só Zustand
-- [ ] `sitemap.ts`, `robots.txt`, OG image
-- [ ] Home como landing com mapas em destaque
+- [ ] Imagem OG padrão do site (hoje cai no splash do mapa / ícone do agente)
+- [ ] Home como landing com mapas em destaque e atalho para o painel interativo
 
 ### Etapa 5 — estático e deploy
 

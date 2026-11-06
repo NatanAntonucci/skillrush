@@ -216,11 +216,25 @@ export async function updateLineup(id: string, input: CreateLineupInput) {
   return mapLineup(data);
 }
 
-export async function fetchLineupById(id: string) {
-  const { data, error } = await supabase
+export async function fetchLineupById(id: string) {  const { data, error } = await supabase
     .from('lineups')
     .select(LINEUP_SELECT)
     .eq('id', id)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(`Falha ao carregar a lineup: ${error.message}`);
+  }
+
+  return data ? mapLineup(data) : null;
+}
+
+export async function fetchLineupBySlug(slug: string) {
+  const { data, error } = await supabase
+    .from('lineups')
+    .select(LINEUP_SELECT)
+    .eq('slug', slug)
+    .eq('status', 'approved')
     .maybeSingle();
 
   if (error) {

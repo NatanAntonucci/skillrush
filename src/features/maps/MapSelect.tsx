@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 
 import { fetchMaps } from '@/services/supabase/maps';
 import { useLineupStore } from '@/stores/lineupStore';
 import { competitiveMaps } from '@/utils/maps';
+import { slugify } from '@/utils/slug';
 
 import type { MapData } from '@/types';
 
@@ -14,6 +15,20 @@ export function MapSelect() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { selectedMap, setSelectedMap } = useLineupStore();
+  const restoredFromUrl = useRef(false);
+
+  useEffect(() => {
+    if (restoredFromUrl.current || maps.length === 0 || selectedMap) return;
+
+    const slug = new URLSearchParams(window.location.search).get('mapa');
+    if (!slug) return;
+
+    const match = maps.find((map) => slugify(map.displayName) === slug);
+    if (match) {
+      restoredFromUrl.current = true;
+      setSelectedMap(match);
+    }
+  }, [maps, selectedMap, setSelectedMap]);
 
   useEffect(() => {
     async function loadMaps() {

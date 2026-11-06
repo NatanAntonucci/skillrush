@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useRef } from 'react';
 import Image from 'next/image';
 import { fetchAgents } from '@/services/supabase/agents';
 import { useLineupStore } from '@/stores/lineupStore';
+import { slugify } from '@/utils/slug';
 import type { Agent } from '@/types';
 
 export function AgentSelect() {
@@ -12,6 +13,20 @@ export function AgentSelect() {
   const [error, setError] = useState<string | null>(null);
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
   const { selectedAgent, setSelectedAgent } = useLineupStore();
+  const restoredFromUrl = useRef(false);
+
+  useEffect(() => {
+    if (restoredFromUrl.current || agents.length === 0 || selectedAgent) return;
+
+    const slug = new URLSearchParams(window.location.search).get('agente');
+    if (!slug) return;
+
+    const match = agents.find((agent) => slugify(agent.displayName) === slug);
+    if (match) {
+      restoredFromUrl.current = true;
+      setSelectedAgent(match);
+    }
+  }, [agents, selectedAgent, setSelectedAgent]);
 
   useEffect(() => {
     async function loadAgents() {

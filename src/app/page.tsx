@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 
 import { LineupProvider } from '@/features/lineups/LineupProvider';
+import { UrlSync } from '@/features/lineups/UrlSync';
 import { AgentSelect } from '@/features/agents/AgentSelect';
 import { MapSelect } from '@/features/maps/MapSelect';
 import { LineupFilterPanel } from '@/components/lineup/LineupFilterPanel';
@@ -23,6 +24,7 @@ export default function LineupsPage() {
 
   return (
     <LineupProvider>
+      <UrlSync />
       <div className="flex min-h-screen flex-col gap-6 bg-slate-950 p-4 text-white sm:p-6">
         {/* Mapas | Agentes */}
         <div className="grid gap-6 lg:grid-cols-[40%_60%]">

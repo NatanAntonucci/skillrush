@@ -1,96 +1,59 @@
-'use client';
-
-import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
+import type { Metadata } from 'next';
 
-import { fetchAgents } from '@/services/supabase/agents';
 import { SectionHeader } from '@/components/ui/SectionHeader';
-import type { Agent } from '@/types';
+import { getAgents } from '@/services/queries';
+import { slugify } from '@/utils/slug';
 
-export default function AgentsPage() {
-  const [agents, setAgents] = useState<Agent[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+export const metadata: Metadata = {
+  title: 'Agentes — lineups de Valorant',
+  description: 'Lista de agentes de Valorant com habilidades e lineups relacionadas.',
+};
 
-  useEffect(() => {
-    async function loadAgents() {
-      setLoading(true);
-      setError(null);
-      try {
-        const data = await fetchAgents();
-        setAgents(data);
-      } catch (err) {
-        setError('Não foi possível carregar agentes.');
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadAgents();
-  }, []);
+export default async function AgentsPage() {
+  const agents = await getAgents();
 
   return (
     <main className="min-h-screen bg-slate-950 text-slate-100">
       <section className="mx-auto max-w-7xl px-6 py-10 lg:px-8">
         <SectionHeader
-          title="Página de agentes"
-          description="Veja a lista completa de agentes com suas descrições e utilitários."
+          title="Agentes"
+          description="Cada agente com suas habilidades e o link para as lineups por mapa."
         />
 
-        {loading ? (
-          <div className="mt-8 text-center">
-            <p className="text-slate-400">Carregando agentes...</p>
-          </div>
-        ) : error ? (
-          <div className="mt-8 text-center">
-            <p className="text-rose-400">{error}</p>
-          </div>
-        ) : (
-          <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {agents.map((agent) => (
-              <div key={agent.id} className="rounded-3xl border border-slate-800 bg-slate-900/80 p-6 shadow-xl shadow-slate-950/40">
-                <div className="flex items-center gap-4 mb-4">
-                  {agent.displayIcon && (
-                    <Image
-                      src={agent.displayIcon}
-                      alt={agent.displayName}
-                      width={48}
-                      height={48}
-                      className="h-12 w-12 rounded-full object-cover"
-                    />
-                  )}
-                  <div>
-                    <h3 className="text-lg font-semibold text-white">{agent.displayName}</h3>
-                    <p className="text-sm text-slate-400">{agent.role?.displayName ?? 'Sem função'}</p>
-                  </div>
+        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {agents.map((agent) => (
+            <Link
+              key={agent.id}
+              href={`/agents/${slugify(agent.displayName)}`}
+              className="group rounded-3xl border border-slate-800 bg-slate-900/80 p-6 shadow-xl shadow-slate-950/40 transition hover:border-cyan-500/50"
+            >
+              <div className="mb-4 flex items-center gap-4">
+                {agent.displayIcon && (
+                  <Image
+                    src={agent.displayIcon}
+                    alt={agent.displayName}
+                    width={48}
+                    height={48}
+                    className="h-12 w-12 rounded-full object-cover"
+                  />
+                )}
+
+                <div>
+                  <h2 className="text-lg font-semibold text-white group-hover:text-cyan-300">
+                    {agent.displayName}
+                  </h2>
+                  <p className="text-sm text-slate-400">{agent.role?.displayName ?? 'Sem função'}</p>
                 </div>
-                {agent.description && (
-                  <p className="text-sm text-slate-300 mb-4">{agent.description}</p>
-                )}
-                {agent.abilities && agent.abilities.length > 0 && (
-                  <div>
-                    <p className="text-sm font-medium text-slate-200 mb-2">Utilitários:</p>
-                    <div className="space-y-2">
-                      {agent.abilities.map((ability) => (
-                        <div key={ability.id} className="flex items-center gap-2">
-                          {ability.displayIcon && (
-                            <Image
-                              src={ability.displayIcon}
-                              alt={ability.displayName}
-                              width={24}
-                              height={24}
-                              className="h-6 w-6 rounded"
-                            />
-                          )}
-                          <span className="text-sm text-slate-300">{ability.displayName}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
               </div>
-            ))}
-          </div>
-        )}
+
+              {agent.description && (
+                <p className="line-clamp-3 text-sm text-slate-300">{agent.description}</p>
+              )}
+            </Link>
+          ))}
+        </div>
       </section>
     </main>
   );

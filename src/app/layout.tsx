@@ -1,14 +1,38 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
-import dynamic from 'next/dynamic';
-import './globals.css';
-import Header from '@/components/Header';
 
-const BackToTopButton = dynamic(() => import('@/components/BackToTopButton'), { ssr: false });
+import './globals.css';
+
+import Header from '@/components/Header';
+import BackToTopButton from '@/components/BackToTopButton';
+import { siteUrl } from '@/utils/site';
 
 export const metadata: Metadata = {
-  title: 'Skillrush',
-  description: 'Skillrush — plataforma interativa de lineups e jogadas com filtros, mapa e hotspots.',
+  metadataBase: new URL(siteUrl()),
+  title: {
+    default: 'Skillrush — lineups e jogadas de Valorant',
+    template: '%s | Skillrush',
+  },
+  description:
+    'Consulta rápida de lineups de Valorant: escolha mapa, agente e habilidade, veja os hotspots e assista à execução.',
+  openGraph: {
+    type: 'website',
+    siteName: 'Skillrush',
+    locale: 'pt_BR',
+    url: '/',
+    title: 'Skillrush — lineups e jogadas de Valorant',
+    description:
+      'Escolha mapa, agente e habilidade, veja os hotspots no mapa e assista à execução.',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Skillrush — lineups de Valorant',
+    description: 'Lineups de Valorant com mapa interativo e vídeos.',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
