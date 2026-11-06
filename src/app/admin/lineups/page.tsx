@@ -112,7 +112,7 @@ function LineupsManager() {
 
               <div className="flex items-center gap-2">
                 <Link
-                  href={`/admin/lineups/${lineup.id}`}
+                  href={`/admin/lineups/edit?id=${lineup.id}`}
                   className="rounded-lg border border-slate-700 px-3 py-1.5 text-xs text-slate-200 transition hover:border-slate-500"
                 >
                   Editar

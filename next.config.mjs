@@ -1,8 +1,10 @@
 const nextConfig = {
   reactStrictMode: true,
-  // As imagens já são otimizadas no `npm run assets` (WebP), então não há
-  // ganho em passar pelo otimizador do Next — e isso também prepara o
-  // `output: 'export'` da Etapa 5.
+  // Site 100% estático: `next build` gera `out/` para subir no cPanel.
+  output: 'export',
+  // No Apache cada rota vira pasta/index.html — evita 404 em /maps/bind.
+  trailingSlash: true,
+  // As imagens já são otimizadas no `npm run assets` (WebP).
   images: {
     unoptimized: true,
     remotePatterns: [

@@ -1,48 +1,124 @@
-# Deploy
+# Deploy — HostGator (cPanel)
 
-Alvo: **hospedagem compartilhada (HostGator/cPanel)** servindo arquivos estáticos. Não há Node em produção.
+Site 100% estático: `npm run build` gera a pasta `out/` e é isso que vai para o servidor.
+Não existe Node em produção.
 
-## Como o build funciona
+---
 
-O site inteiro é exportado para `out/`:
+## 0. Antes do primeiro deploy
+
+| Item | O que fazer |
+|---|---|
+| **Domínio** | Defina `NEXT_PUBLIC_SITE_URL` no `.env.local` (ex.: `https://skillrush.com.br`). É usado no sitemap, canonical e OG |
+| **SSL** | cPanel → *SSL/TLS Status* → **Run AutoSSL** (o `https` precisa funcionar antes de testar login) |
+| **Supabase Auth** | *Authentication → URL Configuration*: **Site URL** = `https://seudominio.com/` e em **Redirect URLs** adicione `https://seudominio.com/admin/reset-password/` |
+
+> ⚠️ **Subpasta vs raiz**: o build referencia assets em `/_next/...` (caminho absoluto). Se for testar em
+> `public_html/staging`, é preciso `basePath: '/staging'` no `next.config.mjs` e rebuildar. Para testar
+> hoje sem mexer em config, use a **raiz do domínio** ou um **subdomínio** (`staging.seudominio.com`,
+> que também é raiz).
+
+---
+
+## 1. Gerar o build
 
 ```bash
-npm run build:static   # gera out/ com HTML, JS, CSS e assets
+cd D:\DEV-Projetos\SkillRush\desenv\skillrushFront
+git branch --show-current          # refactor/hostgator-static
+npm install                        # se ainda não instalou depois do último pull
+npm run build                      # gera out/ (o prebuild limpa o cache de fetch)
 ```
 
-Esse diretório é o site. Nada de processo rodando no servidor.
+Opcional — conferir localmente antes de subir:
 
-## Primeira publicação
+```bash
+npm run preview                    # http://localhost:4321
+```
 
-1. Rode `npm run build:static` localmente.
-2. No cPanel, envie o **conteúdo** de `out/` para `public_html` (não a pasta `out` em si).
-3. Confirme que o `.htaccess` foi enviado junto (é um arquivo oculto — use o gerenciador com "mostrar
-   ocultos" ou envie por FTP).
+O que deve existir em `out/`:
 
-## Atualizações
+```
+index.html      404.html      .htaccess      sitemap.xml     robots.txt
+maps/           agents/       lineups/       admin/          _next/     assets/
+```
 
-Duas coisas mudam em ritmos diferentes:
+---
+
+## 2. Empacotar
+
+Abra `out/`, selecione **o conteúdo** (não a pasta `out` em si) e compacte em `.zip`.
+
+> No Windows: `Compress-Archive -Path out\* -DestinationPath skillrush.zip`
+> (o `.htaccess` começa com ponto e pode ficar de fora do `*` — confira antes de subir; se faltar,
+> inclua com `-Path out\* -Force` ou copie o arquivo separadamente).
+
+Tamanho esperado: ~2 MB comprimido, ~6,5 MB descomprimido, ~385 arquivos.
+
+---
+
+## 3. Subir no cPanel
+
+1. **File Manager** → entre em `public_html`.
+2. Se houver conteúdo antigo, mova para `public_html_old` (não apague — é o rollback).
+3. **Upload** do `.zip` → botão direito → **Extract**.
+4. Apague o `.zip`.
+5. Ative **Settings → Show Hidden Files** e confirme que o **`.htaccess`** está lá (é ele que cuida de
+   404, cache e compressão).
+6. Confirme que `index.html` está na raiz de `public_html` (e não em `public_html/out/`).
+
+---
+
+## 4. Checklist de teste no ar
+
+- [ ] `https://seudominio.com/` abre com a arte dos mapas
+- [ ] `/maps/bind` (sem barra) redireciona para `/maps/bind/` e funciona
+- [ ] `/maps/summit/` abre
+- [ ] `/agents/sova/` mostra habilidades em português
+- [ ] `/painel/` abre, seleciona mapa/agente e o F5 mantém
+- [ ] `/lineups/<slug>/` abre com vídeo e botão Compartilhar
+- [ ] `/admin` → login → `/admin/upload` publica uma lineup
+- [ ] `/admin/lineups` lista, edita (`/admin/lineups/edit?id=...`) e exclui
+- [ ] `/admin/equipe` lista a equipe
+- [ ] `/404` (uma URL qualquer) mostra a página 404
+- [ ] `/sitemap.xml` e `/robots.txt` abrem
+- [ ] Console do navegador sem erros de 404 em `_next`
+
+---
+
+## 5. Atualizações depois
 
 | O que mudou | Precisa rebuildar? |
 |---|---|
-| Código, layout, página nova | sim |
-| Lineup nova/ editada no admin | **não** — aparece na hora (o navegador lê do Supabase) |
+| Lineup publicada/editada pelo admin | **Não** — aparece na hora (o navegador lê do Supabase) |
+| Código, layout, página nova, agente/mapa novo | **Sim** — repetir passos 1–3 |
 
-O rebuild só serve para atualizar o **HTML pré-renderizado** (SEO). Ele roda sozinho numa GitHub Action
-(agendada e/ou disparada pelo Supabase), então o fluxo normal é: publicar pelo admin e esquecer.
+O rebuild só serve para atualizar o **HTML pré-renderizado** (SEO). Para o visitante, o conteúdo novo já
+aparece antes disso.
 
-## GitHub Actions (quando configurado)
+Para conteúdo novo (agente/mapa), rode também:
 
-| Workflow | Quando roda | O que faz |
-|---|---|---|
-| `deploy.yml` | push na `main` ou manual | build estático + upload FTP para o cPanel |
-| `rebuild.yml` | diário / webhook do Supabase | rebuild para atualizar o HTML de SEO |
-| `sync.yml` | semanal | `npm run sync` (metadata do Valorant) |
+```bash
+npm run sync      # atualiza metadata + traduções
+npm run assets    # baixa imagens novas
+npm run build
+```
 
-Segredos necessários no repositório: `FTP_HOST`, `FTP_USER`, `FTP_PASSWORD`, `NEXT_PUBLIC_SUPABASE_URL`,
-`NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` (apenas para o sync).
+---
 
-## Rollback
+## 6. Rollback
 
-O deploy anterior fica em `public_html.old`. Para reverter, renomeie de volta pelo cPanel ou reenvie o
-diretório anterior.
+No cPanel, renomeie `public_html` para `public_html_broken` e `public_html_old` de volta.
+O site volta ao estado anterior em segundos.
+
+---
+
+## 7. Problemas comuns
+
+| Sintoma | Causa provável |
+|---|---|
+| Página em branco, CSS não carrega | build feito para outra raiz (subpasta) — falta `basePath` |
+| 404 em todas as rotas | `.htaccess` não subiu (arquivo oculto) |
+| 500 ao abrir qualquer página | diretiva do `.htaccess` não suportada — comente o bloco `mod_rewrite` |
+| Login funciona mas "Acesso restrito" | usuário sem papel — promover em `/admin/equipe` ou no SQL |
+| Imagens antigas | cache do navegador/CDN — `Ctrl+Shift+R` |
+| Conteúdo novo não aparece no HTML | build sem `prebuild` (cache de fetch) — rode `npm run build` de novo |

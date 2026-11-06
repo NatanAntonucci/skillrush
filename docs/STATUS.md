@@ -10,7 +10,7 @@ Atualizado em 05/11/2026 · branch `refactor/hostgator-static` · base `main` in
 | 2 | Segurança (RLS, fim das API routes, banco) | ✅ concluída e **aplicada em produção** |
 | 3 | Correções funcionais e UX (bugs) | ✅ concluída |
 | 4 | URLs, navegação e SEO | 🟡 4 de 5 itens |
-| 5 | Export estático + deploy HostGator | ⏳ pendente |
+| 5 | Export estático + deploy HostGator | ✅ pronto para subir (execução manual) |
 | 6 | Comunidade (envio público + moderação) | ⏳ futura |
 
 ---
@@ -184,13 +184,14 @@ Checklist manual:
 - [ ] Imagem OG padrão do site (hoje cai no splash do mapa / ícone do agente)
 - [ ] Home como landing com mapas em destaque e atalho para o painel interativo
 
-### Etapa 5 — estático e deploy
+### Etapa 5 — estático e deploy (pronta)
 
-- [ ] `output: 'export'`, `images.unoptimized`, `trailingSlash`
-- [ ] `.htaccess` (fallback de rotas, cache, segurança)
-- [ ] `npm run build:static` → `out/`
-- [ ] Deploy manual em `/staging` no cPanel
-- [ ] GitHub Actions: deploy por push + rebuild agendado + `sync` semanal
+- `output: 'export'` + `trailingSlash: true`; `next build` gera `out/` (6,3 MB, 385 arquivos).
+- `/admin/lineups/[id]` virou `/admin/lineups/edit?id=...` (rota dinâmica não existe no export).
+- `public/.htaccess`: 404 customizado, barra final, cache de assets, compressão e headers.
+- `npm run preview` serve o `out/` localmente simulando o Apache.
+- `docs/DEPLOY.md` com passo a passo do cPanel, checklist no ar, rollback e problemas comuns.
+- Falta apenas a execução (subir o zip) e configurar `NEXT_PUBLIC_SITE_URL` + URLs do Supabase Auth.
 
 ### Etapa 6 — comunidade
 
