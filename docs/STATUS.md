@@ -12,6 +12,7 @@ Atualizado em 05/11/2026 · branch `refactor/hostgator-static` · base `main` in
 | 4 | URLs, navegação e SEO | 🟡 4 de 5 itens |
 | 5 | Export estático + deploy HostGator | ✅ pronto para subir (execução manual) |
 | 6 | Comunidade (envio público + moderação) | ⏳ futura |
+| 7 | Tracker e Campeonatos (branch do colega) | 🟡 integrado; falta ativar a Edge Function |
 
 ---
 
@@ -119,6 +120,20 @@ revisados e painel de detalhe em *bottom sheet* no mobile.
   nomes de agente/mapa ficam em inglês; fallback em inglês quando a Riot ainda não traduziu
   (ex.: `Uncanny Marksman` do Sova). Migration `0009` atualizou o nome já gravado nas lineups.
 
+### Tracker e campeonatos (merge da branch do colega)
+
+- `/tracker`: login por magic link, consentimento LGPD, rank + últimas partidas, filtro por temporada,
+  agregações por agente/mapa e botão de **revogar autorização** (apaga o cache do usuário).
+- `/campeonatos`: agenda/resultados, detalhe do torneio com chaveamento, classificação e transmissões.
+- `/privacidade`: explica o que é consultado, retenção e como revogar.
+- Edge Function `integrations`: JWT validado manualmente, CORS por allowlist, payload ≤4 KB, timeout 15 s,
+  cota atômica (`reserve_integration_quota`), cache com TTL e chaves só no servidor.
+- Testes: **43** (15 antigos + domínio, PGlite, bootstrap do SQL, interações e paridade do `domain.ts`).
+- **Banco**: `0011_integrations` aplicada e validada (tabelas novas negam anon; lineups/policies intactas).
+- **Falta ativar**: secrets (`HENRIKDEV_API_KEY`, `PANDASCORE_API_KEY`, `ALLOWED_ORIGINS`) e
+  `supabase functions deploy integrations --no-verify-jwt`; além de `…/tracker/` nas Redirect URLs do Auth.
+  Sem isso as páginas mostram "aguardando ativação" sem quebrar o site.
+
 ### Migrations aplicadas
 
 | Arquivo | Conteúdo |
@@ -129,8 +144,16 @@ revisados e painel de detalhe em *bottom sheet* no mobile.
 | `0004_hardening.sql` | limite de 5 pendências por usuário, check de `video_url` |
 | `0005_cleanup_legacy_policies.sql` | remove policies antigas do dashboard |
 | `0006_map_competitiveness.sql` | curadoria de `maps.is_competitive` (Abyss/Corrode dentro, TDM fora) |
+| `0007_maps_tactical.sql` | `maps.tactical_description` ("A/B Sites") |
+| `0008_summit_competitive.sql` | Summit como competitivo |
+| `0009_ability_names_pt.sql` | backfill do nome da habilidade em pt-BR nas lineups |
+| `0010_list_profiles.sql` | `list_profiles()` (security definer) para `/admin/equipe` |
+| `0011_integrations.sql` | **aplicada** — `integration_cache`, `tracker_consents`, `integration_limits`, `reserve_integration_quota()` |
 
-Rollbacks em `supabase/rollback/` (0005 e 0006 são de limpeza/curadoria, sem rollback).
+`0000_base_schema.sql` e `0012_explicit_grants.sql` são para **projeto novo** — não rodar no banco atual.
+`INSTALAR_SKILLRUSH_BANCO_NOVO.sql` é o instalador one-shot (0000→0012) para um Supabase do zero.
+
+Rollbacks em `supabase/rollback/`.
 
 ### Modelo de permissão (validado no banco)
 
