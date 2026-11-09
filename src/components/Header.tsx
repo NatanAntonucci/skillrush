@@ -57,7 +57,11 @@ export default function Header() {
     <header className="sticky top-0 z-50 border-b border-slate-800 bg-slate-950/95 backdrop-blur">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between gap-4">
-          <Link href="/" className="flex shrink-0 items-center transition-opacity hover:opacity-90">
+          {/* o SVG tem ~32px de margem interna; a margem negativa alinha a arte à borda do container */}
+          <Link
+            href="/"
+            className="-ml-5 flex shrink-0 items-center transition-opacity hover:opacity-90"
+          >
             <Image src="/logo.svg" alt="Skillrush" width={220} height={102} priority className="h-16 w-auto" />
           </Link>
 
