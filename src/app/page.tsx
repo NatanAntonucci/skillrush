@@ -18,118 +18,120 @@ export const metadata: Metadata = {
 
 export default async function HomePage() {
   const [maps, countByMap, latest] = await Promise.all([
-    getCompetitiveMaps(), getMapLineupCounts(), fetchLineups({ limit: 6 }),
+    getCompetitiveMaps(),
+    getMapLineupCounts(),
+    fetchLineups({ limit: 6 }),
   ]);
 
   return (
     <main className="min-h-screen bg-slate-950 text-slate-100">
-      <section className="mx-auto max-w-5xl px-6 pb-10 pt-14 text-center">
+      <section className="mx-auto w-full max-w-3xl px-4 pb-8 pt-10 text-center sm:px-6 sm:pt-14">
         <span className="animate-fade-up inline-flex items-center gap-2 rounded-full border border-slate-800 bg-slate-900/60 px-3 py-1 text-xs text-slate-300">
           <span className="h-1.5 w-1.5 rounded-full bg-accent-400" />
           Lineups de Valorant, sem enrolação
         </span>
 
-        <h1 className="animate-fade-up mt-5 text-3xl font-bold text-white sm:text-4xl">
+        <h1 className="animate-fade-up mt-4 text-2xl font-bold leading-tight text-white sm:text-4xl">
           Ache a lineup antes da partida
         </h1>
 
         <p
-          className="animate-fade-up mx-auto mt-3 max-w-xl text-slate-400"
+          className="animate-fade-up mx-auto mt-3 max-w-lg text-sm text-slate-400 sm:text-base"
           style={{ animationDelay: '60ms' }}
         >
           Escolha o mapa, o agente e veja onde jogar — com vídeo e execução em segundos.
         </p>
 
-        <div className="mx-auto mt-8 max-w-xl animate-fade-up" style={{ animationDelay: '120ms' }}>
+        <div className="animate-fade-up mt-6 sm:mt-8" style={{ animationDelay: '120ms' }}>
           <SearchBox />
         </div>
       </section>
 
-      <section className="mx-auto max-w-5xl px-6">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 className="text-xs uppercase tracking-[0.2em] text-slate-400">
-            Continuar de onde parei
-          </h2>
-          <Link
-            href="/painel"
-            className="text-sm text-accent-300 transition hover:text-accent-200"
-          >
-            Abrir painel completo →
-          </Link>
-        </div>
+      <div className="mx-auto w-full max-w-[1400px] px-4 sm:px-6 lg:px-8">
+        <section>
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <h2 className="text-xs uppercase tracking-[0.2em] text-slate-400">
+              Continuar de onde parei
+            </h2>
+            <Link
+              href="/painel"
+              className="text-sm text-accent-300 transition hover:text-accent-200"
+            >
+              Abrir painel →
+            </Link>
+          </div>
 
-        <div className="mt-3">
-          <RecentShortcuts />
-        </div>
-      </section>
+          <div className="mt-3">
+            <RecentShortcuts />
+          </div>
+        </section>
 
-      <section className="mx-auto max-w-5xl px-6 py-10">
-        <h2 className="text-xs uppercase tracking-[0.2em] text-slate-400">Mapas</h2>
+        <section className="pt-10">
+          <div className="flex items-end justify-between gap-3">
+            <h2 className="text-sm font-semibold text-white sm:text-base">Mapas</h2>
+            <span className="text-xs text-slate-500">{maps.length} competitivos</span>
+          </div>
 
-        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {maps.map((map, index) => {
-            const total = countByMap.get(map.id) ?? 0;
-            const art = resolveImage(map.listViewIcon ?? map.splash) ?? resolveImage(map.displayIcon) ?? '';
+          <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
+            {maps.map((map, index) => {
+              const total = countByMap.get(map.id) ?? 0;
+              const art =
+                resolveImage(map.splash) ?? resolveImage(map.displayIcon) ?? resolveImage(map.listViewIcon) ?? '';
 
-            return (
-              <Link
-                key={map.id}
-                href={`/maps/${slugify(map.displayName)}`}
-                className="group relative animate-fade-up overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 transition duration-300 hover:-translate-y-1 hover:border-accent-500/60 hover:shadow-xl hover:shadow-accent-950/30"
-                style={{ animationDelay: `${Math.min(index, 8) * 40}ms` }}
-              >
-                <div className="relative h-36 w-full overflow-hidden">
+              return (
+                <Link
+                  key={map.id}
+                  href={`/maps/${slugify(map.displayName)}`}
+                  className="group animate-fade-up relative aspect-video overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 transition duration-300 hover:-translate-y-1 hover:border-accent-500/60 hover:shadow-xl hover:shadow-accent-950/30"
+                  style={{ animationDelay: `${Math.min(index, 8) * 35}ms` }}
+                >
                   {art && (
                     <Image
                       src={art}
                       alt={`Arte do mapa ${map.displayName}`}
                       fill
-                      sizes="(max-width: 768px) 100vw, 33vw"
+                      sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                       className="object-cover transition duration-500 group-hover:scale-105"
                     />
                   )}
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/25 to-transparent" />
 
-                  {total === 0 && (
-                    <span className="absolute right-3 top-3 rounded-full bg-slate-950/80 px-2.5 py-1 text-[11px] font-medium text-amber-300 ring-1 ring-amber-500/30">
-                      Em breve
+                  <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 p-3">
+                    <span className="truncate font-semibold text-white drop-shadow group-hover:text-accent-200">
+                      {map.displayName}
                     </span>
-                  )}
-                </div>
 
-                <div className="flex items-center justify-between px-4 py-3">
-                  <span className="font-semibold text-white group-hover:text-accent-300">
-                    {map.displayName}
-                  </span>
-
-                  <span className="text-xs text-slate-400">
-                    {total === 0 ? 'sem lineups' : `${total} lineup${total > 1 ? 's' : ''}`}
-                  </span>
-                </div>
-              </Link>
-            );
-          })}
-        </div>
-      </section>
-
-      {latest.length > 0 && (
-        <section className="mx-auto max-w-5xl px-6 pb-16">
-          <h2 className="text-xs uppercase tracking-[0.2em] text-slate-400">Últimas lineups</h2>
-
-          <div className="mt-4 grid gap-3 md:grid-cols-2">
-            {latest.map((lineup, index) => (
-              <div
-                key={lineup.id}
-                className="animate-fade-up"
-                style={{ animationDelay: `${Math.min(index, 6) * 50}ms` }}
-              >
-                <LineupCard lineup={lineup} />
-              </div>
-            ))}
+                    <span className="shrink-0 rounded-full bg-slate-950/70 px-2 py-0.5 text-[11px] text-slate-300">
+                      {total === 0 ? 'em breve' : total}
+                    </span>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </section>
-      )}
+
+        {latest.length > 0 && (
+          <section className="pb-16 pt-10">
+            <div className="flex items-end justify-between gap-3">
+              <h2 className="text-sm font-semibold text-white sm:text-base">Últimas lineups</h2>
+            </div>
+
+            <div className="mt-4 grid gap-3 sm:grid-cols-2">
+              {latest.map((lineup, index) => (
+                <div
+                  key={lineup.id}
+                  className="animate-fade-up"
+                  style={{ animationDelay: `${Math.min(index, 6) * 45}ms` }}
+                >
+                  <LineupCard lineup={lineup} />
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+      </div>
     </main>
   );
 }

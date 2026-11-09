@@ -25,7 +25,7 @@ export default function PanelPage() {
   return (
     <LineupProvider>
       <UrlSync />
-      <div className="flex min-h-screen flex-col gap-6 overflow-x-hidden bg-slate-950 p-4 text-white sm:p-6">
+      <div className="mx-auto flex min-h-screen w-full max-w-[1600px] flex-col gap-5 overflow-x-hidden bg-slate-950 px-4 py-5 text-white sm:px-6 lg:px-8">
         <div className="animate-fade-up grid gap-3 lg:grid-cols-[220px_minmax(0,1fr)]">
           <MapSelect />
           <AgentSelect />

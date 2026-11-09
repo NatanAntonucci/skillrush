@@ -18,52 +18,52 @@ export default async function MapsPage() {
 
   return (
     <main className="min-h-screen bg-slate-950 text-slate-100">
-      <section className="mx-auto max-w-7xl px-6 py-10 lg:px-8">
+      <section className="mx-auto w-full max-w-[1400px] px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
         <SectionHeader
           title="Mapas"
           description="Todos os mapas do modo competitivo, com suas lineups e pontos de execução."
         />
 
-        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
           {maps.map((map) => {
             const total = countByMap.get(map.id) ?? 0;
+            const art = resolveImage(map.splash) ?? resolveImage(map.displayIcon);
 
             return (
               <Link
                 key={map.id}
                 href={`/maps/${slugify(map.displayName)}`}
-                className="group animate-fade-up overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/80 shadow-xl shadow-slate-950/40 transition duration-300 hover:-translate-y-1 hover:border-accent-500/50"
+                className="group animate-fade-up relative aspect-video overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 transition duration-300 hover:-translate-y-1 hover:border-accent-500/50"
               >
-                {(map.listViewIcon || map.splash) ? (
-                  <div className="relative h-32 w-full overflow-hidden">
-                    <Image
-                      src={resolveImage(map.listViewIcon ?? map.splash)!}
-                      alt={`Arte do mapa ${map.displayName}`}
-                      fill
-                      sizes="(max-width: 768px) 100vw, 33vw"
-                      className="object-cover transition duration-500 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 to-transparent" />
-
-                    {map.tacticalDescription && (
-                      <span className="absolute left-3 top-3 rounded-full bg-slate-950/75 px-2.5 py-1 text-[11px] text-slate-200 ring-1 ring-white/10">
-                        {map.tacticalDescription}
-                      </span>
-                    )}
-                  </div>
+                {art ? (
+                  <Image
+                    src={art}
+                    alt={`Arte do mapa ${map.displayName}`}
+                    fill
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                    className="object-cover transition duration-500 group-hover:scale-105"
+                  />
                 ) : (
-                  <div className="flex h-32 w-full items-center justify-center bg-slate-900 text-slate-600">
+                  <div className="flex h-full w-full items-center justify-center text-slate-600">
                     {map.displayName}
                   </div>
                 )}
 
-                <div className="p-6">
-                  <h3 className="text-lg font-semibold text-white group-hover:text-accent-300">
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/25 to-transparent" />
+
+                {map.tacticalDescription && (
+                  <span className="absolute left-2.5 top-2.5 rounded-full bg-slate-950/75 px-2 py-0.5 text-[10px] uppercase tracking-wide text-slate-200 ring-1 ring-white/10">
+                    {map.tacticalDescription}
+                  </span>
+                )}
+
+                <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 p-3">
+                  <h3 className="truncate font-semibold text-white drop-shadow group-hover:text-accent-200">
                     {map.displayName}
                   </h3>
-                  <p className="mt-1 text-sm text-slate-400">
-                    {total === 0 ? 'Ainda sem lineups publicadas' : `${total} lineup(s) publicadas`}
-                  </p>
+                  <span className="shrink-0 rounded-full bg-slate-950/70 px-2 py-0.5 text-[11px] text-slate-300">
+                    {total === 0 ? 'em breve' : total}
+                  </span>
                 </div>
               </Link>
             );
