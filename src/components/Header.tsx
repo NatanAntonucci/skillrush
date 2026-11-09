@@ -1,25 +1,50 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Menu, X, LogOut, Upload, Search } from 'lucide-react';
+import { ChevronDown, LogOut, Menu, Search, Upload, X } from 'lucide-react';
 
 import { useAdmin } from '@/hooks/useAdmin';
 import { ThemeToggle } from '@/components/ThemeToggle';
 
-const publicNav = [
+const primaryNav = [
   { label: 'Início', href: '/' },
   { label: 'Mapas', href: '/maps' },
   { label: 'Agentes', href: '/agents' },
   { label: 'Painel', href: '/painel' },
+];
+
+const moreNav = [
   { label: 'Tracker', href: '/tracker' },
   { label: 'Campeonatos', href: '/campeonatos' },
 ];
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMoreOpen, setIsMoreOpen] = useState(false);
   const { isAdmin, loading } = useAdmin();
+  const moreRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!isMoreOpen) return;
+
+    function onPointerDown(event: MouseEvent) {
+      if (!moreRef.current?.contains(event.target as Node)) setIsMoreOpen(false);
+    }
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') setIsMoreOpen(false);
+    }
+
+    window.addEventListener('mousedown', onPointerDown);
+    window.addEventListener('keydown', onKeyDown);
+
+    return () => {
+      window.removeEventListener('mousedown', onPointerDown);
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, [isMoreOpen]);
 
   async function handleLogout() {
     const { supabase } = await import('@/services/supabase/client');
@@ -31,21 +56,55 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-slate-800 bg-slate-950/95 backdrop-blur">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
-          <Link href="/" className="flex items-center transition-opacity hover:opacity-90">
+        <div className="flex h-16 items-center justify-between gap-4">
+          <Link href="/" className="flex shrink-0 items-center transition-opacity hover:opacity-90">
             <Image src="/logo.svg" alt="Skillrush" width={220} height={102} priority className="h-16 w-auto" />
           </Link>
 
-          <nav className="hidden items-center gap-4 lg:flex">
-            {publicNav.map((item) => (
+          <nav className="hidden items-center gap-5 lg:flex">
+            {primaryNav.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="font-medium text-slate-200 transition-colors hover:text-white"
+                className="whitespace-nowrap font-medium text-slate-200 transition-colors hover:text-white"
               >
                 {item.label}
               </Link>
             ))}
+
+            <div className="relative" ref={moreRef}>
+              <button
+                type="button"
+                onClick={() => setIsMoreOpen((current) => !current)}
+                aria-haspopup="menu"
+                aria-expanded={isMoreOpen}
+                className="flex items-center gap-1 whitespace-nowrap font-medium text-slate-200 transition-colors hover:text-white"
+              >
+                Mais
+                <ChevronDown
+                  size={14}
+                  className={`transition ${isMoreOpen ? 'rotate-180' : ''}`}
+                />
+              </button>
+
+              {isMoreOpen && (
+                <div
+                  role="menu"
+                  className="animate-fade-up absolute left-0 top-full z-50 mt-3 w-48 overflow-hidden rounded-xl border border-slate-800 bg-slate-950 shadow-2xl"
+                >
+                  {moreNav.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setIsMoreOpen(false)}
+                      className="block px-4 py-2.5 text-sm text-slate-300 transition hover:bg-slate-900 hover:text-white"
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
 
             <Link
               href="/buscar"
@@ -56,26 +115,28 @@ export default function Header() {
             </Link>
 
             <ThemeToggle />
+          </nav>
 
+          <div className="hidden items-center gap-3 lg:flex">
             {!loading && isAdmin && (
               <>
                 <Link
                   href="/admin/upload"
-                  className="rounded-2xl bg-accent-500 px-5 py-2.5 text-sm font-semibold text-slate-950 transition-colors hover:bg-accent-400"
+                  className="whitespace-nowrap rounded-2xl bg-accent-500 px-4 py-2 text-sm font-semibold text-slate-950 transition-colors hover:bg-accent-400"
                 >
                   Upload
                 </Link>
                 <button
                   type="button"
                   onClick={handleLogout}
-                  className="flex items-center gap-1.5 text-sm text-slate-400 transition-colors hover:text-white"
+                  className="flex items-center gap-1.5 whitespace-nowrap text-sm text-slate-400 transition-colors hover:text-white"
                 >
                   <LogOut size={16} />
                   Sair
                 </button>
               </>
             )}
-          </nav>
+          </div>
 
           <button
             type="button"
@@ -92,7 +153,7 @@ export default function Header() {
       {isMenuOpen && (
         <div className="border-t border-slate-800 bg-slate-950/95 px-4 py-4 lg:hidden">
           <div className="space-y-2">
-            {publicNav.map((item) => (
+            {[...primaryNav, ...moreNav].map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
