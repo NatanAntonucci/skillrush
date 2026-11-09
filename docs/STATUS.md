@@ -130,9 +130,10 @@ revisados e painel de detalhe em *bottom sheet* no mobile.
   cota atômica (`reserve_integration_quota`), cache com TTL e chaves só no servidor.
 - Testes: **43** (15 antigos + domínio, PGlite, bootstrap do SQL, interações e paridade do `domain.ts`).
 - **Banco**: `0011_integrations` aplicada e validada (tabelas novas negam anon; lineups/policies intactas).
-- **Falta ativar**: secrets (`HENRIKDEV_API_KEY`, `PANDASCORE_API_KEY`, `ALLOWED_ORIGINS`) e
-  `supabase functions deploy integrations --no-verify-jwt`; além de `…/tracker/` nas Redirect URLs do Auth.
-  Sem isso as páginas mostram "aguardando ativação" sem quebrar o site.
+- **Ativada em 09/11/2026**: `secrets` cadastrados (HENRIKDEV_API_KEY, PANDASCORE_API_KEY,
+  ALLOWED_ORIGINS), função publicada (`functions deploy integrations --no-verify-jwt`) e Redirect URLs
+  do Auth com `…/tracker/`. Testes: `esports-list` 200 com dados reais, origin não autorizada 403,
+  `tracker` sem sessão 401. Chaves ainda são as do colega — o ideal é migrar para chaves do projeto.
 
 ### Migrations aplicadas
 
