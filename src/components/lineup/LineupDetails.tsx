@@ -68,6 +68,7 @@ export default function LineupDetails() {
         {embedUrl ? (
           <div className="aspect-video">
             <iframe
+              loading="lazy"
               className="h-full w-full"
               src={embedUrl}
               title={selectedLineup.title}

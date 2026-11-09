@@ -3,13 +3,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 
-import { fetchAgents } from '@/services/supabase/agents';
-import { fetchMaps } from '@/services/supabase/maps';
-import { fetchLineups } from '@/services/supabase/lineups';
-import { competitiveMaps } from '@/utils/maps';
+import type { fetchSearchCatalog } from '@/services/supabase/search';
 import { slugify } from '@/utils/slug';
 
-import type { Agent, Lineup, MapData } from '@/types';
+type SearchCatalog = Awaited<ReturnType<typeof fetchSearchCatalog>>;
 
 function normalize(value: string) {
   return value
@@ -20,48 +17,52 @@ function normalize(value: string) {
 
 export default function SearchPage() {
   const [query, setQuery] = useState('');
-  const [agents, setAgents] = useState<Agent[]>([]);
-  const [maps, setMaps] = useState<MapData[]>([]);
-  const [lineups, setLineups] = useState<Lineup[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [catalog, setCatalog] = useState<SearchCatalog | null>(null);
+  const [error, setError] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+  const needsCatalog = Boolean(query.trim()) && !catalog;
+  const loading = needsCatalog && !error;
 
   useEffect(() => {
-    const initial = new URLSearchParams(window.location.search).get('q') ?? '';
-    setQuery(initial);
-
-    async function load() {
-      try {
-        const [agentData, mapData, lineupData] = await Promise.all([
-          fetchAgents(),
-          fetchMaps(),
-          fetchLineups({ limit: 200 }),
-        ]);
-
-        setAgents(agentData);
-        setMaps(competitiveMaps(mapData));
-        setLineups(lineupData);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    load();
+    const readQuery = () => setQuery(new URLSearchParams(window.location.search).get('q') ?? '');
+    readQuery();
+    window.addEventListener('popstate', readQuery);
+    return () => window.removeEventListener('popstate', readQuery);
   }, []);
 
   useEffect(() => {
-    const term = query.trim();
+    if (!needsCatalog) return;
+    const controller = new AbortController();
+    setError(false);
+    async function load() {
+      try {
+        const { fetchSearchCatalog } = await import('@/services/supabase/search');
+        if (controller.signal.aborted) return;
+        const data = await fetchSearchCatalog(controller.signal);
+        if (!controller.signal.aborted) setCatalog(data);
+      } catch {
+        if (!controller.signal.aborted) setError(true);
+      }
+    }
+    void load();
+    return () => controller.abort();
+  }, [needsCatalog, attempt]);
+
+  function updateQuery(value: string) {
+    setQuery(value);
+    const term = value.trim();
     const url = term ? `/buscar?q=${encodeURIComponent(term)}` : '/buscar';
-    window.history.replaceState(null, '', url);
-  }, [query]);
+    window.history.replaceState(window.history.state, '', url);
+  }
 
   const results = useMemo(() => {
     const term = normalize(query.trim());
-    if (!term) return { agents: [], maps: [], lineups: [] };
+    if (!term || !catalog) return { agents: [], maps: [], lineups: [] };
 
     return {
-      agents: agents.filter((agent) => normalize(agent.displayName).includes(term)).slice(0, 6),
-      maps: maps.filter((map) => normalize(map.displayName).includes(term)).slice(0, 6),
-      lineups: lineups
+      agents: catalog.agents.filter((agent) => normalize(agent.displayName).includes(term)).slice(0, 6),
+      maps: catalog.maps.filter((map) => normalize(map.displayName).includes(term)).slice(0, 6),
+      lineups: catalog.lineups
         .filter(
           (lineup) =>
             normalize(lineup.title).includes(term) ||
@@ -71,7 +72,7 @@ export default function SearchPage() {
         )
         .slice(0, 10),
     };
-  }, [agents, maps, lineups, query]);
+  }, [catalog, query]);
 
   const hasResults =
     results.agents.length + results.maps.length + results.lineups.length > 0;
@@ -87,14 +88,23 @@ export default function SearchPage() {
         <input
           autoFocus
           value={query}
-          onChange={(event) => setQuery(event.target.value)}
+          onChange={(event) => updateQuery(event.target.value)}
           placeholder="Buscar…"
           className="mt-6 w-full rounded-2xl border border-slate-800 bg-slate-900 px-5 py-4 text-lg text-white outline-none placeholder:text-slate-500 focus:border-accent-500"
         />
 
         {loading && <p className="mt-8 text-sm text-slate-400">Carregando dados…</p>}
 
-        {!loading && query.trim() && !hasResults && (
+        {error && needsCatalog && (
+          <p role="alert" className="mt-8 text-sm text-slate-400">
+            Não foi possível carregar a busca.{' '}
+            <button onClick={() => setAttempt((current) => current + 1)} className="text-accent-300">
+              Tentar novamente
+            </button>
+          </p>
+        )}
+
+        {catalog && query.trim() && !hasResults && (
           <p className="mt-8 text-sm text-slate-400">
             Nada encontrado para “{query}”. Tente o nome do agente ou do mapa.
           </p>

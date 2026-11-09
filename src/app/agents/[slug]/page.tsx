@@ -16,6 +16,8 @@ export const dynamicParams = false;
 
 export async function generateStaticParams() {
   const agents = await getAgents();
+  // O export do Next 14 exige pelo menos um parâmetro. A rota vazia usa o 404.
+  if (!agents.length) return [{ slug: '__empty__' }];
   return agents.map((agent) => ({ slug: slugify(agent.displayName) }));
 }
 

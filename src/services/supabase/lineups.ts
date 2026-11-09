@@ -10,6 +10,7 @@ interface LineupFilters {
   abilities?: string[];
   status?: LineupStatus | 'all';
   limit?: number;
+  signal?: AbortSignal;
 }
 
 export interface CreateLineupInput {
@@ -124,6 +125,8 @@ export async function fetchLineups(filters?: LineupFilters) {
   query = query
     .order('created_at', { ascending: false })
     .limit(filters?.limit ?? 200);
+
+  if (filters?.signal) query = query.abortSignal(filters.signal);
 
   const { data, error } = await query;
 

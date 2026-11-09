@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next';
 
-import { getAllLineups, getAgents, getCompetitiveMaps } from '@/services/queries';
+import { getLineupIndex, getAgents, getCompetitiveMaps } from '@/services/queries';
 import { slugify } from '@/utils/slug';
 import { siteUrl } from '@/utils/site';
 
@@ -10,11 +10,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [maps, agents, lineups] = await Promise.all([
     getCompetitiveMaps(),
     getAgents(),
-    getAllLineups(),
+    getLineupIndex(),
   ]);
 
   return [
     { url: `${base}/`, changeFrequency: 'weekly', priority: 1 },
+    { url: `${base}/campeonatos`, changeFrequency: 'daily', priority: 0.8 },
     { url: `${base}/maps`, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${base}/agents`, changeFrequency: 'monthly', priority: 0.8 },
     ...maps.map((map) => ({

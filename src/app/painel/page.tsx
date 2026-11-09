@@ -13,7 +13,7 @@ import InteractiveMap from '@/components/map/InteractiveMap';
 import { useLineupStore } from '@/stores/lineupStore';
 
 export default function PanelPage() {
-  const { selectedLineup } = useLineupStore();
+  const selectedLineup = useLineupStore((state) => state.selectedLineup);
   const lineupDetailsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 
-import { getAllLineups, getLineupBySlug } from '@/services/queries';
+import { getLineupIndex, getLineupBySlug } from '@/services/queries';
 import { ShareMenu } from '@/components/share/ShareMenu';
 import { getVideoEmbedUrl } from '@/utils/video';
 import { labelDifficulty, labelSide } from '@/utils/labels';
@@ -15,7 +15,9 @@ interface LineupPageProps {
 export const dynamicParams = false;
 
 export async function generateStaticParams() {
-  const lineups = await getAllLineups();
+  const lineups = await getLineupIndex();
+  // O export do Next 14 exige pelo menos um parâmetro. A rota vazia usa o 404.
+  if (!lineups.length) return [{ slug: '__empty__' }];
   return lineups.map((lineup) => ({ slug: lineup.slug }));
 }
 
@@ -105,6 +107,7 @@ export default async function LineupPage({ params }: LineupPageProps) {
           {embedUrl ? (
             <div className="aspect-video">
               <iframe
+                loading="lazy"
                 className="h-full w-full"
                 src={embedUrl}
                 title={lineup.title}

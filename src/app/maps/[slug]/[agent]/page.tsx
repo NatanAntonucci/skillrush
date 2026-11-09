@@ -4,7 +4,7 @@ import type { Metadata } from 'next';
 
 import { LineupCard } from '@/components/lineup/LineupCard';
 import {
-  getAllLineups,
+  getLineupIndex,
   getAgentBySlug,
   getLineupsByMapAndAgent,
   getMapBySlug,
@@ -18,7 +18,7 @@ interface AgentMapPageProps {
 export const dynamicParams = false;
 
 export async function generateStaticParams() {
-  const lineups = await getAllLineups();
+  const lineups = await getLineupIndex();
 
   const seen = new Set<string>();
   const params: { slug: string; agent: string }[] = [];
@@ -35,7 +35,8 @@ export async function generateStaticParams() {
     params.push({ slug, agent });
   }
 
-  return params;
+  // Sem pares publicados, esta entrada cai em notFound() durante o export.
+  return params.length ? params : [{ slug: '__empty__', agent: '__empty__' }];
 }
 
 export async function generateMetadata({ params }: AgentMapPageProps): Promise<Metadata> {

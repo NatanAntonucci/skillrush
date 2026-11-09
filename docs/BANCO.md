@@ -59,6 +59,16 @@ Espelho de `auth.users` com o papel do usuário. Criado por trigger no cadastro.
 
 A função `is_admin()` é `security definer` para evitar recursão de policy em `profiles`.
 
+## Projeto Supabase novo
+
+Execute `supabase/INSTALAR_SKILLRUSH_BANCO_NOVO.sql` inteiro no SQL Editor, uma única vez.
+O arquivo reúne o schema base e todas as migrations em uma transação; recusa executar
+se as tabelas base já existirem, para não reaplicar transformações em dados existentes.
+Depois execute `npm run sync` para popular agentes, habilidades e mapas. O script aceita
+`.env.local` e `.env` (o primeiro tem prioridade). Não são inseridas lineups de demonstração.
+
+Para atualizar o SQL após acrescentar migrations: `node scripts/build-bootstrap.mjs`.
+
 ## Aplicando migrations
 
 1. Abra o **SQL Editor** do projeto no Supabase.

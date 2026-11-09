@@ -5,7 +5,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Menu, X, LogOut, Upload, Search } from 'lucide-react';
 
-import { supabase } from '@/services/supabase/client';
 import { useAdmin } from '@/hooks/useAdmin';
 import { ThemeToggle } from '@/components/ThemeToggle';
 
@@ -14,6 +13,8 @@ const publicNav = [
   { label: 'Mapas', href: '/maps' },
   { label: 'Agentes', href: '/agents' },
   { label: 'Painel', href: '/painel' },
+  { label: 'Tracker', href: '/tracker' },
+  { label: 'Campeonatos', href: '/campeonatos' },
 ];
 
 export default function Header() {
@@ -21,6 +22,7 @@ export default function Header() {
   const { isAdmin, loading } = useAdmin();
 
   async function handleLogout() {
+    const { supabase } = await import('@/services/supabase/client');
     await supabase.auth.signOut();
     setIsMenuOpen(false);
     window.location.href = '/';
@@ -34,7 +36,7 @@ export default function Header() {
             <Image src="/logo.svg" alt="Skillrush" width={220} height={102} priority className="h-16 w-auto" />
           </Link>
 
-          <nav className="hidden items-center gap-6 lg:flex">
+          <nav className="hidden items-center gap-4 lg:flex">
             {publicNav.map((item) => (
               <Link
                 key={item.href}

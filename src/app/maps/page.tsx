@@ -3,7 +3,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 
 import { SectionHeader } from '@/components/ui/SectionHeader';
-import { getAllLineups, getCompetitiveMaps } from '@/services/queries';
+import { getMapLineupCounts, getCompetitiveMaps } from '@/services/queries';
 import { resolveImage } from '@/utils/images';
 import { slugify } from '@/utils/slug';
 
@@ -14,12 +14,7 @@ export const metadata: Metadata = {
 };
 
 export default async function MapsPage() {
-  const [maps, lineups] = await Promise.all([getCompetitiveMaps(), getAllLineups()]);
-
-  const countByMap = new Map<string, number>();
-  for (const lineup of lineups) {
-    countByMap.set(lineup.mapId, (countByMap.get(lineup.mapId) ?? 0) + 1);
-  }
+  const [maps, countByMap] = await Promise.all([getCompetitiveMaps(), getMapLineupCounts()]);
 
   return (
     <main className="min-h-screen bg-slate-950 text-slate-100">
@@ -39,10 +34,10 @@ export default async function MapsPage() {
                 href={`/maps/${slugify(map.displayName)}`}
                 className="group animate-fade-up overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/80 shadow-xl shadow-slate-950/40 transition duration-300 hover:-translate-y-1 hover:border-accent-500/50"
               >
-                {map.splash ? (
+                {(map.listViewIcon || map.splash) ? (
                   <div className="relative h-32 w-full overflow-hidden">
                     <Image
-                      src={resolveImage(map.splash)!}
+                      src={resolveImage(map.listViewIcon ?? map.splash)!}
                       alt={`Arte do mapa ${map.displayName}`}
                       fill
                       sizes="(max-width: 768px) 100vw, 33vw"

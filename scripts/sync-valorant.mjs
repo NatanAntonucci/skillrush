@@ -36,8 +36,9 @@ const COMPETITIVE_MAPS = new Set([
 ]);
 
 function loadEnv() {
-  if (existsSync('.env.local')) {
-    const content = readFileSync('.env.local', 'utf8');
+  for (const filename of ['.env.local', '.env']) {
+    if (!existsSync(filename)) continue;
+    const content = readFileSync(filename, 'utf8');
     for (const line of content.split(/\r?\n/)) {
       const match = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*)\s*$/);
       if (!match) continue;
@@ -64,7 +65,7 @@ async function main() {
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!url || !serviceRoleKey) {
-    console.error('Faltam NEXT_PUBLIC_SUPABASE_URL e/ou SUPABASE_SERVICE_ROLE_KEY no .env.local');
+    console.error('Faltam NEXT_PUBLIC_SUPABASE_URL e/ou SUPABASE_SERVICE_ROLE_KEY no .env.local ou .env');
     process.exit(1);
   }
 

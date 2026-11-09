@@ -1,0 +1,3 @@
+# Public esports reads; tracker JWTs are validated explicitly inside the function.
+[functions.integrations]
+verify_jwt = false

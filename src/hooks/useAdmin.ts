@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from 'react';
 
-import { supabase } from '@/services/supabase/client';
-
 export type AdminRole = 'user' | 'moderator' | 'admin';
 
 export interface AdminState {
@@ -36,6 +34,8 @@ export function useAdmin(): AdminState {
 
     async function load() {
       try {
+        const { supabase } = await import('@/services/supabase/client');
+        if (!active) return;
         const {
           data: { session },
         } = await supabase.auth.getSession();

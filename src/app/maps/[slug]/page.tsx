@@ -15,6 +15,8 @@ interface MapPageProps {
 
 export async function generateStaticParams() {
   const maps = await getCompetitiveMaps();
+  // O export do Next 14 exige pelo menos um parâmetro. A rota vazia usa o 404.
+  if (!maps.length) return [{ slug: '__empty__' }];
   return maps.map((map) => ({ slug: slugify(map.displayName) }));
 }
 

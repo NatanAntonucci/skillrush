@@ -4,8 +4,8 @@ import type { MapData } from '@/types';
  * Mapas competitivos, sem duplicata de nome (a API do Valorant tem mais de
  * um "The Range") e em ordem alfabética.
  */
-export function competitiveMaps(maps: MapData[]): MapData[] {
-  const unique = new Map<string, MapData>();
+export function competitiveMaps<T extends Pick<MapData, 'displayName' | 'isCompetitive'>>(maps: T[]): T[] {
+  const unique = new Map<string, T>();
 
   for (const map of maps) {
     if (map.isCompetitive !== true) continue;

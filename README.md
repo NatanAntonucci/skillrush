@@ -137,3 +137,10 @@ Passo a passo do cPanel, checklist no ar e rollback em [docs/DEPLOY.md](docs/DEP
 - **Etapa 6**: envio pela comunidade + moderação (`/admin/moderacao`), login com Discord, favoritos e busca full-text
 - Descrições ricas por mapa (campo editável no admin)
 - Domínio final e virada de chave do staging
+
+## Tracker e campeonatos
+
+Novas áreas: `/tracker/` (estatísticas privadas consentidas via HenrikDev) e `/campeonatos/`
+(agenda, resultados, chaveamento e transmissões via PandaScore). A ativação exige uma Edge Function,
+a migration `0011` e as chaves dos provedores configuradas como segredos no Supabase.
+Veja [configuração, limites e validação](docs/TRACKER-ESPORTS.md).

@@ -5,7 +5,8 @@ import type { Metadata } from 'next';
 import { LineupCard } from '@/components/lineup/LineupCard';
 import { SearchBox } from '@/components/search/SearchBox';
 import { RecentShortcuts } from '@/features/home/RecentShortcuts';
-import { getAllLineups, getCompetitiveMaps } from '@/services/queries';
+import { getMapLineupCounts, getCompetitiveMaps } from '@/services/queries';
+import { fetchLineups } from '@/services/supabase/lineups';
 import { resolveImage } from '@/utils/images';
 import { slugify } from '@/utils/slug';
 
@@ -16,14 +17,9 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const [maps, lineups] = await Promise.all([getCompetitiveMaps(), getAllLineups()]);
-
-  const countByMap = new Map<string, number>();
-  for (const lineup of lineups) {
-    countByMap.set(lineup.mapId, (countByMap.get(lineup.mapId) ?? 0) + 1);
-  }
-
-  const latest = lineups.slice(0, 6);
+  const [maps, countByMap, latest] = await Promise.all([
+    getCompetitiveMaps(), getMapLineupCounts(), fetchLineups({ limit: 6 }),
+  ]);
 
   return (
     <main className="min-h-screen bg-slate-950 text-slate-100">
@@ -73,7 +69,7 @@ export default async function HomePage() {
         <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {maps.map((map, index) => {
             const total = countByMap.get(map.id) ?? 0;
-            const art = resolveImage(map.splash) ?? resolveImage(map.displayIcon) ?? '';
+            const art = resolveImage(map.listViewIcon ?? map.splash) ?? resolveImage(map.displayIcon) ?? '';
 
             return (
               <Link
