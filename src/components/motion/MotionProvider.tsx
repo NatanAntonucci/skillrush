@@ -38,6 +38,10 @@ export function MotionProvider() {
       document.documentElement.classList.add('motion-ready');
 
       const lenis = new Lenis({ duration: 1.05, smoothWheel: true });
+
+      // exposto para o "voltar ao topo" usar o mesmo motor de scroll
+      (window as unknown as { __lenis?: unknown }).__lenis = lenis;
+
       let frame = 0;
 
       const raf = (time: number) => {
@@ -83,6 +87,7 @@ export function MotionProvider() {
         cancelAnimationFrame(frame);
         context.revert();
         lenis.destroy();
+        delete (window as unknown as { __lenis?: unknown }).__lenis;
         document.documentElement.classList.remove('motion-ready');
       };
     }

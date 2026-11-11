@@ -85,7 +85,7 @@ export default async function MapPage({ params }: MapPageProps) {
 
               <h1 className="text-3xl font-bold text-white">Lineups de {map.displayName}</h1>
               <p className="mt-1 text-sm text-slate-300">
-                Escolha o agente no topo, clique no hotspot e veja a execução sem sair da página.
+                Escolha o agente, clique no ponto do mapa. O vídeo abre sem sair da página.
               </p>
             </div>
 

@@ -28,7 +28,7 @@ export default async function HomePage() {
       <section className="mx-auto w-full max-w-3xl px-4 pb-8 pt-10 text-center sm:px-6 sm:pt-14">
         <span className="animate-fade-up inline-flex items-center gap-2 rounded-full border border-slate-800 bg-slate-900/60 px-3 py-1 text-xs text-slate-300">
           <span className="h-1.5 w-1.5 rounded-full bg-accent-400" />
-          Lineups de Valorant, sem enrolação
+          Lineups e spots de Valorant
         </span>
 
         <h1 className="animate-fade-up mt-4 text-2xl font-bold leading-tight text-white sm:text-4xl">
@@ -39,7 +39,7 @@ export default async function HomePage() {
           className="animate-fade-up mx-auto mt-3 max-w-lg text-sm text-slate-400 sm:text-base"
           style={{ animationDelay: '60ms' }}
         >
-          Escolha o mapa, o agente e veja onde jogar — com vídeo e execução em segundos.
+          Mapa, agente, ponto. Veja o vídeo e execute em segundos.
         </p>
 
         <div className="animate-fade-up mt-6 sm:mt-8" style={{ animationDelay: '120ms' }}>
@@ -54,10 +54,10 @@ export default async function HomePage() {
             href="/painel"
             className="rounded-xl border border-slate-800 px-4 py-2 font-medium text-slate-200 transition hover:border-accent-400 hover:text-white"
           >
-            Abrir painel completo
+            Abrir o painel
           </Link>
           <Link href="/maps" className="text-slate-400 transition hover:text-white">
-            Ver catálogo de mapas →
+            Ver todos os mapas →
           </Link>
         </div>
       </section>
@@ -66,7 +66,7 @@ export default async function HomePage() {
         <section>
           <div className="flex flex-wrap items-center justify-between gap-2">
             <h2 className="text-xs uppercase tracking-[0.2em] text-slate-400">
-              Continuar de onde parei
+              Volte de onde parou
             </h2>
             <Link
               href="/painel"
@@ -84,7 +84,7 @@ export default async function HomePage() {
         <section className="pt-10">
           <div className="flex items-end justify-between gap-3">
             <h2 className="text-sm font-semibold text-white sm:text-base">Mapas</h2>
-            <span className="text-xs text-slate-500">{maps.length} competitivos</span>
+            <span className="text-xs text-slate-500">{maps.length} mapas no competitivo</span>
           </div>
 
           <div data-reveal className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
@@ -110,10 +110,10 @@ export default async function HomePage() {
                     />
                   )}
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/25 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
                   <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 p-3">
-                    <span className="truncate font-semibold text-white drop-shadow group-hover:text-accent-200">
+                    <span className="truncate font-semibold art-label drop-shadow">
                       {map.displayName}
                     </span>
 
@@ -130,7 +130,7 @@ export default async function HomePage() {
         {latest.length > 0 && (
           <section className="pb-16 pt-10">
             <div className="flex items-end justify-between gap-3">
-              <h2 className="text-sm font-semibold text-white sm:text-base">Últimas lineups</h2>
+              <h2 className="text-sm font-semibold text-white sm:text-base">Adicionadas recentemente</h2>
             </div>
 
             <div data-reveal className="mt-4 grid gap-3 sm:grid-cols-2">

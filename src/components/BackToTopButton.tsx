@@ -32,6 +32,17 @@ export default function BackToTopButton({ threshold = 300, className = '' }: Bac
   }, [threshold]);
 
   const scrollToTop = () => {
+    const lenis = (window as unknown as {
+      __lenis?: { scrollTo: (target: number, options?: { duration?: number }) => void };
+    }).__lenis;
+
+    // Com o scroll suave ativo, o window.scrollTo é sobrescrito pelo Lenis —
+    // usar a mesma instância evita o "só funciona no segundo clique".
+    if (lenis) {
+      lenis.scrollTo(0, { duration: 1.1 });
+      return;
+    }
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 

@@ -200,8 +200,15 @@ export function Championships() {
                   setPage(1);
                   setStatus(value);
                 }}
-                className={`rounded-xl px-4 py-3 text-sm ${status === value ? "bg-accent-500/15 text-accent-200" : "bg-slate-900 text-slate-400"}`}
+                className={`flex items-center gap-2 rounded-xl px-4 py-3 text-sm transition duration-200 ease-out active:scale-[0.97] ${
+                  status === value
+                    ? "bg-accent-500/15 text-accent-200 ring-1 ring-accent-500/40"
+                    : "bg-slate-900 text-slate-400 hover:bg-slate-800 hover:text-slate-200"
+                }`}
               >
+                {loading && status === value && (
+                  <span className="h-3 w-3 animate-spin rounded-full border-2 border-accent-400/40 border-t-accent-400" />
+                )}
                 {label}
               </button>
             ))}
@@ -218,7 +225,18 @@ export function Championships() {
           />
         </div>
       )}
-      {loading && <Notice>Carregando campeonatos…</Notice>}
+      {loading && (
+        <div className="space-y-4" aria-busy="true" aria-live="polite">
+          <div className="h-1 w-full overflow-hidden rounded-full bg-slate-900">
+            <div className="pixel-bar h-full w-1/2 animate-pulse" />
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <div key={index} className="skeleton h-32 rounded-2xl" />
+            ))}
+          </div>
+        </div>
+      )}
       {!loading && !error && !id && data && (
         <>
           <Timestamp value={data.fetchedAt} />
@@ -244,7 +262,7 @@ export function Championships() {
                       navigate(t.id);
                     }
                   }}
-                  className="group rounded-3xl border border-slate-800 bg-slate-900/50 p-6 transition hover:border-accent-500/60"
+                  className="group rounded-3xl border border-slate-800 bg-slate-900/50 p-6 transition duration-200 hover:-translate-y-0.5 hover:border-accent-500/60"
                 >
                   <p className="text-xs uppercase tracking-wider text-accent-300">
                     {t.league || "Valorant"}

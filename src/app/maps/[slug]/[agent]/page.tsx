@@ -80,7 +80,7 @@ export default async function AgentMapPage({ params }: AgentMapPageProps) {
         </h1>
         <p className="mt-2 text-sm text-slate-400">
           {lineups.length === 0
-            ? 'Nenhuma lineup publicada para este agente neste mapa.'
+            ? 'Sem lineup desse agente neste mapa ainda.'
             : `${lineups.length} lineup(s) de ${agent.displayName} em ${map.displayName}.`}
         </p>
 

@@ -23,7 +23,7 @@ export function RecentShortcuts() {
   if (recent.length === 0) {
     return (
       <p className="text-sm text-slate-400">
-        Na primeira consulta, seus últimos mapas aparecem aqui para abrir em um clique.
+        Seus últimos mapas aparecem aqui depois da primeira consulta.
       </p>
     );
   }

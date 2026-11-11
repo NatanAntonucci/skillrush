@@ -314,7 +314,7 @@ export function MapBoard({
         <div className="max-h-[420px] space-y-2 overflow-y-auto pr-1">
           {filtered.length === 0 && (
             <p className="rounded-2xl border border-dashed border-slate-700 p-4 text-sm text-slate-400">
-              Nenhuma lineup com esses filtros. Tente remover algum.
+              Nada com esses filtros. Tente limpar um deles.
             </p>
           )}
 

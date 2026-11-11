@@ -49,7 +49,7 @@ export default async function MapsPage() {
                   </div>
                 )}
 
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/25 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
                 {map.tacticalDescription && (
                   <span className="absolute left-2.5 top-2.5 rounded-full bg-slate-950/75 px-2 py-0.5 text-[10px] uppercase tracking-wide text-slate-200 ring-1 ring-white/10">
@@ -58,7 +58,7 @@ export default async function MapsPage() {
                 )}
 
                 <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 p-3">
-                  <h3 className="truncate font-semibold text-white drop-shadow group-hover:text-accent-200">
+                  <h3 className="truncate font-semibold art-label drop-shadow">
                     {map.displayName}
                   </h3>
                   <span className="shrink-0 rounded-full bg-slate-950/70 px-2 py-0.5 text-[11px] text-slate-300">

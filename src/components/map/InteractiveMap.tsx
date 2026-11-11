@@ -130,7 +130,7 @@ export default function InteractiveMap() {
       <div className="text-sm text-slate-400">
         {hotspots.length > 0
           ? `${hotspots.length} lineup(s) encontrada(s)`
-          : 'Nenhuma lineup encontrada'}
+          : 'Nenhuma lineup por aqui'}
       </div>
     </div>
   );

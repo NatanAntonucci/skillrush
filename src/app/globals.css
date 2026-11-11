@@ -70,7 +70,7 @@
   --accent-950: 65 10 16;
 
   --page-glow: 230 58 75;
-  --page-glow-alpha: 0.045;
+  --page-glow-alpha: 0.02;
   --page-bg: 6 6 7;
   --page-grid: 255 255 255;
   --page-grid-opacity: 0.04;
@@ -181,12 +181,31 @@ h3 {
   color: rgb(var(--slate-100));
 }
 
+[data-theme='light'] .hover\:text-white:hover,
+[data-theme='light'] .hover\:text-slate-100:hover,
+[data-theme='light'] .group:hover .group-hover\:text-white,
+[data-theme='light'] .group:hover .group-hover\:text-accent-200,
+[data-theme='light'] .group:hover .group-hover\:text-accent-300 {
+  color: rgb(var(--slate-100));
+}
+
+/* rótulos sobre a arte do mapa: brancos em qualquer tema */
+.art-label {
+  color: #fff;
+}
+
 [data-theme='light'] .bg-white\/5 {
   background-color: rgb(0 0 0 / 0.04);
 }
 
 [data-theme='light'] .hover\:bg-white\/10:hover {
   background-color: rgb(0 0 0 / 0.06);
+}
+
+/* no tema coral, textos de acento ganham peso para não ficarem "finos" */
+[data-theme='rush'] .text-accent-300,
+[data-theme='rush'] .text-accent-400 {
+  font-weight: 500;
 }
 
 * {
