@@ -128,6 +128,21 @@ export function Tracker() {
       setBusy(false);
     }
   }
+  async function loginDiscord() {
+    setBusy(true);
+    setError("");
+    setAuthMessage("");
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "discord",
+      options: { redirectTo: `${window.location.origin}/tracker/` },
+    });
+    if (error) {
+      setError(
+        "O login com Discord ainda não está ativo. Use o link por e-mail enquanto isso.",
+      );
+      setBusy(false);
+    }
+  }
   async function search(event?: FormEvent, more = false) {
     event?.preventDefault();
     if (!consent || !userId || wait) return;
@@ -250,15 +265,26 @@ export function Tracker() {
             </Link>
           </div>
           <form onSubmit={login} className="space-y-3">
-            <button
-              type="button"
-              onClick={loginGoogle}
-              disabled={busy}
-              className="flex w-full items-center justify-center gap-2 rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 text-sm font-medium text-slate-100 transition hover:border-slate-500 disabled:opacity-60"
-            >
-              <span aria-hidden="true" className="text-base font-bold">G</span>
-              Entrar com Google
-            </button>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={loginGoogle}
+                disabled={busy}
+                className="flex items-center justify-center gap-2 rounded-xl border border-slate-700 bg-slate-900 px-3 py-3 text-sm font-medium text-slate-100 transition hover:border-slate-500 disabled:opacity-60"
+              >
+                <span aria-hidden="true" className="text-base font-bold">G</span>
+                Google
+              </button>
+              <button
+                type="button"
+                onClick={loginDiscord}
+                disabled={busy}
+                className="flex items-center justify-center gap-2 rounded-xl border border-slate-700 bg-slate-900 px-3 py-3 text-sm font-medium text-slate-100 transition hover:border-slate-500 disabled:opacity-60"
+              >
+                <span aria-hidden="true" className="text-base font-bold">D</span>
+                Discord
+              </button>
+            </div>
 
             <div className="flex items-center gap-3 py-1 text-[11px] uppercase tracking-widest text-slate-500">
               <span className="h-px flex-1 bg-slate-800" />
