@@ -67,6 +67,33 @@ async function cached(
     );
   if (data && new Date(data.expires_at).getTime() > Date.now())
     return data.payload;
+
+  // Cache vencido: responde na hora com o valor antigo e revalida em segundo plano.
+  // Evita pagar a latência do provedor em toda visita.
+  if (data) {
+    const refresh = (async () => {
+      try {
+        const value = await load();
+        await db.from("integration_cache").upsert({
+          cache_key: key,
+          owner_id: owner,
+          payload: value,
+          updated_at: new Date().toISOString(),
+          expires_at: new Date(Date.now() + ttl * 1000).toISOString(),
+        });
+      } catch {
+        /* mantém o cache antigo se a revalidação falhar */
+      }
+    })();
+
+    const runtime = (globalThis as { EdgeRuntime?: { waitUntil?: (p: Promise<unknown>) => void } })
+      .EdgeRuntime;
+
+    if (runtime?.waitUntil) runtime.waitUntil(refresh);
+    else await refresh;
+
+    return data.payload;
+  }
   const value = await load();
   const { error: saveError } = await db
     .from("integration_cache")
