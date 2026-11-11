@@ -23,7 +23,7 @@ export default async function AgentsPage() {
           description="Cada agente com suas habilidades e o link para as lineups por mapa."
         />
 
-        <div className="mt-6 grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4">
+        <div data-reveal className="mt-6 grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4">
           {agents.map((agent) => (
             <Link
               key={agent.id}

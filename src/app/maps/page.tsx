@@ -24,7 +24,7 @@ export default async function MapsPage() {
           description="Todos os mapas do modo competitivo, com suas lineups e pontos de execução."
         />
 
-        <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
+        <div data-reveal className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
           {maps.map((map) => {
             const total = countByMap.get(map.id) ?? 0;
             const art = resolveImage(map.splash) ?? resolveImage(map.displayIcon);

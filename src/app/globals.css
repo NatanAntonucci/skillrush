@@ -2,11 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ---------- temas ---------- */
+/* ============ temas ============ */
 
-/* Tema padrão: ciano */
+/* Tema padrão: ciano sobre azul-noite */
 :root {
   color-scheme: dark;
+
+  --slate-50: 248 250 252;
+  --slate-100: 241 245 249;
+  --slate-200: 226 232 240;
+  --slate-300: 203 213 225;
+  --slate-400: 148 163 184;
+  --slate-500: 100 116 139;
+  --slate-600: 71 85 105;
+  --slate-700: 51 65 85;
+  --slate-800: 30 41 59;
+  --slate-900: 15 23 42;
+  --slate-950: 2 6 23;
 
   --accent-50: 236 254 255;
   --accent-100: 207 250 254;
@@ -19,11 +31,26 @@
   --accent-800: 21 94 117;
   --accent-900: 22 78 99;
   --accent-950: 8 51 68;
-  --accent-glow: 34 211 238;
+
+  --page-glow: 34 211 238;
+  --page-grid: 255 255 255;
+  --page-grid-opacity: 0.035;
 }
 
-/* Tema Skillrush: vermelho/coral da marca (#E63A4B) */
+/* Tema Skillrush: preto editorial, vermelho da marca e neutros quentes */
 [data-theme='rush'] {
+  --slate-50: 250 250 250;
+  --slate-100: 245 245 245;
+  --slate-200: 229 229 229;
+  --slate-300: 212 212 212;
+  --slate-400: 163 163 163;
+  --slate-500: 115 115 115;
+  --slate-600: 82 82 82;
+  --slate-700: 64 64 64;
+  --slate-800: 38 38 38;
+  --slate-900: 23 23 23;
+  --slate-950: 8 8 8;
+
   --accent-50: 254 242 243;
   --accent-100: 253 226 229;
   --accent-200: 251 204 210;
@@ -35,20 +62,52 @@
   --accent-800: 143 26 39;
   --accent-900: 119 27 37;
   --accent-950: 65 10 16;
-  --accent-glow: 230 58 75;
+
+  --page-glow: 230 58 75;
+  --page-grid: 255 255 255;
+  --page-grid-opacity: 0.045;
 }
+
+/* ============ base ============ */
 
 html {
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
   min-height: 100vh;
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
   background:
-    radial-gradient(circle at top, rgb(var(--accent-glow) / 0.09), transparent 35%),
-    radial-gradient(circle at bottom, rgba(139, 92, 246, 0.06), transparent 30%),
-    #020617;
-  color: #e2e8f0;
+    radial-gradient(60rem 40rem at 50% -10%, rgb(var(--page-glow) / 0.12), transparent 60%),
+    radial-gradient(40rem 30rem at 100% 100%, rgb(var(--page-glow) / 0.06), transparent 60%),
+    rgb(var(--slate-950));
+  color: rgb(var(--slate-200));
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* grade sutil de "pixel" no fundo — referencia o material da marca */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: radial-gradient(rgb(var(--page-grid) / var(--page-grid-opacity)) 1px, transparent 0);
+  background-size: 22px 22px;
+  mask-image: radial-gradient(70% 60% at 50% 0%, black, transparent 75%);
+}
+
+body > * {
+  position: relative;
+  z-index: 1;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display), var(--font-sans), sans-serif;
+  letter-spacing: -0.02em;
 }
 
 * {
@@ -62,17 +121,22 @@ textarea {
   font: inherit;
 }
 
+:focus-visible {
+  outline: 2px solid rgb(var(--accent-500));
+  outline-offset: 2px;
+}
+
 ::selection {
-  background: rgb(var(--accent-glow) / 0.35);
+  background: rgb(var(--page-glow) / 0.35);
   color: white;
 }
 
-/* ---------- animações ---------- */
+/* ============ animações ============ */
 
 @keyframes fade-up {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
@@ -97,13 +161,13 @@ textarea {
 
 @keyframes pulse-ring {
   0% {
-    box-shadow: 0 0 0 0 rgb(var(--accent-glow) / 0.45);
+    box-shadow: 0 0 0 0 rgb(var(--page-glow) / 0.45);
   }
   70% {
-    box-shadow: 0 0 0 12px rgb(var(--accent-glow) / 0);
+    box-shadow: 0 0 0 12px rgb(var(--page-glow) / 0);
   }
   100% {
-    box-shadow: 0 0 0 0 rgb(var(--accent-glow) / 0);
+    box-shadow: 0 0 0 0 rgb(var(--page-glow) / 0);
   }
 }
 
@@ -118,22 +182,35 @@ textarea {
   }
 }
 
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 .animate-fade-up {
-  animation: fade-up 0.35s ease-out both;
+  animation: fade-up 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .animate-fade-in {
-  animation: fade-in 0.25s ease-out both;
+  animation: fade-in 0.3s ease-out both;
 }
 
 .animate-theme-pop {
   animation: theme-pop 0.25s ease-out both;
 }
 
+.animate-marquee {
+  animation: marquee 28s linear infinite;
+}
+
 .skeleton {
   position: relative;
   overflow: hidden;
-  background: #0f172a;
+  background: rgb(var(--slate-900));
 }
 
 .skeleton::after {
@@ -145,13 +222,22 @@ textarea {
   animation: shimmer 1.4s infinite;
 }
 
+/* barra de "pixel" usada no preloader e no carregamento de rota */
+.pixel-bar {
+  background-image: repeating-linear-gradient(
+    90deg,
+    rgb(var(--accent-500)) 0 10px,
+    transparent 10px 14px
+  );
+}
+
 .custom-scrollbar::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #1e293b;
+  background: rgb(var(--slate-800));
   border-radius: 999px;
 }
 
@@ -159,10 +245,18 @@ textarea {
   background: transparent;
 }
 
+/* elementos que o MotionProvider anima (só escondem quando o JS assumiu) */
+.motion-ready [data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  will-change: transform, opacity;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-up,
   .animate-fade-in,
-  .animate-theme-pop {
+  .animate-theme-pop,
+  .animate-marquee {
     animation: none;
   }
 
@@ -170,7 +264,26 @@ textarea {
     animation: none;
   }
 
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+
   html {
     scroll-behavior: auto;
   }
+}
+
+/* Lenis (scroll suave) */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
 }

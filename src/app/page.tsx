@@ -72,7 +72,7 @@ export default async function HomePage() {
             <span className="text-xs text-slate-500">{maps.length} competitivos</span>
           </div>
 
-          <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
+          <div data-reveal className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
             {maps.map((map, index) => {
               const total = countByMap.get(map.id) ?? 0;
               const art =
@@ -118,7 +118,7 @@ export default async function HomePage() {
               <h2 className="text-sm font-semibold text-white sm:text-base">Últimas lineups</h2>
             </div>
 
-            <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            <div data-reveal className="mt-4 grid gap-3 sm:grid-cols-2">
               {latest.map((lineup, index) => (
                 <div
                   key={lineup.id}

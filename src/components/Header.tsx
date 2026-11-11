@@ -55,7 +55,7 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-slate-800 bg-slate-950/95 backdrop-blur">
-      <div className="mx-auto flex h-14 w-full max-w-[1600px] items-center justify-between gap-3 px-4 sm:h-16 sm:px-6 lg:px-8">
+      <div className="mx-auto flex h-16 w-full max-w-[1600px] items-center justify-between gap-3 px-4 sm:h-20 sm:px-6 lg:px-8">
         <Link
           href="/"
           className="-ml-2 flex shrink-0 items-center transition-opacity hover:opacity-90 sm:-ml-4"
@@ -66,7 +66,7 @@ export default function Header() {
             width={220}
             height={102}
             priority
-            className="h-12 w-auto sm:h-14"
+            className="h-12 w-auto sm:h-16"
           />
         </Link>
 
@@ -75,7 +75,7 @@ export default function Header() {
             <Link
               key={item.href}
               href={item.href}
-              className="whitespace-nowrap text-sm font-medium text-slate-300 transition-colors hover:text-white"
+              className="whitespace-nowrap text-[15px] font-medium text-slate-300 transition-colors hover:text-white"
             >
               {item.label}
             </Link>
@@ -87,7 +87,7 @@ export default function Header() {
               onClick={() => setIsCatalogOpen((current) => !current)}
               aria-haspopup="menu"
               aria-expanded={isCatalogOpen}
-              className="flex items-center gap-1 whitespace-nowrap text-sm font-medium text-slate-300 transition-colors hover:text-white"
+              className="flex items-center gap-1 whitespace-nowrap text-[15px] font-medium text-slate-300 transition-colors hover:text-white"
             >
               Catálogo
               <ChevronDown size={14} className={`transition ${isCatalogOpen ? 'rotate-180' : ''}`} />

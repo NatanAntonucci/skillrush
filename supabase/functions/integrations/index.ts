@@ -150,9 +150,9 @@ async function upstream(provider: "henrik" | "panda", path: string, cost = 1) {
     throw new HttpError(502, "Resposta inválida do provedor.");
   }
 }
-async function pandaPages(path: string) {
+async function pandaPages(path: string, maxPages = 10) {
   const rows: unknown[] = [];
-  for (let page = 1; page <= 10; page++) {
+  for (let page = 1; page <= maxPages; page++) {
     const batch = await upstream(
       "panda",
       `${path}${path.includes("?") ? "&" : "?"}per_page=100&page=${page}`,
@@ -226,54 +226,62 @@ async function handle(req: Request, body: Record<string, any>) {
       });
     if (consentError)
       throw new HttpError(503, "Não foi possível registrar a autorização.");
+    const scope = `${region}/${platform}/${identity}`;
+
     return await cached(`${ownerKey}:${mode}:${start}`, 300, uid, async () => {
-      const account = object(
-        await cached(
-          `${ownerKey}:account`,
-          3600,
-          uid,
-          async () =>
-            object(
-              await upstream("henrik", `/valorant/v2/account/${identity}`, 2),
-            ).data,
+      // Conta, partidas e rank são independentes: em paralelo, o tracker espera
+      // uma rodada de rede em vez de três em sequência.
+      const [accountResult, matchesResult, rankResult] = await Promise.allSettled([
+        cached(`${ownerKey}:account`, 3600, uid, async () =>
+          object(await upstream("henrik", `/valorant/v2/account/${identity}`, 2)).data,
         ),
-      );
+        upstream("henrik", `/valorant/v4/matches/${scope}?mode=${mode}&size=10&start=${start}`, 12),
+        cached(`${ownerKey}:rank`, 600, uid, async () => {
+          const mmr = object(await upstream("henrik", `/valorant/v3/mmr/${scope}`, 2)).data;
+          let history = null;
+          try {
+            history = object(await upstream("henrik", `/valorant/v2/mmr-history/${scope}`, 2)).data;
+          } catch {
+            /* Rank is still usable if RR history is temporarily unavailable. */
+          }
+          return normalizeRank(mmr, history);
+        }),
+      ]);
+
+      if (accountResult.status === "rejected") {
+        throw accountResult.reason instanceof HttpError
+          ? accountResult.reason
+          : new HttpError(502, "Não foi possível consultar a conta no provedor.");
+      }
+
+      const account = object(accountResult.value);
+
       if (!text(account.puuid))
         throw new HttpError(
           502,
           "O provedor não retornou a identificação da conta.",
         );
-      const scope = `${region}/${platform}/${identity}`;
-      const matchesRaw = object(
-        await upstream(
-          "henrik",
-          `/valorant/v4/matches/${scope}?mode=${mode}&size=10&start=${start}`,
-          12,
-        ),
-      );
+
+      if (matchesResult.status === "rejected") {
+        throw matchesResult.reason instanceof HttpError
+          ? matchesResult.reason
+          : new HttpError(502, "Não foi possível consultar o histórico agora.");
+      }
+
+      const matchesRaw = object(matchesResult.value);
+
       if (!Array.isArray(matchesRaw.data))
         throw new HttpError(
           502,
           "O provedor não retornou o histórico esperado.",
         );
+
       const warnings: string[] = [];
       let rank = null;
-      try {
-        rank = await cached(`${ownerKey}:rank`, 600, uid, async () => {
-          const mmr = object(
-            await upstream("henrik", `/valorant/v3/mmr/${scope}`, 2),
-          ).data;
-          let history = null;
-          try {
-            history = object(
-              await upstream("henrik", `/valorant/v2/mmr-history/${scope}`, 2),
-            ).data;
-          } catch {
-            /* Rank is still usable if RR history is temporarily unavailable. */
-          }
-          return normalizeRank(mmr, history);
-        });
-      } catch {
+
+      if (rankResult.status === "fulfilled") {
+        rank = rankResult.value;
+      } else {
         warnings.push(
           "Rank indisponível nesta consulta. O histórico de partidas continua disponível.",
         );
@@ -312,14 +320,11 @@ async function handle(req: Request, body: Record<string, any>) {
       status === "running" ? 60 : 300,
       null,
       async () => {
-        const tournaments = await upstream(
-          "panda",
-          `/valorant/tournaments/${status}?per_page=12&page=${page}`,
-        );
-        const matches = await upstream(
-          "panda",
-          `/valorant/matches/${status}?per_page=30&page=${page}`,
-        );
+        // Duas chamadas independentes: disparar em paralelo corta uma ida ao provedor.
+        const [tournaments, matches] = await Promise.all([
+          upstream("panda", `/valorant/tournaments/${status}?per_page=12&page=${page}`),
+          upstream("panda", `/valorant/matches/${status}?per_page=30&page=${page}`),
+        ]);
         if (!Array.isArray(tournaments) || !Array.isArray(matches))
           throw new HttpError(502, "Resposta de campeonatos inválida.");
         return {
@@ -345,19 +350,25 @@ async function handle(req: Request, body: Record<string, any>) {
       const warnings: string[] = [];
       let brackets: unknown[] = [],
         standings: unknown[] = [];
-      if (raw.has_bracket) {
-        try {
-          const result = await pandaPages(`/tournaments/${id}/brackets`);
-          brackets = result.rows;
-          if (result.partial)
-            warnings.push("Chaveamento parcial: limite de paginação atingido.");
-        } catch {
-          warnings.push("O chaveamento não está disponível nesta consulta.");
-        }
+
+      // Chaveamento e classificação são independentes entre si e das partidas:
+      // rodar em paralelo evita três esperas em série.
+      const [bracketResult, standingsResult] = await Promise.allSettled([
+        raw.has_bracket ? pandaPages(`/tournaments/${id}/brackets`, 4) : Promise.resolve(null),
+        pandaPages(`/tournaments/${id}/standings`, 3),
+      ]);
+
+      if (bracketResult.status === "fulfilled" && bracketResult.value) {
+        brackets = bracketResult.value.rows;
+        if (bracketResult.value.partial)
+          warnings.push("Chaveamento parcial: limite de paginação atingido.");
+      } else if (raw.has_bracket) {
+        warnings.push("O chaveamento não está disponível nesta consulta.");
       }
-      try {
-        standings = (await pandaPages(`/tournaments/${id}/standings`)).rows;
-      } catch {
+
+      if (standingsResult.status === "fulfilled") {
+        standings = standingsResult.value.rows;
+      } else {
         warnings.push("A classificação não está disponível nesta consulta.");
       }
       return {

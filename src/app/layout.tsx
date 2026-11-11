@@ -1,11 +1,18 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
+import { Inter, Space_Grotesk } from 'next/font/google';
 
 import './globals.css';
 
 import Header from '@/components/Header';
 import BackToTopButton from '@/components/BackToTopButton';
+import { MotionProvider } from '@/components/motion/MotionProvider';
+import { Preloader } from '@/components/motion/Preloader';
+import { RouteProgress } from '@/components/motion/RouteProgress';
 import { siteUrl } from '@/utils/site';
+
+const inter = Inter({ subsets: ['latin'], variable: '--font-sans', display: 'swap' });
+const display = Space_Grotesk({ subsets: ['latin'], variable: '--font-display', display: 'swap' });
 
 // Builds de staging usam NEXT_PUBLIC_NOINDEX=true para não competir com o domínio final no Google.
 const noindex = process.env.NEXT_PUBLIC_NOINDEX === 'true';
@@ -39,7 +46,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="pt-BR" suppressHydrationWarning>
+    <html lang="pt-BR" className={`${inter.variable} ${display.variable}`} suppressHydrationWarning>
       <head>
         {/* aplica o tema salvo antes do primeiro paint, evitando flash */}
         <script
@@ -49,7 +56,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           }}
         />
       </head>
-      <body className="bg-slate-950 text-slate-100">
+      <body className="min-h-screen bg-slate-950 font-sans text-slate-100 antialiased">
+        <Preloader />
+        <RouteProgress />
+        <MotionProvider />
         <Header />
         {children}
         <BackToTopButton />
