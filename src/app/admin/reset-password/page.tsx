@@ -112,7 +112,7 @@ function ResetPasswordContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white">
+      <div className="min-h-screen flex items-center justify-center text-white">
         <p>Processando link de reset...</p>
       </div>
     );
@@ -120,7 +120,7 @@ function ResetPasswordContent() {
 
   if (error && status !== 'success') {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white">
+      <div className="min-h-screen flex items-center justify-center text-white">
         <div className="space-y-4 w-80 text-center">
           <h2 className="text-lg font-semibold text-red-400">Erro ao resetar senha</h2>
           <p className="text-slate-400">{error}</p>
@@ -143,7 +143,7 @@ function ResetPasswordContent() {
 
   if (status === 'success') {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white">
+      <div className="min-h-screen flex items-center justify-center text-white">
         <div className="space-y-4 w-80 text-center">
           <p className="text-green-400 font-semibold text-lg">Senha resetada com sucesso! 🎉</p>
           <p className="text-slate-400">Redirecionando para login...</p>
@@ -154,7 +154,7 @@ function ResetPasswordContent() {
 
   if (!hasValidSession) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white">
+      <div className="min-h-screen flex items-center justify-center text-white">
         <div className="space-y-4 w-80 text-center">
           <p className="text-red-400">Sessão não validada</p>
           <button
@@ -169,7 +169,7 @@ function ResetPasswordContent() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white">
+    <div className="min-h-screen flex items-center justify-center text-white">
       <form onSubmit={handleSubmit} className="space-y-4 w-80">
         <h1 className="text-xl font-bold">Resetar Senha</h1>
 
@@ -207,7 +207,7 @@ function ResetPasswordContent() {
 
 function ResetPasswordLoading() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white">
+    <div className="min-h-screen flex items-center justify-center text-white">
       <p>Carregando página de reset...</p>
     </div>
   );

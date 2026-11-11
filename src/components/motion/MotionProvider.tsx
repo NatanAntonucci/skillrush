@@ -51,6 +51,9 @@ export function MotionProvider() {
 
       const context = gsap.context(() => {
         for (const element of elements) {
+          // estado inicial aplicado por JS: se algo falhar, o conteúdo segue visível
+          gsap.set(element, { opacity: 0, y: 18 });
+
           gsap.to(element, {
             opacity: 1,
             y: 0,
@@ -59,7 +62,7 @@ export function MotionProvider() {
             delay: Number(element.dataset.revealDelay ?? 0),
             scrollTrigger: {
               trigger: element,
-              start: 'top 90%',
+              start: 'top 92%',
               once: true,
             },
           });
@@ -68,7 +71,15 @@ export function MotionProvider() {
 
       ScrollTrigger.refresh();
 
+      const onLoad = () => ScrollTrigger.refresh();
+      window.addEventListener('load', onLoad);
+
+      // se imagens/fontes mudarem a altura depois, recalcula as posições
+      const safety = window.setTimeout(() => ScrollTrigger.refresh(), 1200);
+
       cleanup = () => {
+        window.clearTimeout(safety);
+        window.removeEventListener('load', onLoad);
         cancelAnimationFrame(frame);
         context.revert();
         lenis.destroy();

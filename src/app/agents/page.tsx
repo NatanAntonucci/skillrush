@@ -16,7 +16,7 @@ export default async function AgentsPage() {
   const agents = await getAgents();
 
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100">
+    <main className="min-h-screen text-slate-100">
       <section className="mx-auto w-full max-w-[1400px] px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
         <SectionHeader
           title="Agentes"

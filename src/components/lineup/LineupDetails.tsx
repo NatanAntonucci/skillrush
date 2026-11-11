@@ -49,7 +49,7 @@ export default function LineupDetails() {
             )}
 
             {selectedLineup.side && (
-              <span className="rounded-full bg-violet-500/15 px-3 py-1 text-xs text-violet-200">
+              <span className="rounded-full bg-accent-500/15 px-3 py-1 text-xs text-accent-200">
                 {labelSide(selectedLineup.side)}
               </span>
             )}

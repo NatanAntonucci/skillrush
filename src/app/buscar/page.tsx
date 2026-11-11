@@ -78,7 +78,7 @@ export default function SearchPage() {
     results.agents.length + results.maps.length + results.lineups.length > 0;
 
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100">
+    <main className="min-h-screen text-slate-100">
       <section className="mx-auto max-w-3xl px-6 py-12">
         <h1 className="text-2xl font-semibold text-white">Buscar</h1>
         <p className="mt-1 text-sm text-slate-400">

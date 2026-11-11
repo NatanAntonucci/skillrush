@@ -42,7 +42,7 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white">
+    <div className="min-h-screen flex items-center justify-center text-white">
       <form onSubmit={handleLogin} className="space-y-4 w-80">
         <div>
           <h1 className="text-xl font-bold mb-1">Admin Login</h1>

@@ -24,7 +24,7 @@ export default async function HomePage() {
   ]);
 
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100">
+    <main className="min-h-screen text-slate-100">
       <section className="mx-auto w-full max-w-3xl px-4 pb-8 pt-10 text-center sm:px-6 sm:pt-14">
         <span className="animate-fade-up inline-flex items-center gap-2 rounded-full border border-slate-800 bg-slate-900/60 px-3 py-1 text-xs text-slate-300">
           <span className="h-1.5 w-1.5 rounded-full bg-accent-400" />

@@ -208,7 +208,7 @@ export function MapBoard({
               onClick={() => setDifficulty(difficulty === value ? null : value)}
               className={`rounded-full border px-3 py-1 text-xs transition ${
                 difficulty === value
-                  ? 'border-violet-400 bg-violet-500/15 text-violet-100'
+                  ? 'border-accent-400 bg-accent-500/15 text-accent-100'
                   : 'border-slate-800 bg-slate-900 text-slate-400 hover:border-slate-600'
               }`}
             >
@@ -223,7 +223,7 @@ export function MapBoard({
               onClick={() => setSide(side === value ? null : value)}
               className={`rounded-full border px-3 py-1 text-xs transition ${
                 side === value
-                  ? 'border-emerald-400 bg-emerald-500/15 text-emerald-100'
+                  ? 'border-accent-400 bg-accent-500/15 text-accent-100'
                   : 'border-slate-800 bg-slate-900 text-slate-400 hover:border-slate-600'
               }`}
             >

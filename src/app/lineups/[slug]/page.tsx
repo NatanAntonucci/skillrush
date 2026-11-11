@@ -50,7 +50,7 @@ export default async function LineupPage({ params }: LineupPageProps) {
   const agentSlug = lineup.agent?.displayName ? slugify(lineup.agent.displayName) : null;
 
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100">
+    <main className="min-h-screen text-slate-100">
       <section className="mx-auto max-w-4xl px-6 py-10 lg:px-8">
         <nav className="mb-6 flex flex-wrap gap-1 text-sm text-slate-500">
           <Link href="/maps" className="hover:text-accent-300">
@@ -88,7 +88,7 @@ export default async function LineupPage({ params }: LineupPageProps) {
                 </span>
               )}
               {lineup.side && (
-                <span className="rounded-full bg-violet-500/15 px-3 py-1 text-xs text-violet-200">
+                <span className="rounded-full bg-accent-500/15 px-3 py-1 text-xs text-accent-200">
                   {labelSide(lineup.side)}
                 </span>
               )}

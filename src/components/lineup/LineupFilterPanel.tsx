@@ -75,7 +75,7 @@ export function LineupFilterPanel() {
                 onClick={() => setSelectedSide(selectedSide === side.value ? null : side.value)}
                 className={`rounded-2xl border px-4 py-2 text-sm transition ${
                   selectedSide === side.value
-                    ? 'border-violet-400 bg-violet-500/15 text-violet-100'
+                    ? 'border-accent-400 bg-accent-500/15 text-accent-100'
                     : 'border-slate-800 bg-slate-900 text-slate-300 hover:border-slate-600 hover:bg-slate-900/90'
                 }`}
               >

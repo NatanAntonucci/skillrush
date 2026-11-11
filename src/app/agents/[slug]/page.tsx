@@ -62,7 +62,7 @@ export default async function AgentPage({ params }: AgentPageProps) {
   const maps = Array.from(byMap.values()).sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
 
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100">
+    <main className="min-h-screen text-slate-100">
       <section className="mx-auto max-w-5xl px-6 py-10 lg:px-8">
         <nav className="mb-6 text-sm text-slate-500">
           <Link href="/agents" className="hover:text-accent-300">
