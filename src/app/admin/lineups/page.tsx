@@ -1,10 +1,11 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
 import { AdminGuard } from '@/components/admin/AdminGuard';
+import { AdminNav } from '@/components/admin/AdminNav';
 import { deleteLineup, fetchLineups } from '@/services/supabase/lineups';
 import { labelDifficulty, labelSide, labelStatus } from '@/utils/labels';
 import { resolveImage } from '@/utils/images';
@@ -16,6 +17,7 @@ function LineupsManager() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [query, setQuery] = useState('');
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -51,8 +53,31 @@ function LineupsManager() {
     }
   }
 
+  const visible = useMemo(() => {
+    const term = query
+      .trim()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase();
+
+    if (!term) return lineups;
+
+    return lineups.filter((lineup) =>
+      [lineup.title, lineup.abilityName, lineup.agent?.displayName, lineup.map?.displayName]
+        .filter(Boolean)
+        .some((value) =>
+          String(value)
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .toLowerCase()
+            .includes(term),
+        ),
+    );
+  }, [lineups, query]);
+
   return (
     <main className="min-h-screen text-slate-100">
+      <AdminNav />
       <section className="mx-auto max-w-5xl px-6 py-10">
         <header className="mb-6 flex flex-wrap items-end justify-between gap-4">
           <div>
@@ -77,18 +102,27 @@ function LineupsManager() {
           </div>
         </header>
 
+        <div className="mb-4">
+          <input
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Buscar por título, agente, mapa ou habilidade"
+            className="w-full rounded-xl border border-slate-800 bg-slate-900 px-4 py-2.5 text-sm text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-accent-500"
+          />
+        </div>
+
         {loading && <p className="text-sm text-slate-400">Carregando...</p>}
 
         {error && <p className="text-sm text-rose-400">{error}</p>}
 
-        {!loading && lineups.length === 0 && (
+        {!loading && visible.length === 0 && (
           <p className="rounded-2xl border border-dashed border-slate-700 p-6 text-sm text-slate-400">
-            Nenhuma lineup cadastrada ainda.
+            {query.trim() ? 'Nenhuma lineup encontrada para essa busca.' : 'Nenhuma lineup cadastrada ainda.'}
           </p>
         )}
 
         <div className="space-y-3">
-          {lineups.map((lineup) => (
+          {visible.map((lineup) => (
             <article
               key={lineup.id}
               className="flex flex-wrap items-center gap-4 rounded-2xl border border-slate-800 bg-slate-900/60 p-4"

@@ -189,6 +189,12 @@ h3 {
   color: rgb(var(--slate-100));
 }
 
+/* ícones de habilidade do Valorant são brancos: precisam de fundo escuro fixo */
+.ability-tile {
+  background-color: #0b0b0c;
+  border-radius: 0.5rem;
+}
+
 /* rótulos sobre a arte do mapa: brancos em qualquer tema */
 .art-label {
   color: #fff;
@@ -301,6 +307,21 @@ textarea {
   to {
     transform: translateX(-50%);
   }
+}
+
+@keyframes header-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-header {
+  animation: header-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .animate-fade-up {

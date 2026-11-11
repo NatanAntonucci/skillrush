@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState, type FormEvent, type MouseEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, type FormEvent, type MouseEvent, type SyntheticEvent } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { fetchAgents } from '@/services/supabase/agents';
@@ -58,6 +58,19 @@ export function LineupForm({ mode, lineup }: LineupFormProps) {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const imgRef = useRef<HTMLImageElement | null>(null);
+  const [imageBox, setImageBox] = useState({ left: 0, top: 0, width: 100, height: 100 });
+
+  function handleImageLoad(event: SyntheticEvent<HTMLImageElement>) {
+    const image = event.currentTarget;
+    const rect = image.getBoundingClientRect();
+    if (!rect.width || !rect.height || !image.naturalWidth || !image.naturalHeight) return;
+
+    const scale = Math.min(rect.width / image.naturalWidth, rect.height / image.naturalHeight);
+    const width = ((image.naturalWidth * scale) / rect.width) * 100;
+    const height = ((image.naturalHeight * scale) / rect.height) * 100;
+
+    setImageBox({ left: (100 - width) / 2, top: (100 - height) / 2, width, height });
+  }
 
   const selectedMap = useMemo(
     () => maps.find((map) => map.id === mapId) ?? null,
@@ -291,6 +304,7 @@ export function LineupForm({ mode, lineup }: LineupFormProps) {
               ref={imgRef}
               src={mapImage}
               alt={selectedMap?.displayName ?? 'Mapa'}
+              onLoad={handleImageLoad}
               className="pointer-events-none h-full w-full select-none object-contain"
             />
           ) : (
@@ -300,12 +314,23 @@ export function LineupForm({ mode, lineup }: LineupFormProps) {
           )}
 
           {selectedMap && (
-            <span
-              className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent-500 px-3 py-1 text-xs font-bold text-black"
-              style={{ left: `${hotspotX}%`, top: `${hotspotY}%` }}
+            // o marcador vive na área desenhada da imagem, não na caixa do container
+            <div
+              className="pointer-events-none absolute"
+              style={{
+                left: `${imageBox.left}%`,
+                top: `${imageBox.top}%`,
+                width: `${imageBox.width}%`,
+                height: `${imageBox.height}%`,
+              }}
             >
-              {hotspotLabel}
-            </span>
+              <span
+                className="absolute -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent-500 px-3 py-1 text-xs font-bold text-black"
+                style={{ left: `${hotspotX}%`, top: `${hotspotY}%` }}
+              >
+                {hotspotLabel}
+              </span>
+            </div>
           )}
         </div>
 

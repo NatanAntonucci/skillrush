@@ -50,7 +50,7 @@ export function LineupList() {
           )}
         >
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded bg-black/40 p-1">
+            <div className="flex h-10 w-10 items-center justify-center rounded ability-tile p-1">
               {lineup.ability?.displayIcon && (
                 <Image
                   src={resolveImage(lineup.ability.displayIcon)!}

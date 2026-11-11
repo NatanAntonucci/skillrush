@@ -5,6 +5,7 @@ import { Archivo, Archivo_Black, Inter, Space_Grotesk } from 'next/font/google';
 import './globals.css';
 
 import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 import BackToTopButton from '@/components/BackToTopButton';
 import { MotionProvider } from '@/components/motion/MotionProvider';
 import { Preloader } from '@/components/motion/Preloader';
@@ -75,6 +76,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <MotionProvider />
         <Header />
         {children}
+        <Footer />
         <BackToTopButton />
       </body>
     </html>

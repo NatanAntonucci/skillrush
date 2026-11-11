@@ -3,12 +3,14 @@
 import Link from 'next/link';
 
 import { AdminGuard } from '@/components/admin/AdminGuard';
+import { AdminNav } from '@/components/admin/AdminNav';
 import { LineupForm } from '@/features/admin/LineupForm';
 
 export default function UploadPage() {
   return (
     <AdminGuard>
       <main className="min-h-screen text-slate-100">
+      <AdminNav />
         <section className="mx-auto max-w-4xl px-6 py-10">
           <header className="mb-6 flex flex-wrap items-end justify-between gap-4">
             <div>

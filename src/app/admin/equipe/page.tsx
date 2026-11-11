@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 
 import { AdminGuard } from '@/components/admin/AdminGuard';
+import { AdminNav } from '@/components/admin/AdminNav';
 import { useAdmin } from '@/hooks/useAdmin';
 import { supabase } from '@/services/supabase/client';
 
@@ -75,6 +76,7 @@ function TeamManager() {
 
   return (
     <main className="min-h-screen text-slate-100">
+      <AdminNav />
       <section className="mx-auto max-w-4xl px-6 py-10">
         <header className="mb-6 flex flex-wrap items-end justify-between gap-4">
           <div>

@@ -329,7 +329,7 @@ export function MapBoard({
                   : 'border-slate-800 bg-slate-900/60 hover:border-slate-600'
               }`}
             >
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-black/40 p-1">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg ability-tile p-1">
                 {lineup.ability?.displayIcon && (
                   <Image
                     src={resolveImage(lineup.ability.displayIcon)!}

@@ -14,6 +14,19 @@ interface AgentPageProps {
 
 export const dynamicParams = false;
 
+// Slots vêm da API em inglês; mostramos a tecla do jogo (ou "Passiva").
+const SLOT_LABELS: Record<string, string> = {
+  Grenade: 'C',
+  Ability1: 'Q',
+  Ability2: 'E',
+  Ultimate: 'X',
+  Passive: 'Passiva',
+};
+
+function slotLabel(slot: string) {
+  return SLOT_LABELS[slot] ?? slot;
+}
+
 export async function generateStaticParams() {
   const agents = await getAgents();
   // O export do Next 14 exige pelo menos um parâmetro. A rota vazia usa o 404.
@@ -109,13 +122,13 @@ export default async function AgentPage({ params }: AgentPageProps) {
                       alt={ability.displayName}
                       width={40}
                       height={40}
-                      className="h-10 w-10 rounded object-contain"
+                      className="ability-tile h-10 w-10 rounded object-contain p-1"
                     />
                   )}
 
                   <div>
                     <p className="font-medium text-white">{ability.displayName}</p>
-                    <p className="text-xs text-slate-500">{ability.slot}</p>
+                    <p className="text-xs text-slate-500">{slotLabel(ability.slot)}</p>
                   </div>
                 </div>
               ))}

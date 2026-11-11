@@ -113,6 +113,21 @@ export function Tracker() {
       );
     setBusy(false);
   }
+  async function loginGoogle() {
+    setBusy(true);
+    setError("");
+    setAuthMessage("");
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: `${window.location.origin}/tracker/` },
+    });
+    if (error) {
+      setError(
+        "O login com Google ainda não está ativo. Use o link por e-mail enquanto isso.",
+      );
+      setBusy(false);
+    }
+  }
   async function search(event?: FormEvent, more = false) {
     event?.preventDefault();
     if (!consent || !userId || wait) return;
@@ -235,6 +250,22 @@ export function Tracker() {
             </Link>
           </div>
           <form onSubmit={login} className="space-y-3">
+            <button
+              type="button"
+              onClick={loginGoogle}
+              disabled={busy}
+              className="flex w-full items-center justify-center gap-2 rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 text-sm font-medium text-slate-100 transition hover:border-slate-500 disabled:opacity-60"
+            >
+              <span aria-hidden="true" className="text-base font-bold">G</span>
+              Entrar com Google
+            </button>
+
+            <div className="flex items-center gap-3 py-1 text-[11px] uppercase tracking-widest text-slate-500">
+              <span className="h-px flex-1 bg-slate-800" />
+              ou
+              <span className="h-px flex-1 bg-slate-800" />
+            </div>
+
             <label htmlFor="tracker-email" className="block text-sm">
               E-mail
             </label>
@@ -249,7 +280,7 @@ export function Tracker() {
               placeholder="voce@exemplo.com"
             />
             <button className={buttonClass} disabled={busy}>
-              {busy ? "Enviando…" : "Receber link de acesso"}
+              {busy ? "Enviando…" : "Receber link por e-mail"}
             </button>
           </form>
         </section>
