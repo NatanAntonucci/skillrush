@@ -66,7 +66,15 @@ export default function Header() {
             width={220}
             height={102}
             priority
-            className="h-12 w-auto sm:h-16"
+            className="logo-on-dark h-12 w-auto sm:h-16"
+          />
+          <Image
+            src="/logo-dark.png"
+            alt="Skillrush"
+            width={521}
+            height={241}
+            priority
+            className="logo-on-light h-12 w-auto sm:h-16"
           />
         </Link>
 
@@ -75,7 +83,7 @@ export default function Header() {
             <Link
               key={item.href}
               href={item.href}
-              className="whitespace-nowrap text-[15px] font-medium text-slate-300 transition-colors hover:text-white"
+              className="whitespace-nowrap text-base font-medium text-slate-300 transition-colors hover:text-white"
             >
               {item.label}
             </Link>
@@ -87,7 +95,7 @@ export default function Header() {
               onClick={() => setIsCatalogOpen((current) => !current)}
               aria-haspopup="menu"
               aria-expanded={isCatalogOpen}
-              className="flex items-center gap-1 whitespace-nowrap text-[15px] font-medium text-slate-300 transition-colors hover:text-white"
+              className="flex items-center gap-1 whitespace-nowrap text-base font-medium text-slate-300 transition-colors hover:text-white"
             >
               Catálogo
               <ChevronDown size={14} className={`transition ${isCatalogOpen ? 'rotate-180' : ''}`} />

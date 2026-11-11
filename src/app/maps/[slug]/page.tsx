@@ -90,10 +90,10 @@ export default async function MapPage({ params }: MapPageProps) {
             </div>
 
             <Link
-              href="/painel"
+              href={`/painel?mapa=${slugify(map.displayName)}`}
               className="rounded-xl border border-slate-700/80 bg-slate-950/60 px-4 py-2 text-sm text-slate-200 backdrop-blur transition hover:border-slate-500"
             >
-              Painel completo
+              Abrir no painel
             </Link>
           </div>
         </header>

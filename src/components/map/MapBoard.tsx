@@ -146,15 +146,16 @@ export function MapBoard({
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
       {/* MAPA + FILTROS */}
-      <div>
-        <div className="flex flex-wrap items-center gap-2">
+      <div className="min-w-0">
+        {/* agentes: linha rolável, não cresce a página */}
+        <div className="custom-scrollbar -mx-1 flex items-center gap-2 overflow-x-auto px-1 pb-1">
           <button
             type="button"
             onClick={() => {
               setAgentSlug('');
               setAbility(null);
             }}
-            className={`rounded-full border px-3 py-1.5 text-sm transition ${
+            className={`shrink-0 rounded-full border px-3 py-1.5 text-sm transition ${
               agentSlug === ''
                 ? 'border-accent-400 bg-accent-500/15 text-accent-100'
                 : 'border-slate-800 bg-slate-900 text-slate-300 hover:border-slate-600'
@@ -171,7 +172,7 @@ export function MapBoard({
                 setAgentSlug(agent.slug === agentSlug ? '' : agent.slug);
                 setAbility(null);
               }}
-              className={`rounded-full border px-3 py-1.5 text-sm transition ${
+              className={`shrink-0 rounded-full border px-3 py-1.5 text-sm transition ${
                 agentSlug === agent.slug
                   ? 'border-accent-400 bg-accent-500/15 text-accent-100'
                   : 'border-slate-800 bg-slate-900 text-slate-300 hover:border-slate-600'
@@ -183,24 +184,39 @@ export function MapBoard({
           ))}
         </div>
 
+        {/* habilidades: só depois de escolher um agente */}
+        {agentSlug && (
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            {agentAbilities.map((name) => (
+              <button
+                key={name}
+                type="button"
+                onClick={() => setAbility(ability === name ? null : name)}
+                className={`rounded-full border px-3 py-1 text-xs uppercase tracking-wide transition ${
+                  ability === name
+                    ? 'border-accent-400 bg-accent-500/15 text-accent-100'
+                    : 'border-slate-800 bg-slate-900 text-slate-400 hover:border-slate-600'
+                }`}
+              >
+                {name}
+              </button>
+            ))}
+
+            {agentAbilities.length === 0 && (
+              <span className="text-xs text-slate-400">
+                Esse agente ainda não tem lineups neste mapa.
+              </span>
+            )}
+          </div>
+        )}
+
+        {!agentSlug && (
+          <p className="mt-2 text-xs text-slate-500">
+            Escolha um agente para filtrar por habilidade.
+          </p>
+        )}
+
         <div className="mt-3 flex flex-wrap items-center gap-2">
-          {agentAbilities.map((name) => (
-            <button
-              key={name}
-              type="button"
-              onClick={() => setAbility(ability === name ? null : name)}
-              className={`rounded-full border px-3 py-1 text-xs uppercase tracking-wide transition ${
-                ability === name
-                  ? 'border-accent-400 bg-accent-500/15 text-accent-100'
-                  : 'border-slate-800 bg-slate-900 text-slate-400 hover:border-slate-600'
-              }`}
-            >
-              {name}
-            </button>
-          ))}
-
-          <span className="mx-1 h-4 w-px bg-slate-800" />
-
           {(['easy', 'medium', 'hard'] as const).map((value) => (
             <button
               key={value}
@@ -215,6 +231,8 @@ export function MapBoard({
               {labelDifficulty(value)}
             </button>
           ))}
+
+          <span className="mx-1 h-4 w-px bg-slate-800" />
 
           {(['attack', 'defense'] as const).map((value) => (
             <button

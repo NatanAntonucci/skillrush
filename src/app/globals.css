@@ -2,9 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ============ temas ============ */
+/* ============================================================
+   TEMAS
+   - ciano (padrão): fundo azul-noite, acento ciano
+   - rush: preto editorial, acento coral, fonts Archivo
+   - light: branco, acento preto, fonts Archivo
+   ============================================================ */
 
-/* Tema padrão: ciano sobre azul-noite */
 :root {
   color-scheme: dark;
 
@@ -33,13 +37,13 @@
   --accent-950: 8 51 68;
 
   --page-glow: 34 211 238;
-  --page-glow-alpha: 0.10;
+  --page-glow-alpha: 0.1;
   --page-bg: 2 6 23;
   --page-grid: 255 255 255;
   --page-grid-opacity: 0.035;
+  --on-accent: 2 6 23;
 }
 
-/* Tema Skillrush: preto editorial, vermelho da marca e neutros quentes */
 [data-theme='rush'] {
   --slate-50: 250 250 250;
   --slate-100: 245 245 245;
@@ -70,9 +74,48 @@
   --page-bg: 6 6 7;
   --page-grid: 255 255 255;
   --page-grid-opacity: 0.04;
+  --on-accent: 255 255 255;
 }
 
-/* ============ base ============ */
+/* Tema branco: escala slate invertida, acento preto */
+[data-theme='light'] {
+  color-scheme: light;
+
+  --slate-50: 10 10 10;
+  --slate-100: 23 23 23;
+  --slate-200: 38 38 38;
+  --slate-300: 63 63 63;
+  --slate-400: 82 82 82;
+  --slate-500: 115 115 115;
+  --slate-600: 163 163 163;
+  --slate-700: 212 212 212;
+  --slate-800: 229 229 229;
+  --slate-900: 248 248 248;
+  --slate-950: 255 255 255;
+
+  --accent-50: 245 245 245;
+  --accent-100: 229 229 229;
+  --accent-200: 212 212 212;
+  --accent-300: 163 163 163;
+  --accent-400: 38 38 38;
+  --accent-500: 10 10 10;
+  --accent-600: 0 0 0;
+  --accent-700: 0 0 0;
+  --accent-800: 0 0 0;
+  --accent-900: 0 0 0;
+  --accent-950: 0 0 0;
+
+  --page-glow: 0 0 0;
+  --page-glow-alpha: 0.04;
+  --page-bg: 255 255 255;
+  --page-grid: 0 0 0;
+  --page-grid-opacity: 0.05;
+  --on-accent: 255 255 255;
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
 
 html {
   scroll-behavior: smooth;
@@ -82,28 +125,16 @@ html {
 body {
   min-height: 100vh;
   font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: 0.005em;
   background:
     radial-gradient(60rem 40rem at 50% -12%, rgb(var(--page-glow) / var(--page-glow-alpha)), transparent 62%),
     radial-gradient(38rem 28rem at 100% 110%, rgb(var(--page-glow) / calc(var(--page-glow-alpha) * 0.6)), transparent 60%),
     rgb(var(--page-bg));
   color: rgb(var(--slate-200));
-  transition: background-color 0.4s ease, color 0.4s ease;
+  transition: background-color 0.45s ease, color 0.45s ease;
 }
 
-/* Tema coral usa outra família tipográfica (Archivo Black + Archivo) */
-[data-theme='rush'] body {
-  font-family: var(--font-rush-sans), var(--font-sans), sans-serif;
-}
-
-[data-theme='rush'] h1,
-[data-theme='rush'] h2,
-[data-theme='rush'] h3 {
-  font-family: var(--font-rush-display), var(--font-rush-sans), sans-serif;
-  letter-spacing: -0.01em;
-  text-transform: uppercase;
-}
-
-/* grade sutil de "pixel" no fundo — referencia o material da marca */
+/* fundo com grade de pixels (referência ao material da marca) */
 body::before {
   content: '';
   position: fixed;
@@ -124,7 +155,38 @@ h1,
 h2,
 h3 {
   font-family: var(--font-display), var(--font-sans), sans-serif;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.01em;
+}
+
+/* nos temas editoriais, Archivo Black + Archivo */
+[data-theme='rush'] body,
+[data-theme='light'] body {
+  font-family: var(--font-rush-sans), var(--font-sans), sans-serif;
+  letter-spacing: 0.012em;
+}
+
+[data-theme='rush'] h1,
+[data-theme='rush'] h2,
+[data-theme='rush'] h3,
+[data-theme='light'] h1,
+[data-theme='light'] h2,
+[data-theme='light'] h3 {
+  font-family: var(--font-rush-display), var(--font-rush-sans), sans-serif;
+  letter-spacing: 0.035em;
+  text-transform: uppercase;
+}
+
+/* no tema claro, "white" vira o texto principal escuro */
+[data-theme='light'] .text-white {
+  color: rgb(var(--slate-100));
+}
+
+[data-theme='light'] .bg-white\/5 {
+  background-color: rgb(0 0 0 / 0.04);
+}
+
+[data-theme='light'] .hover\:bg-white\/10:hover {
+  background-color: rgb(0 0 0 / 0.06);
 }
 
 * {
@@ -144,11 +206,26 @@ textarea {
 }
 
 ::selection {
-  background: rgb(var(--page-glow) / 0.35);
-  color: white;
+  background: rgb(var(--page-glow) / 0.3);
+  color: rgb(var(--slate-50));
 }
 
-/* ============ animações ============ */
+/* logos por tema */
+.logo-on-light {
+  display: none;
+}
+
+[data-theme='light'] .logo-on-dark {
+  display: none;
+}
+
+[data-theme='light'] .logo-on-light {
+  display: block;
+}
+
+/* ============================================================
+   ANIMAÇÕES
+   ============================================================ */
 
 @keyframes fade-up {
   from {
@@ -176,18 +253,6 @@ textarea {
   }
 }
 
-@keyframes pulse-ring {
-  0% {
-    box-shadow: 0 0 0 0 rgb(var(--page-glow) / 0.45);
-  }
-  70% {
-    box-shadow: 0 0 0 12px rgb(var(--page-glow) / 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgb(var(--page-glow) / 0);
-  }
-}
-
 @keyframes theme-pop {
   0% {
     transform: scale(0.8);
@@ -196,6 +261,17 @@ textarea {
   100% {
     transform: scale(1);
     opacity: 1;
+  }
+}
+
+@keyframes theme-reveal {
+  from {
+    opacity: 0.4;
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(0);
   }
 }
 
@@ -224,6 +300,22 @@ textarea {
   animation: marquee 28s linear infinite;
 }
 
+/* transição de tema com View Transitions (Chrome/Edge) */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.45s;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+::view-transition-old(root) {
+  animation-name: fade-in;
+  animation-direction: reverse;
+}
+
+::view-transition-new(root) {
+  animation-name: theme-reveal;
+}
+
 .skeleton {
   position: relative;
   overflow: hidden;
@@ -235,11 +327,10 @@ textarea {
   position: absolute;
   inset: 0;
   transform: translateX(-100%);
-  background: linear-gradient(90deg, transparent, rgba(148, 163, 184, 0.12), transparent);
+  background: linear-gradient(90deg, transparent, rgb(var(--slate-400) / 0.12), transparent);
   animation: shimmer 1.4s infinite;
 }
 
-/* barra de "pixel" usada no preloader e no carregamento de rota */
 .pixel-bar {
   background-image: repeating-linear-gradient(
     90deg,
@@ -262,10 +353,23 @@ textarea {
   background: transparent;
 }
 
-/* elementos que o MotionProvider anima — o estado inicial é aplicado via JS,
-   então o conteúdo continua visível se o JavaScript falhar */
+/* elementos animados pelo MotionProvider */
 .motion-ready [data-reveal] {
   will-change: transform, opacity;
+}
+
+/* Lenis */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -280,26 +384,12 @@ textarea {
     animation: none;
   }
 
-  [data-reveal] {
-    opacity: 1;
-    transform: none;
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
   }
 
   html {
     scroll-behavior: auto;
   }
-}
-
-/* Lenis (scroll suave) */
-html.lenis,
-html.lenis body {
-  height: auto;
-}
-
-.lenis.lenis-smooth {
-  scroll-behavior: auto !important;
-}
-
-.lenis.lenis-stopped {
-  overflow: hidden;
 }

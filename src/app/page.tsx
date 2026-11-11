@@ -45,6 +45,21 @@ export default async function HomePage() {
         <div className="animate-fade-up mt-6 sm:mt-8" style={{ animationDelay: '120ms' }}>
           <SearchBox />
         </div>
+
+        <div
+          className="animate-fade-up mt-3 flex flex-wrap items-center justify-center gap-3 text-sm"
+          style={{ animationDelay: '160ms' }}
+        >
+          <Link
+            href="/painel"
+            className="rounded-xl border border-slate-800 px-4 py-2 font-medium text-slate-200 transition hover:border-accent-400 hover:text-white"
+          >
+            Abrir painel completo
+          </Link>
+          <Link href="/maps" className="text-slate-400 transition hover:text-white">
+            Ver catálogo de mapas →
+          </Link>
+        </div>
       </section>
 
       <div className="mx-auto w-full max-w-[1400px] px-4 sm:px-6 lg:px-8">

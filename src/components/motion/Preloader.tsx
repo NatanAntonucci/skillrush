@@ -59,7 +59,9 @@ export function Preloader() {
       }`}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/logo.svg" alt="" className="h-16 w-auto opacity-90" />
+      <img src="/logo.svg" alt="" className="logo-on-dark h-16 w-auto opacity-90" />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/logo-dark.png" alt="" className="logo-on-light h-16 w-auto opacity-90" />
 
       <div className="w-56">
         <div className="h-1 w-full overflow-hidden rounded-full bg-slate-800">

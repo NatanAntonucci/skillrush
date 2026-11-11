@@ -65,7 +65,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <script
           dangerouslySetInnerHTML={{
             __html:
-              "try{if(localStorage.getItem('skillrush:theme')==='rush'){document.documentElement.dataset.theme='rush'}}catch(e){}",
+              "try{var t=localStorage.getItem('skillrush:theme');if(t==='rush'||t==='light'){document.documentElement.dataset.theme=t}}catch(e){}",
           }}
         />
       </head>
