@@ -1,6 +1,6 @@
 /**
  * Converte um clique em uma imagem `object-contain` para percentual (0–100)
- * relativo à área realmente desenhada — não à caixa do elemento, que pode
+ * relativo à área realmente desenhada · não à caixa do elemento, que pode
  * ter tarjas (letterbox) quando a proporção da imagem difere do container.
  */
 export interface HotspotPoint {

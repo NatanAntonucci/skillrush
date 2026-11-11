@@ -419,7 +419,7 @@ export function Tracker() {
                     </span>
                   </h2>
                   <p className="mt-1 text-sm text-slate-400">
-                    Nível {result.account.level ?? "—"} · {region.toUpperCase()}{" "}
+                    Nível {result.account.level ?? "-"} · {region.toUpperCase()}{" "}
                     · {platform.toUpperCase()} · Fonte: HenrikDev
                   </p>
                 </div>
@@ -557,9 +557,9 @@ export function Tracker() {
                           </td>
                           <td className="p-4">{s.count}</td>
                           <td className="p-4">{fixed(s.winrate)}%</td>
-                          <td className="p-4">{fixed(s.kd, 2) ?? "—"}</td>
-                          <td className="p-4">{fixed(s.acs) ?? "—"}</td>
-                          <td className="p-4">{fixed(s.adr) ?? "—"}</td>
+                          <td className="p-4">{fixed(s.kd, 2) ?? "-"}</td>
+                          <td className="p-4">{fixed(s.acs) ?? "-"}</td>
+                          <td className="p-4">{fixed(s.adr) ?? "-"}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -589,7 +589,7 @@ export function Tracker() {
                           {formatDate(h.date)} · {h.map}
                         </p>
                         <p className="mt-2 font-medium">
-                          {h.tier} · {h.rr ?? "—"} RR
+                          {h.tier} · {h.rr ?? "-"} RR
                         </p>
                         <p
                           className={
@@ -599,7 +599,7 @@ export function Tracker() {
                           }
                         >
                           {h.change === null
-                            ? "—"
+                            ? "-"
                             : `${h.change >= 0 ? "+" : ""}${h.change}`}{" "}
                           RR
                         </p>

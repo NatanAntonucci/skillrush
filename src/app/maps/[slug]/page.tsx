@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: MapPageProps): Promise<Metada
   }
 
   return {
-    title: `Lineups de ${map.displayName} — Valorant`,
+    title: `Lineups de ${map.displayName} · Valorant`,
     description: `Lineups, pontos de execução e vídeos para o mapa ${map.displayName} no Valorant.`,
     openGraph: {
       title: `Lineups de ${map.displayName} | Skillrush`,
@@ -109,7 +109,7 @@ export default async function MapPage({ params }: MapPageProps) {
           <>
             <MapBoard map={map} lineups={lineups} />
 
-            {/* lista completa — também serve de conteúdo para indexação */}
+            {/* lista completa · também serve de conteúdo para indexação */}
             <section className="mt-12 border-t border-slate-800 pt-8">
               <h2 className="text-lg font-semibold text-white">
                 Todas as lineups de {map.displayName}

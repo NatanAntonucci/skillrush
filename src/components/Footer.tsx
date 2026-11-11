@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { ArrowUpRight } from 'lucide-react';
 
 const columns = [
   {
@@ -22,7 +23,6 @@ const columns = [
     title: 'Conta',
     links: [
       { label: 'Entrar', href: '/admin' },
-      { label: 'Equipe', href: '/admin/equipe' },
       { label: 'Privacidade', href: '/privacidade' },
     ],
   },
@@ -38,12 +38,12 @@ export default function Footer() {
           <div>
             <p className="font-display text-lg font-bold tracking-wide text-slate-100">SKILLRUSH</p>
             <p className="mt-3 max-w-xs text-sm leading-relaxed text-slate-400">
-              Lineups e spots de Valorant para consultar em segundos — mapa, agente e ponto exato.
+              Lineups e spots de Valorant. Escolha o mapa, o agente e veja o ponto exato em segundos.
             </p>
 
-            <div className="mt-5 flex items-center gap-2 text-xs text-slate-500">
-              <span className="h-1.5 w-1.5 rounded-full bg-accent-500" />
-              Feito para quem joga, não para quem só assiste.
+            <div className="mt-5 inline-flex items-center gap-1.5 text-xs text-slate-500">
+              Feito para quem joga
+              <ArrowUpRight size={14} className="text-accent-400" />
             </div>
           </div>
 

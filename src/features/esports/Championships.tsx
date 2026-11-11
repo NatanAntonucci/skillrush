@@ -410,11 +410,11 @@ export function Championships() {
                         key={`${s.team.id}-${i}`}
                         className="border-t border-slate-800"
                       >
-                        <td className="p-4">{s.rank ?? "—"}</td>
+                        <td className="p-4">{s.rank ?? "-"}</td>
                         <td className="p-4 font-medium">{s.team.name}</td>
-                        <td className="p-4">{s.wins ?? "—"}</td>
-                        <td className="p-4">{s.losses ?? "—"}</td>
-                        <td className="p-4">{s.ties ?? "—"}</td>
+                        <td className="p-4">{s.wins ?? "-"}</td>
+                        <td className="p-4">{s.losses ?? "-"}</td>
+                        <td className="p-4">{s.ties ?? "-"}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -479,7 +479,7 @@ function MatchList({
                 className={`flex justify-between gap-3 ${m.winnerId && m.opponents[i]?.id === m.winnerId ? "font-semibold text-accent-200" : ""}`}
               >
                 <span>{m.opponents[i]?.name || "A definir"}</span>
-                <span>{m.opponents[i]?.score ?? "—"}</span>
+                <span>{m.opponents[i]?.score ?? "-"}</span>
               </div>
             ))}
           </div>
@@ -620,7 +620,7 @@ function Bracket({
                         <span className="truncate">
                           {m.opponents[i]?.name || "A definir"}
                         </span>
-                        <span>{m.opponents[i]?.score ?? "—"}</span>
+                        <span>{m.opponents[i]?.score ?? "-"}</span>
                       </div>
                     ))}
                     <div className="mt-2 text-[10px] text-slate-500">
@@ -725,7 +725,7 @@ function MatchViewer({
         </div>
         <div className="flex justify-center gap-6 text-3xl font-semibold">
           {match.opponents.map((o) => (
-            <span key={o.id}>{o.score ?? "—"}</span>
+            <span key={o.id}>{o.score ?? "-"}</span>
           ))}
         </div>
         {match.streams.length ? (

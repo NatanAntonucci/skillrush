@@ -49,7 +49,7 @@ export function useRecent() {
       try {
         window.localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
       } catch {
-        // localStorage indisponível (modo privado) — ignora
+        // localStorage indisponível (modo privado) · ignora
       }
 
       return updated;

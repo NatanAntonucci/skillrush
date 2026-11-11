@@ -19,7 +19,7 @@ export default function GlobalError({
         <p className="text-xs uppercase tracking-[0.28em] text-slate-500">Erro</p>
         <h1 className="text-2xl font-semibold">Algo deu errado</h1>
         <p className="text-sm text-slate-400">
-          Não foi possível carregar esta página. Tente novamente — se persistir, avise o
+          Não foi possível carregar esta página. Tente novamente · se persistir, avise o
           administrador.
         </p>
         <div className="flex justify-center gap-3">

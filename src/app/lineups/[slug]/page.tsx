@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: LineupPageProps): Promise<Met
   }
 
   return {
-    title: `${lineup.title} — ${lineup.agent?.displayName ?? ''} em ${lineup.map?.displayName ?? ''}`,
+    title: `${lineup.title} · ${lineup.agent?.displayName ?? ''} em ${lineup.map?.displayName ?? ''}`,
     description: lineup.description.slice(0, 160),
     openGraph: {
       title: lineup.title,

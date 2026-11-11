@@ -8,7 +8,7 @@ import { resolveImage } from '@/utils/images';
 import { slugify } from '@/utils/slug';
 
 export const metadata: Metadata = {
-  title: 'Mapas — lineups de Valorant',
+  title: 'Mapas · lineups de Valorant',
   description:
     'Todos os mapas do modo competitivo de Valorant com lineups, hotspots e vídeos de execução.',
 };

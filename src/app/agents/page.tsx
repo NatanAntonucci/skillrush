@@ -8,7 +8,7 @@ import { resolveImage } from '@/utils/images';
 import { slugify } from '@/utils/slug';
 
 export const metadata: Metadata = {
-  title: 'Agentes — lineups de Valorant',
+  title: 'Agentes · lineups de Valorant',
   description: 'Lista de agentes de Valorant com habilidades e lineups relacionadas.',
 };
 

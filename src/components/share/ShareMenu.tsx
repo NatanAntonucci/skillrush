@@ -99,7 +99,7 @@ export function ShareMenu({ title, path, align = 'right' }: ShareMenuProps) {
     }
   }
 
-  const text = encodeURIComponent(`${title} — Skillrush`);
+  const text = encodeURIComponent(`${title} · Skillrush`);
   const link = encodeURIComponent(url);
 
   const targets = [
@@ -164,7 +164,7 @@ export function ShareMenu({ title, path, align = 'right' }: ShareMenuProps) {
           )}
 
           <p className="border-t border-slate-800 px-4 py-2 text-[11px] leading-snug text-slate-500">
-            Instagram não aceita link direto — use “copiar link”.
+            Instagram não aceita link direto · use “copiar link”.
           </p>
         </div>
       )}

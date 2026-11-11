@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: AgentPageProps): Promise<Meta
   }
 
   return {
-    title: `${agent.displayName} — habilidades e lineups`,
+    title: `${agent.displayName} · habilidades e lineups`,
     description:
       agent.description?.slice(0, 150) ??
       `Habilidades e lineups do agente ${agent.displayName} no Valorant.`,

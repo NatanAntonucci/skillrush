@@ -134,7 +134,7 @@ function LineupsManager() {
               <div className="min-w-0 flex-1">
                 <p className="truncate font-medium text-white">{lineup.title}</p>
                 <p className="mt-1 text-xs text-slate-400">
-                  {lineup.agent?.displayName ?? '—'} · {lineup.map?.displayName ?? '—'} ·{' '}
+                  {lineup.agent?.displayName ?? '-'} · {lineup.map?.displayName ?? '-'} ·{' '}
                   {lineup.abilityName} · {labelDifficulty(lineup.difficulty)} ·{' '}
                   {labelSide(lineup.side) || 'sem lado'}
                 </p>

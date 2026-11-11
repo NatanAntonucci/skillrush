@@ -11,7 +11,7 @@ import { resolveImage } from '@/utils/images';
 import { slugify } from '@/utils/slug';
 
 export const metadata: Metadata = {
-  title: 'Skillrush — lineups de Valorant para consultar em segundos',
+  title: 'Skillrush · lineups de Valorant para consultar em segundos',
   description:
     'Ache a lineup do seu agente no mapa em segundos: hotspots no mapa, vídeo e execução passo a passo.',
 };
@@ -39,7 +39,7 @@ export default async function HomePage() {
           className="animate-fade-up mx-auto mt-3 max-w-lg text-sm text-slate-400 sm:text-base"
           style={{ animationDelay: '60ms' }}
         >
-          Mapa, agente, ponto. Veja o vídeo e execute em segundos.
+          Escolha o mapa e o agente, veja o vídeo e execute.
         </p>
 
         <div className="animate-fade-up mt-6 sm:mt-8" style={{ animationDelay: '120ms' }}>

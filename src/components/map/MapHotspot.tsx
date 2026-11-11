@@ -27,7 +27,7 @@ export function MapHotspot({
       onClick={onClick}
       className="group absolute z-10 flex h-11 w-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center"
       style={{ left: `${x}%`, top: `${y}%` }}
-      title={label ? `Hotspot ${label} — clique para ver a lineup` : 'Clique para ver a lineup'}
+      title={label ? `Hotspot ${label} · clique para ver a lineup` : 'Clique para ver a lineup'}
       aria-label={label ? `Hotspot ${label}` : 'Hotspot'}
     >
       <span

@@ -24,7 +24,7 @@ const initialState: AdminState = {
  * Lê a sessão atual e o papel do usuário em `profiles`.
  *
  * Serve apenas para a interface (esconder/mostrar telas). A autorização real
- * é feita pelo RLS do Postgres — o cliente nunca é a última linha de defesa.
+ * é feita pelo RLS do Postgres · o cliente nunca é a última linha de defesa.
  */
 export function useAdmin(): AdminState {
   const [state, setState] = useState<AdminState>(initialState);
